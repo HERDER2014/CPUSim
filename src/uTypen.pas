@@ -1,4 +1,4 @@
-unit UTypen;
+unit uTypen;
 
 {$mode objfpc}{$H+}
 

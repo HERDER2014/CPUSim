@@ -33,10 +33,11 @@
         <Filename Value="ram.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="RAM"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="25"/>
-        <CursorPos X="15" Y="12"/>
+        <TopLine Value="15"/>
+        <CursorPos X="9" Y="39"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -55,11 +56,10 @@
         <Filename Value="cpu.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="CPU"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="5"/>
-        <CursorPos X="48" Y="21"/>
+        <CursorPos X="47" Y="22"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit4>

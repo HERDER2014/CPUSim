@@ -59,3 +59,7 @@ backup/
 lib/
 src/backup/
 src/lib/
+
+# Binary Folder
+bin/
+src/bin/

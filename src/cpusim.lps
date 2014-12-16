@@ -25,8 +25,8 @@
         <UnitName Value="form_main"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="25"/>
-        <CursorPos X="18" Y="38"/>
+        <TopLine Value="14"/>
+        <CursorPos X="24" Y="27"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -39,7 +39,7 @@
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="3" Y="18"/>
+        <CursorPos X="18" Y="61"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -49,8 +49,8 @@
         <UnitName Value="uCompiler"/>
         <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="1"/>
-        <CursorPos X="84" Y="26"/>
+        <TopLine Value="19"/>
+        <CursorPos X="22" Y="42"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit3>
@@ -72,7 +72,7 @@
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="4" Y="10"/>
+        <CursorPos X="25" Y="28"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -104,7 +104,7 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="4" HistoryIndex="3">
+    <JumpHistory Count="13" HistoryIndex="12">
       <Position1>
         <Filename Value="uRAM.pas"/>
         <Caret Line="7" Column="7" TopLine="1"/>
@@ -121,6 +121,42 @@
         <Filename Value="uRAM.pas"/>
         <Caret Line="10" Column="39" TopLine="1"/>
       </Position4>
+      <Position5>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="18" Column="3" TopLine="1"/>
+      </Position5>
+      <Position6>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="12" Column="15" TopLine="1"/>
+      </Position6>
+      <Position7>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="18" Column="3" TopLine="3"/>
+      </Position7>
+      <Position8>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="16" Column="19" TopLine="1"/>
+      </Position8>
+      <Position9>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="45" Column="4" TopLine="20"/>
+      </Position9>
+      <Position10>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="49" Column="19" TopLine="23"/>
+      </Position10>
+      <Position11>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="42" Column="45" TopLine="23"/>
+      </Position11>
+      <Position12>
+        <Filename Value="uCompiler.pas"/>
+        <Caret Line="26" Column="84" TopLine="1"/>
+      </Position12>
+      <Position13>
+        <Filename Value="uCompiler.pas"/>
+        <Caret Line="44" Column="5" TopLine="19"/>
+      </Position13>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

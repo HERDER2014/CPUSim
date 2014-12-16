@@ -29,6 +29,20 @@ type TCompiler = class
 end;
 
 implementation
+  constructor TCompiler.Create(var r : TRAM);
+  begin
+
+  end;
+
+  procedure TCompiler.Compile(input : String);
+  begin
+
+  end;
+
+  function TCompiler.GetCodePosition(addr : Cardinal) : Cardinal;
+  begin
+
+  end;
 
 end.
 

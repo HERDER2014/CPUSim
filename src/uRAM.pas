@@ -15,6 +15,7 @@ type TRAM = class
     Effekt: -
     Ergebnis: Liefert das Byte an Adresse addr.
   }
+
   function ReadByte(addr : Cardinal) : Byte;
 
   { Vor.: addr < size
@@ -38,7 +39,26 @@ type TRAM = class
 end;
 
 implementation
+   constructor TRAM.Create(size : Cardinal);
+   begin
 
+   end;
+   function TRAM.ReadByte(addr : Cardinal) : Byte;
+   begin
+
+   end;
+   procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
+   begin
+
+   end;
+   function TRAM.ReadWord(addr : Cardinal) : Word;
+   begin
+
+   end;
+   procedure TRAM.WriteWord(addr : Cardinal; w : Word);
+   begin
+
+   end;
 
 end.
 

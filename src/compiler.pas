@@ -1,11 +1,11 @@
-unit Compiler;
+unit uCompiler;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, RAM;
+  Classes, SysUtils, uRAM;
 
 type TCompiler = class
   public constructor Create(var r : TRAM);

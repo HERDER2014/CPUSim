@@ -50,22 +50,22 @@
         <UnitName Value="form_main"/>
       </Unit1>
       <Unit2>
-        <Filename Value="ram.pas"/>
+        <Filename Value="uRAM.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="RAM"/>
+        <UnitName Value="uRAM"/>
       </Unit2>
       <Unit3>
-        <Filename Value="compiler.pas"/>
+        <Filename Value="uCompiler.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Compiler"/>
+        <UnitName Value="uCompiler"/>
       </Unit3>
       <Unit4>
-        <Filename Value="cpu.pas"/>
+        <Filename Value="uCPU.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="CPU"/>
+        <UnitName Value="uCPU"/>
       </Unit4>
       <Unit5>
-        <Filename Value="utypen.pas"/>
+        <Filename Value="uTypen.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="UTypen"/>
       </Unit5>

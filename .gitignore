@@ -50,9 +50,11 @@
 *.dsk
 
 # Delphi history and backups
-__history/
-*.~*
+# __history/
+# *.~*
 
-# folders
+# Lazarus history and backups
 backup/
 lib/
+src/backup/
+src/lib/

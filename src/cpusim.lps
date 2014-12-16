@@ -30,9 +30,9 @@
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="ram.pas"/>
+        <Filename Value="uRAM.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="RAM"/>
+        <UnitName Value="uRAM"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
@@ -42,9 +42,9 @@
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="compiler.pas"/>
+        <Filename Value="uCompiler.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Compiler"/>
+        <UnitName Value="uCompiler"/>
         <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
@@ -53,7 +53,7 @@
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="cpu.pas"/>
+        <Filename Value="uCPU.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="CPU"/>
         <EditorIndex Value="2"/>
@@ -64,9 +64,9 @@
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="utypen.pas"/>
+        <Filename Value="uTypen.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UTypen"/>
+        <UnitName Value="uTypen"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
@@ -74,15 +74,15 @@
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit5>
-      <Unit6>
-        <Filename Value="simulator.pas"/>
+      <Unit6> <!-- ? -->
+        <Filename Value="usimulator.pas"/>
         <UnitName Value="Simulator"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="16" Y="10"/>
         <UsageCount Value="20"/>
       </Unit6>
-      <Unit7>
+      <Unit7> <!-- ? -->
         <Filename Value="register.pas"/>
         <UnitName Value="Register"/>
         <WindowIndex Value="0"/>
@@ -90,7 +90,7 @@
         <CursorPos X="22" Y="11"/>
         <UsageCount Value="20"/>
       </Unit7>
-      <Unit8>
+      <Unit8> <!-- ? -->
         <Filename Value="registers.pas"/>
         <UnitName Value="Registers"/>
         <WindowIndex Value="0"/>
@@ -104,49 +104,13 @@
     </General>
     <JumpHistory Count="11" HistoryIndex="10">
       <Position1>
-        <Filename Value="ram.pas"/>
+        <Filename Value="uRAM.pas"/>
         <Caret Line="7" Column="7" TopLine="1"/>
       </Position1>
       <Position2>
-        <Filename Value="cpu.pas"/>
+        <Filename Value="uCPU.pas"/>
         <Caret Line="21" Column="19" TopLine="7"/>
       </Position2>
-      <Position3>
-        <Filename Value="cpu.pas"/>
-        <Caret Line="11" Column="21" TopLine="4"/>
-      </Position3>
-      <Position4>
-        <Filename Value="ram.pas"/>
-        <Caret Line="34" Column="51" TopLine="6"/>
-      </Position4>
-      <Position5>
-        <Filename Value="cpu.pas"/>
-        <Caret Line="24" Column="23" TopLine="7"/>
-      </Position5>
-      <Position6>
-        <Filename Value="form_main.pas"/>
-        <Caret Line="7" Column="35" TopLine="7"/>
-      </Position6>
-      <Position7>
-        <Filename Value="form_main.pas"/>
-        <Caret Line="33" Column="3" TopLine="18"/>
-      </Position7>
-      <Position8>
-        <Filename Value="form_main.pas"/>
-        <Caret Line="35" Column="3" TopLine="20"/>
-      </Position8>
-      <Position9>
-        <Filename Value="cpu.pas"/>
-        <Caret Line="13" Column="4" TopLine="1"/>
-      </Position9>
-      <Position10>
-        <Filename Value="cpu.pas"/>
-        <Caret Line="14" Column="24" TopLine="1"/>
-      </Position10>
-      <Position11>
-        <Filename Value="ram.pas"/>
-        <Caret Line="12" Column="15" TopLine="1"/>
-      </Position11>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

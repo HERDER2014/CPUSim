@@ -22,7 +22,7 @@ type CPU = class
 
    {
    Vor.: Simulation nicht am Ende.
-   Eff.: Führt einen Befehl im RAM an Stelle IP aus.
+   Eff.: Befehl im RAM an Stelle IP wurde ausgeführt.
    Erg.: Liefert genau dann TRUE, wenn die Simulation zu Ende ist.
    }
    function Step() : Boolean;

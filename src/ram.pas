@@ -1,4 +1,4 @@
-unit RAM;
+unit uRAM;
 
 {$mode objfpc}{$H+}
 

@@ -1,11 +1,11 @@
-unit CPU;
+unit uCPU;
 
 {$mode objfpc}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, RAM, UTypen;
+  Classes, SysUtils, uRAM, UTypen;
 
 type CPU = class
 

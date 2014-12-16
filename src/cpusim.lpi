@@ -67,7 +67,7 @@
       <Unit5>
         <Filename Value="uTypen.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="UTypen"/>
+        <UnitName Value="uTypen"/>
       </Unit5>
     </Units>
   </ProjectOptions>

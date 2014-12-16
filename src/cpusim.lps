@@ -9,10 +9,12 @@
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="cpusim"/>
+        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="39" Y="11"/>
+        <CursorPos X="39" Y="10"/>
         <UsageCount Value="20"/>
+        <Loaded Value="True"/>
       </Unit0>
       <Unit1>
         <Filename Value="form_main.pas"/>
@@ -36,8 +38,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="15"/>
-        <CursorPos X="9" Y="39"/>
+        <TopLine Value="1"/>
+        <CursorPos X="3" Y="18"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -45,7 +47,7 @@
         <Filename Value="uCompiler.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uCompiler"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="84" Y="26"/>
@@ -55,8 +57,8 @@
       <Unit4>
         <Filename Value="uCPU.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="CPU"/>
-        <EditorIndex Value="2"/>
+        <UnitName Value="uCPU"/>
+        <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="5"/>
         <CursorPos X="47" Y="22"/>
@@ -67,14 +69,14 @@
         <Filename Value="uTypen.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uTypen"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="4" Y="10"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit5>
-      <Unit6> <!-- ? -->
+      <Unit6>
         <Filename Value="usimulator.pas"/>
         <UnitName Value="Simulator"/>
         <WindowIndex Value="0"/>
@@ -82,7 +84,7 @@
         <CursorPos X="16" Y="10"/>
         <UsageCount Value="20"/>
       </Unit6>
-      <Unit7> <!-- ? -->
+      <Unit7>
         <Filename Value="register.pas"/>
         <UnitName Value="Register"/>
         <WindowIndex Value="0"/>
@@ -90,7 +92,7 @@
         <CursorPos X="22" Y="11"/>
         <UsageCount Value="20"/>
       </Unit7>
-      <Unit8> <!-- ? -->
+      <Unit8>
         <Filename Value="registers.pas"/>
         <UnitName Value="Registers"/>
         <WindowIndex Value="0"/>
@@ -102,7 +104,7 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="11" HistoryIndex="10">
+    <JumpHistory Count="4" HistoryIndex="3">
       <Position1>
         <Filename Value="uRAM.pas"/>
         <Caret Line="7" Column="7" TopLine="1"/>
@@ -111,6 +113,14 @@
         <Filename Value="uCPU.pas"/>
         <Caret Line="21" Column="19" TopLine="7"/>
       </Position2>
+      <Position3>
+        <Filename Value="cpusim.lpr"/>
+        <Caret Line="11" Column="39" TopLine="1"/>
+      </Position3>
+      <Position4>
+        <Filename Value="uRAM.pas"/>
+        <Caret Line="10" Column="39" TopLine="1"/>
+      </Position4>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

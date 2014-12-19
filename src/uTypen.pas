@@ -7,7 +7,10 @@ interface
 uses
   Classes, SysUtils;
 
-   type RegisterIndex = (AX, BX, CX, DX, BP, SP, IP, FLAGS);
+   type RegisterIndex = (AX, BX, CX, DX,
+                         AL, BL, CL, DL,
+                         AH, BH, CH, DH,
+                         BP, SP, IP, FLAGS);
 
    type TRegRecord = Record
       AX : Word;

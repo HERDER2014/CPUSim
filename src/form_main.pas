@@ -5,14 +5,17 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Menus;
 
 type
 
-  { TForm1 }
+  { TmainFrm }
 
-  TForm1 = class(TForm)
+  TmainFrm = class(TForm)
     Button1: TButton;
+    MainFrm_Menu: TMainMenu;
+    MainFrm_Menu_File: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -22,20 +25,20 @@ type
   end;
 
 var
-  Form1: TForm1;
+  mainFrm: TmainFrm;
 
 implementation
 
 {$R *.lfm}
 
-{ TForm1 }
+{ TmainFrm }
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TmainFrm.FormCreate(Sender: TObject);
 begin
 
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TmainFrm.Button1Click(Sender: TObject);
 begin
 
 end;

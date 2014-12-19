@@ -1,20 +1,26 @@
-object Form1: TForm1
-  Left = 567
-  Height = 240
-  Top = 407
-  Width = 320
-  Caption = 'Form1'
-  ClientHeight = 240
-  ClientWidth = 320
+object mainFrm: TmainFrm
+  Left = 426
+  Height = 472
+  Top = 191
+  Width = 1031
+  Caption = 'CPUSimulator Herder 2014'
+  ClientHeight = 452
+  ClientWidth = 1031
+  Menu = MainFrm_Menu
   OnCreate = FormCreate
-  LCLVersion = '1.0.4.0'
+  LCLVersion = '1.2.6.0'
   object Button1: TButton
-    Left = 50
+    Left = 152
     Height = 25
-    Top = 27
+    Top = 344
     Width = 75
     Caption = 'Button1'
     OnClick = Button1Click
     TabOrder = 0
+  end
+  object MainFrm_Menu: TMainMenu
+    object MainFrm_Menu_File: TMenuItem
+      Caption = 'File'
+    end
   end
 end

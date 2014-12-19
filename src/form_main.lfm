@@ -4,9 +4,21 @@ object mainFrm: TmainFrm
   Top = 221
   Width = 1031
   Caption = 'CPUSimulator Herder 2014'
+  ClientHeight = 451
+  ClientWidth = 1031
   Menu = MainFrm_Menu
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
+  object Memo1: TMemo
+    Left = 15
+    Height = 90
+    Top = 96
+    Width = 150
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 0
+  end
   object MainFrm_Menu: TMainMenu
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'

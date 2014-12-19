@@ -15,6 +15,7 @@ type
   TmainFrm = class(TForm)
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
+    Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;

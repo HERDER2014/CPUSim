@@ -13,19 +13,35 @@ type
   { TmainFrm }
 
   TmainFrm = class(TForm)
-    Button1: TButton;
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
-    MainFrm_Menu_File_Open: TMenuItem;
-    MainFrm_Menu_File_Save: TMenuItem;
-    MainFrm_Menu_File_SaveAs: TMenuItem;
     MenuItem1: TMenuItem;
+    MenuItem10: TMenuItem;
+    MenuItem11: TMenuItem;
+    MenuItem12: TMenuItem;
+    MenuItem13: TMenuItem;
+    MenuItem14: TMenuItem;
+    MenuItem15: TMenuItem;
+    MenuItem16: TMenuItem;
+    MenuItem17: TMenuItem;
+    MenuItem18: TMenuItem;
+    MenuItem19: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem20: TMenuItem;
+    MenuItem21: TMenuItem;
+    MenuItem22: TMenuItem;
+    MenuItem23: TMenuItem;
+    MenuItem24: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
     OpenDlg: TOpenDialog;
     SaveDlg: TSaveDialog;
-    procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
-    procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
   private
     { private declarations }
   public
@@ -46,20 +62,7 @@ begin
   //OpenDlg.Create(OpenDlg);
 end;
 
-procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);
-begin
-  OpenDlg.execute;
-end;
 
-procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
-begin
-  SaveDlg.Execute;
-end;
-
-procedure TmainFrm.Button1Click(Sender: TObject);
-begin
-
-end;
 
 end.
 

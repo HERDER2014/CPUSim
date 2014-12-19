@@ -1,40 +1,86 @@
 object mainFrm: TmainFrm
-  Left = 425
+  Left = 383
   Height = 472
-  Top = 190
+  Top = 221
   Width = 1031
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 452
-  ClientWidth = 1031
   Menu = MainFrm_Menu
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
-  object Button1: TButton
-    Left = 152
-    Height = 25
-    Top = 344
-    Width = 75
-    Caption = 'Button1'
-    OnClick = Button1Click
-    TabOrder = 0
-  end
   object MainFrm_Menu: TMainMenu
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
-      object MainFrm_Menu_File_Open: TMenuItem
-        Caption = 'Open'
-        OnClick = MainFrm_Menu_File_OpenClick
-      end
-      object MainFrm_Menu_File_Save: TMenuItem
-        Caption = 'Save'
-        OnClick = MainFrm_Menu_File_SaveClick
-      end
-      object MainFrm_Menu_File_SaveAs: TMenuItem
-        Caption = 'SaveAs'
-      end
       object MenuItem1: TMenuItem
-        Caption = 'New Item5'
-        GroupIndex = 1
+        Caption = 'New'
+      end
+      object MenuItem2: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem3: TMenuItem
+        Caption = 'Open'
+      end
+      object MenuItem4: TMenuItem
+        Caption = 'Open Recent'
+      end
+      object MenuItem5: TMenuItem
+        Caption = 'Save'
+      end
+      object MenuItem6: TMenuItem
+        Caption = 'Save As'
+      end
+      object MenuItem7: TMenuItem
+        Caption = 'Close'
+      end
+      object MenuItem8: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem9: TMenuItem
+        Caption = 'Exit'
+      end
+    end
+    object MenuItem10: TMenuItem
+      Caption = 'Edit'
+      object MenuItem11: TMenuItem
+        Caption = 'Undo'
+      end
+      object MenuItem12: TMenuItem
+        Caption = 'Redo'
+      end
+      object MenuItem13: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem14: TMenuItem
+        Caption = 'Cut'
+      end
+      object MenuItem15: TMenuItem
+        Caption = 'Copy'
+      end
+      object MenuItem16: TMenuItem
+        Caption = 'Paste'
+      end
+      object MenuItem17: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem18: TMenuItem
+        Caption = 'Find'
+      end
+      object MenuItem19: TMenuItem
+        Caption = 'Find Next'
+      end
+    end
+    object MenuItem20: TMenuItem
+      Caption = 'Help'
+      object MenuItem21: TMenuItem
+        Caption = 'Contents'
+      end
+      object MenuItem22: TMenuItem
+        Caption = 'Tutorial'
+      end
+      object MenuItem23: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem24: TMenuItem
+        Caption = 'About'
       end
     end
   end

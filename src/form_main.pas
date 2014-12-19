@@ -5,7 +5,7 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, uCompiler, uRAM;
 
 type
 
@@ -13,6 +13,7 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Memo1: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -36,8 +37,12 @@ begin
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
+var comp : TCompiler;
+  ram : TRAM;
 begin
-
+  ram := TRAM.Create(20);
+  comp := TCompiler.Create(ram);
+  comp.Compile(Memo1.Text);
 end;
 
 end.

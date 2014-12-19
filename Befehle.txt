@@ -1,0 +1,62 @@
+mov R,x
+mov R,[R]
+mov R,[x]
+mov [R],R
+mov [x],R
+mov R,R
+mov R,[R+x]	()
+mov [R+x],R
+add R,x
+add R,[R]
+add R,[x]
+add R,R
+sub R,x
+sub R,[X]
+sub R,[R]
+sub R,R
+mul R,x
+mul R,[X]
+mul R,[R]
+mul R,R
+div R,x
+div R,[X]
+div R,[R]
+div R,R
+mod R,x		()
+mod R,[X]	()
+mod R,[R]	()
+mod R,R		()
+cmp R,x
+lbl:		(wird nicht im RAM gespeichert)
+jmp [R]
+jmp [X]
+jmp lbl
+js lbl
+js [R]
+js [X]
+jz lbl
+jz [X]
+jz [R]
+je lbl
+je [X]
+je [R]
+call [X]
+call [R]
+call lbl
+ret
+push R
+push x
+pop			(in kein Register)
+pop R
+not R		(binär)
+and R,x
+and R,R
+or R,x
+or R,R
+xor R,x
+xor R,R
+
+
+x: Zahlen
+R: Register
+lbl: Label

@@ -5,8 +5,7 @@ unit uCompiler;
 interface
 
 uses
-  Classes, SysUtils, strutils,strings, Dialogs, uRAM;
-
+  Classes, SysUtils, strutils, strings, Dialogs, uRAM;
 
 type
   TCompiler = class
@@ -40,20 +39,32 @@ end;
 
 procedure TCompiler.Compile(input: string);
 var
-  offset, cpos, len, zlen: cardinal;
-  zeile : String;
-  zeilenende : TSysCharSet;
-  befehleL : TStrings;
+  offset, cpos, len, zlen, commentpos: cardinal;
+  zeile: string;
+  zeilenende: TSysCharSet;
+  befehleL: TStringList;
+  i : Cardinal;
 begin
   offset := 0;
   cpos := 0;
-  zeilenende := [#13, #10];
+  befehleL := TStringList.Create;
   len := strlen(PChar(input));
   while cpos < len do
   begin
-    zlen := PosEx('#13#10', input, cpos);
-    zeile := Copy(); //ExtractSubstr(input, LongInt(cpos), zeilenende);
-    zeile := str
+    // VORSICHT! Kein Mensch weiß warum, aber Delphi indiziert Strings ab 1, nicht 0!
+    zlen := PosEx(#13#10, input, 1 + cpos) - cpos - 1;
+    zeile := Copy(input, cpos + 1, zlen);
+    commentpos := Pos(';', zeile);
+    if commentpos > 0 then
+      zeile := Copy(zeile, 1, commentpos-1);
+    zeile := Trim(zeile);
+    befehleL.Add(zeile);
+    cpos += zlen + 2; // wegen \r\n
+  end;
+  while i < befehleL.Count do
+  begin
+    ShowMessage(befehleL[i]);
+    inc (i);
   end;
 end;
 

@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 426
+  Left = 425
   Height = 472
-  Top = 191
+  Top = 190
   Width = 1031
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 452
@@ -21,6 +21,29 @@ object mainFrm: TmainFrm
   object MainFrm_Menu: TMainMenu
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
+      object MainFrm_Menu_File_Open: TMenuItem
+        Caption = 'Open'
+        OnClick = MainFrm_Menu_File_OpenClick
+      end
+      object MainFrm_Menu_File_Save: TMenuItem
+        Caption = 'Save'
+        OnClick = MainFrm_Menu_File_SaveClick
+      end
+      object MainFrm_Menu_File_SaveAs: TMenuItem
+        Caption = 'SaveAs'
+      end
+      object MenuItem1: TMenuItem
+        Caption = 'New Item5'
+        GroupIndex = 1
+      end
     end
+  end
+  object OpenDlg: TOpenDialog
+    FileName = '/home/leonard'
+    InitialDir = '/home/'
+    left = 32
+  end
+  object SaveDlg: TSaveDialog
+    left = 64
   end
 end

@@ -19,6 +19,7 @@ type TRAM = class
   function ReadByte(addr : Cardinal) : Byte;
 
   { Vor.: addr < size
+  TEST
     Effekt: -
     Ergebnis: Setzt das Byte an Adresse addr auf b.
   }

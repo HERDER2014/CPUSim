@@ -1,4 +1,4 @@
-1 mov R,x
+﻿1 mov R,x
 2 mov R,[R]
 3 mov R,[x]
 4 mov [R],R
@@ -30,14 +30,10 @@
 lbl:		(wird nicht im RAM gespeichert)
 30 jmp [R]
 31 jmp [X]
-32 jmp lbl
-33 js lbl
 34 js [R]
 35 js [X]
-36 jz lbl
 37 jz [X]
 38 jz [R]
-39 je lbl
 40 je [X]
 41 je [R]
 42 call [X]

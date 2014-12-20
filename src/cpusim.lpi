@@ -4,6 +4,9 @@
     <Version Value="9"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <UseDesignTimePackages Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
       <Title Value="CPU Simulator Herder14"/>
@@ -35,7 +38,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -69,6 +72,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uTypen"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="uadvancedrecords.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uAdvancedRecords"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

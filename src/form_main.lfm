@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 248
+  Left = 260
   Height = 240
-  Top = 313
+  Top = 402
   Width = 320
   Caption = 'Form1'
   ClientHeight = 240
@@ -9,11 +9,11 @@ object Form1: TForm1
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object Button1: TButton
-    Left = 160
+    Left = 16
     Height = 25
-    Top = 152
+    Top = 104
     Width = 75
-    Caption = 'Button1'
+    Caption = 'Compile'
     OnClick = Button1Click
     TabOrder = 0
   end
@@ -23,9 +23,22 @@ object Form1: TForm1
     Top = 8
     Width = 296
     Lines.Strings = (
+      'jmp start     ; startet an der stelle start'
       'add al, 3       ; sinnvoller kommentar'
       'mov bl, al'
+      'start:           ; hier wird gestartet'
+      'add al, bl'
     )
     TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 168
+    Height = 25
+    Top = 104
+    Width = 144
+    Caption = 'GetCodePosition(0)'
+    Enabled = False
+    OnClick = Button2Click
+    TabOrder = 2
   end
 end

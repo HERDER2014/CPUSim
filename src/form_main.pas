@@ -5,8 +5,8 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus, LCLType;
+  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo, Forms, Controls,
+  Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit;
 
 type
 
@@ -39,15 +39,25 @@ type
     MainFrm_Menu_File_Close: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
+    Memo1: TMemo;
     OpenDlg: TOpenDialog;
     SaveDlg: TSaveDialog;
+    Splitter1: TSplitter;
+    Splitter2: TSplitter;
+    Splitter3: TSplitter;
+    Splitter4: TSplitter;
+    StaticText1: TStaticText;
+    SynEdit1: TSynEdit;
+    ValueListEditor1: TValueListEditor;
     procedure Button1Click(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
+    procedure Memo1Change(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
+    procedure SynEdit1Change(Sender: TObject);
   private
     { private declarations }
   public
@@ -100,6 +110,11 @@ begin
   MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
+procedure TmainFrm.Memo1Change(Sender: TObject);
+begin
+
+end;
+
 
 procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);
 begin
@@ -109,6 +124,11 @@ end;
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
 begin
   SaveDlg.Execute;
+end;
+
+procedure TmainFrm.SynEdit1Change(Sender: TObject);
+begin
+
 end;
 
 

@@ -42,7 +42,6 @@ type
     Memo1: TMemo;
     OpenDlg: TOpenDialog;
     SaveDlg: TSaveDialog;
-    Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     Splitter4: TSplitter;

@@ -14,9 +14,9 @@ object mainFrm: TmainFrm
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Splitter3
-    AnchorSideBottom.Control = Splitter1
+    AnchorSideBottom.Control = Splitter4
     Left = 0
-    Height = 128
+    Height = 129
     Top = 0
     Width = 416
     Align = alCustom
@@ -527,7 +527,7 @@ object mainFrm: TmainFrm
   end
   object Memo1: TMemo
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Splitter1
+    AnchorSideTop.Control = Splitter4
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Splitter2
     AnchorSideBottom.Control = Owner
@@ -544,28 +544,27 @@ object mainFrm: TmainFrm
     OnChange = Memo1Change
     TabOrder = 1
   end
-  object Splitter1: TSplitter
-    Cursor = crVSplit
-    Left = 0
-    Height = 6
-    Top = 128
-    Width = 416
-    Align = alNone
-    ResizeAnchor = akBottom
-  end
   object Splitter2: TSplitter
+    AnchorSideTop.Control = Splitter4
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 416
     Height = 255
     Top = 134
     Width = 5
     Align = alNone
+    Anchors = [akTop, akBottom]
   end
   object Splitter3: TSplitter
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = Splitter4
     Left = 416
-    Height = 128
+    Height = 129
     Top = 0
     Width = 5
     Align = alNone
+    Anchors = [akTop, akBottom]
   end
   object StaticText1: TStaticText
     AnchorSideLeft.Control = Splitter3
@@ -575,24 +574,28 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Splitter4
     Left = 421
-    Height = 128
+    Height = 129
     Top = 0
     Width = 472
     Anchors = [akTop, akLeft, akRight, akBottom]
     Caption = 'StaticText1'
-    TabOrder = 5
+    TabOrder = 4
   end
   object Splitter4: TSplitter
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     Cursor = crVSplit
-    Left = 424
+    Left = 0
     Height = 5
-    Top = 128
-    Width = 469
+    Top = 129
+    Width = 893
     Align = alNone
+    Anchors = [akLeft, akRight]
     ResizeAnchor = akBottom
   end
   object ValueListEditor1: TValueListEditor
-    AnchorSideLeft.Control = Splitter3
+    AnchorSideLeft.Control = Splitter2
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Splitter4
     AnchorSideTop.Side = asrBottom
@@ -601,13 +604,13 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 421
-    Height = 256
-    Top = 133
+    Height = 255
+    Top = 134
     Width = 472
     Anchors = [akTop, akLeft, akRight, akBottom]
     FixedCols = 0
     RowCount = 2
-    TabOrder = 7
+    TabOrder = 6
     Strings.Strings = (
       ''
     )

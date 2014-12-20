@@ -1,97 +1,89 @@
 object mainFrm: TmainFrm
-  Left = 383
-  Height = 472
-  Top = 221
-  Width = 1031
+  Left = 454
+  Height = 409
+  Top = 148
+  Width = 893
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 451
-  ClientWidth = 1031
   Menu = MainFrm_Menu
   OnCreate = FormCreate
+  Position = poScreenCenter
   LCLVersion = '1.2.6.0'
-  object Memo1: TMemo
-    Left = 15
-    Height = 90
-    Top = 96
-    Width = 150
-    Lines.Strings = (
-      'Memo1'
-    )
-    TabOrder = 0
-  end
   object MainFrm_Menu: TMainMenu
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
-      object MenuItem1: TMenuItem
+      object MainFrm_Menu_File_New: TMenuItem
         Caption = 'New'
       end
-      object MenuItem2: TMenuItem
+      object MainFrm_Menu_File_Spacer1: TMenuItem
         Caption = '-'
       end
-      object MenuItem3: TMenuItem
+      object MainFrm_Menu_File_Open: TMenuItem
         Caption = 'Open'
+        OnClick = MainFrm_Menu_File_OpenClick
       end
-      object MenuItem4: TMenuItem
+      object MainFrm_Menu_File_OpenRecent: TMenuItem
         Caption = 'Open Recent'
       end
-      object MenuItem5: TMenuItem
+      object MainFrm_Menu_File_Save: TMenuItem
         Caption = 'Save'
+        OnClick = MainFrm_Menu_File_SaveClick
       end
-      object MenuItem6: TMenuItem
+      object MainFrm_Menu_File_SaveAs: TMenuItem
         Caption = 'Save As'
       end
-      object MenuItem7: TMenuItem
+      object MainFrm_Menu_File_Close: TMenuItem
         Caption = 'Close'
       end
-      object MenuItem8: TMenuItem
+      object MainFrm_Menu_File_Spacer2: TMenuItem
         Caption = '-'
       end
-      object MenuItem9: TMenuItem
+      object MainFrm_Menu_File_Exit: TMenuItem
         Caption = 'Exit'
+        OnClick = MainFrm_Menu_File_ExitClick
       end
     end
-    object MenuItem10: TMenuItem
+    object MainFrm_Menu_Edit: TMenuItem
       Caption = 'Edit'
-      object MenuItem11: TMenuItem
+      object MainFrm_Menu_Edit_Undo: TMenuItem
         Caption = 'Undo'
       end
-      object MenuItem12: TMenuItem
+      object MainFrm_Menu_Edit_Redo: TMenuItem
         Caption = 'Redo'
       end
-      object MenuItem13: TMenuItem
+      object MainFrm_Menu_Edit_Spacer1: TMenuItem
         Caption = '-'
       end
-      object MenuItem14: TMenuItem
+      object MainFrm_Menu_Edit_Cut: TMenuItem
         Caption = 'Cut'
       end
-      object MenuItem15: TMenuItem
+      object MainFrm_Menu_Edit_Copy: TMenuItem
         Caption = 'Copy'
       end
-      object MenuItem16: TMenuItem
+      object MainFrm_Menu_Edit_Paste: TMenuItem
         Caption = 'Paste'
       end
-      object MenuItem17: TMenuItem
+      object MainFrm_Menu_Edit_Spacer2: TMenuItem
         Caption = '-'
       end
-      object MenuItem18: TMenuItem
+      object MainFrm_Menu_Edit_Find: TMenuItem
         Caption = 'Find'
       end
-      object MenuItem19: TMenuItem
+      object MainFrm_Menu_Edit_FindNext: TMenuItem
         Caption = 'Find Next'
       end
     end
-    object MenuItem20: TMenuItem
+    object MainFrm_Menu_Help: TMenuItem
       Caption = 'Help'
-      object MenuItem21: TMenuItem
+      object MainFrm_Menu_Help_Contents: TMenuItem
         Caption = 'Contents'
       end
-      object MenuItem22: TMenuItem
+      object MainFrm_Menu_Help_Tutorial: TMenuItem
         Caption = 'Tutorial'
       end
-      object MenuItem23: TMenuItem
+      object MainFrm_Menu_Help_Spacer1: TMenuItem
         Caption = '-'
       end
-      object MenuItem24: TMenuItem
+      object MainFrm_Menu_Help_About: TMenuItem
         Caption = 'About'
       end
     end

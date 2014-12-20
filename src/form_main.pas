@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit;
+  Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
+  ComCtrls;
 
 type
 
@@ -39,24 +40,25 @@ type
     MainFrm_Menu_File_Close: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
-    Memo1: TMemo;
+    MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
     SaveDlg: TSaveDialog;
-    Splitter2: TSplitter;
-    Splitter3: TSplitter;
-    Splitter4: TSplitter;
-    StaticText1: TStaticText;
-    SynEdit1: TSynEdit;
-    ValueListEditor1: TValueListEditor;
+    BottomVSplitter: TSplitter;
+    StatusBar1: TStatusBar;
+    TopVSplitter: TSplitter;
+    HSplitter: TSplitter;
+    RAMViewStaticTxt: TStaticText;
+    InputSynEdit: TSynEdit;
+    RegistersValueList: TValueListEditor;
     procedure Button1Click(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
-    procedure Memo1Change(Sender: TObject);
+    procedure MessagesMemoChange(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
-    procedure SynEdit1Change(Sender: TObject);
+    procedure InputSynEditChange(Sender: TObject);
   private
     { private declarations }
   public
@@ -74,7 +76,15 @@ implementation
 
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
+  //example code for registers:
+  RegistersValueList.Row := 0;
+  RegistersValueList.InsertRow('AX','0000000000000000',true);
 
+  InputSynEdit.Text:='';
+
+  MessagesMemo.Text:='Hit "Run" to test your program!';
+
+  RAMViewStaticTxt.Caption:='';
 end;
 
 procedure TmainFrm.ShowExitDlg;
@@ -109,10 +119,11 @@ begin
   MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
-procedure TmainFrm.Memo1Change(Sender: TObject);
+procedure TmainFrm.MessagesMemoChange(Sender: TObject);
 begin
 
 end;
+
 
 
 procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);
@@ -125,9 +136,8 @@ begin
   SaveDlg.Execute;
 end;
 
-procedure TmainFrm.SynEdit1Change(Sender: TObject);
+procedure TmainFrm.InputSynEditChange(Sender: TObject);
 begin
-
 end;
 
 

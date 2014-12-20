@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Menus;
+  Menus, LCLType;
 
 type
 
@@ -42,6 +42,7 @@ type
     OpenDlg: TOpenDialog;
     SaveDlg: TSaveDialog;
     procedure Button1Click(Sender: TObject);
+    procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -82,7 +83,6 @@ begin
 end;
 
 
-
 procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
 begin
   ShowExitDlg;
@@ -90,8 +90,14 @@ end;
 
 procedure TmainFrm.Button1Click(Sender: TObject);
 begin
-  //ApplicationProperties1.Create(mainFrm);
-//  ApplicationProperties1.;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
+var
+  AboutStr : PChar;
+begin
+  AboutStr:='CPU Simulator Herder 14' + sLineBreak + 'by Informatik-LK 14/15 (3.Sem) of the Herder-Gymnasium Berlin';
+  MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
 

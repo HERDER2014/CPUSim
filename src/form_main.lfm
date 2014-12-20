@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 454
+  Left = 443
   Height = 409
-  Top = 148
+  Top = 193
   Width = 893
   Caption = 'CPUSimulator Herder 2014'
   Menu = MainFrm_Menu
@@ -85,6 +85,7 @@ object mainFrm: TmainFrm
       end
       object MainFrm_Menu_Help_About: TMenuItem
         Caption = 'About'
+        OnClick = MainFrm_Menu_Help_AboutClick
       end
     end
   end

@@ -42,6 +42,7 @@ type
     OpenDlg: TOpenDialog;
     SaveDlg: TSaveDialog;
     procedure Button1Click(Sender: TObject);
+    procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
@@ -66,9 +67,25 @@ begin
 
 end;
 
+procedure TmainFrm.ShowExitDlg;
+var
+  answer : LongInt;
+begin
+  answer := MessageDlg('Do you really want to quit?', mtConfirmation, mbYesNoCancel, 0);
+  if  answer = mrYes then
+  begin
+    Application.Terminate;
+  end else if answer = mrNo then
+  begin
+    SaveDlg.Execute;
+  end;
+end;
+
+
+
 procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
 begin
-  Application.Terminate;
+  ShowExitDlg;
 end;
 
 procedure TmainFrm.Button1Click(Sender: TObject);

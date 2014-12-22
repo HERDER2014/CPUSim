@@ -1,27 +1,32 @@
 object Form1: TForm1
-  Left = 260
-  Height = 240
-  Top = 402
-  Width = 320
+  Left = 392
+  Height = 342
+  Top = 223
+  Width = 558
   Caption = 'Form1'
-  ClientHeight = 240
-  ClientWidth = 320
+  ClientHeight = 342
+  ClientWidth = 558
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object Button1: TButton
-    Left = 16
+    Left = 8
     Height = 25
-    Top = 104
+    Top = 312
     Width = 75
     Caption = 'Compile'
     OnClick = Button1Click
     TabOrder = 0
   end
   object Memo1: TMemo
-    Left = 16
-    Height = 90
+    Left = 8
+    Height = 298
     Top = 8
-    Width = 296
+    Width = 544
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -13
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    Font.Quality = fqDraft
     Lines.Strings = (
       'jmp start     ; startet an der stelle start'
       'add al, 3       ; sinnvoller kommentar'
@@ -29,12 +34,13 @@ object Form1: TForm1
       'start:           ; hier wird gestartet'
       'add al, bl'
     )
+    ParentFont = False
     TabOrder = 1
   end
   object Button2: TButton
-    Left = 168
+    Left = 408
     Height = 25
-    Top = 104
+    Top = 312
     Width = 144
     Caption = 'GetCodePosition(0)'
     Enabled = False

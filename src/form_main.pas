@@ -1,11 +1,12 @@
 unit form_main;
 
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, uCompiler, uRAM;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, uCompiler, uRAM;
 
 type
 
@@ -26,7 +27,8 @@ type
 
 var
   Form1: TForm1;
-  comp : TCompiler;
+  comp: TCompiler;
+
 implementation
 
 {$R *.lfm}
@@ -40,12 +42,21 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
-  ram : TRAM;
+  ram: TRAM;
 begin
   ram := TRAM.Create(2 shl 16); // 2^16 bytes (2B-Adressen)
   comp := TCompiler.Create(ram);
-  comp.Compile(Memo1.Text);
-  Button2.Enabled:=true;
+  try
+    comp.Compile(Memo1.Text);
+  except
+    on CE: TCompilerException do
+    begin
+      MessageDlg('Error while compiling', CE.Message, mtError, [mbOK], 0);
+      exit;
+    end;
+  end;
+  Button2.Enabled := True;
+  ShowMessage('Compilation successful.');
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -54,4 +65,3 @@ begin
 end;
 
 end.
-

@@ -7,30 +7,33 @@ interface
 uses
   Classes, SysUtils, uRAM, UTypen;
 
-type CPU = class
+type
+  CPU = class
 
-   private Reg : TRegRecord;
+  private
+    Reg: TRegRecord;
 
-   public constructor Create(var r : TRam);
+  public
+    constructor Create(var r: TRam);
 
    {
    Vor.: -
    Eff.: -
    Erg.: Liefert den Wert von Register 'index'.
    }
-   public function ReadRegister(index : RegisterIndex) : Word;
+  public
+    function ReadRegister(index: RegisterIndex): word;
 
    {
    Vor.: Simulation nicht am Ende.
    Eff.: Befehl im RAM an Stelle IP wurde ausgeführt.
    Erg.: Liefert genau dann TRUE, wenn die Simulation zu Ende ist.
    }
-   function Step() : Boolean;
-end;
+    function Step(): boolean;
+  end;
 
 implementation
 
 
 
 end.
-

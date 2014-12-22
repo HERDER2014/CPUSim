@@ -37,20 +37,45 @@ type
      Adresse der Verwendung des Labels (Adressen sind 2 Byte groß)
     }
     addrRAM: word;
+    {
+     Zeile der Verwendung in der Eingabe.
+    }
+    line: cardinal;
     class operator Equal(l1, l2: TLabelUse): boolean;
   end;
 
+type
+  {
+   Enthält die vorhandenen Operanden einer Befehlszeile.
+   Wenn nur ein Operand vorhanden ist, ist op2 = EmptyStr.
+   Wenn kein Operand vorhanden ist, ist op1 = op2 = EmptyStr.
+  }
+  TOperands = record
+    op1, op2: string;
+
+    {
+     Wenn COUNT = 3, sind *mindestens* 3 Operanden vorhanden. Daher *muss*
+       die Eingabe ungültig sein.
+    }
+    Count: cardinal;
+  end;
+
 function CrTCodeLineNr(line: string; nr: cardinal): TCodeLineNr;
+function CrTLabelUse(labelName: string; addrRAM: word; line: cardinal): TLabelUse;
 
 implementation
 
 function CrTCodeLineNr(line: string; nr: cardinal): TCodeLineNr;
-var
-  r: TCodeLineNr;
 begin
-  r.line := line;
-  r.nr := nr;
-  Result := r;
+  Result.line := line;
+  Result.nr := nr;
+end;
+
+function CrTLabelUse(labelName: string; addrRAM: word; line: cardinal): TLabelUse;
+begin
+  Result.labelName := labelName;
+  Result.addrRAM := addrRAM;
+  Result.line := line;
 end;
 
 class operator TCodeLineNr.Equal(l1, l2: TCodeLineNr): boolean;

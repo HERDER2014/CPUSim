@@ -56,7 +56,7 @@ begin
     end;
   end;
   Button2.Enabled := True;
-  ShowMessage('Compilation successful.');
+  ShowMessage('Compilation successful.'#13'Binary image size: '+IntToStr(comp.LastSize)+' bytes');
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);

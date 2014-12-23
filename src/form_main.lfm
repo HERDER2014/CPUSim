@@ -1,10 +1,10 @@
 object Form1: TForm1
-  Left = 392
-  Height = 342
-  Top = 223
+  Left = 60
+  Height = 344
+  Top = 370
   Width = 558
   Caption = 'Form1'
-  ClientHeight = 342
+  ClientHeight = 344
   ClientWidth = 558
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
@@ -29,10 +29,13 @@ object Form1: TForm1
     Font.Quality = fqDraft
     Lines.Strings = (
       'jmp start     ; startet an der stelle start'
-      'add al, 3       ; sinnvoller kommentar'
+      'mov al, 3       ; sinnvoller kommentar'
       'mov bl, al'
       'start:           ; hier wird gestartet'
       'add al, bl'
+      'sub al, 2'
+      'push ax'
+      'pop cx'
     )
     ParentFont = False
     TabOrder = 1

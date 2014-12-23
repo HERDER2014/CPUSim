@@ -32,12 +32,6 @@ type
 type
   TCompilerException = class(Exception);
 
-{
- Übergangslösung für ParseRegisterIndex.
-}
-const
-  INVALID_REGISTER_INDEX = 1234;
-
 type
   {_____________________
    COMPILER-Klasse
@@ -84,6 +78,10 @@ type
     function WriteInstrucitonLineToRAM(instruction, operandsString: string;
       offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
       var rBytesWritten: word; var rErrorString: string): boolean;
+
+    public
+      // Die Größe des letzten Images.
+      LastSize : Cardinal;
   end;
 
 implementation
@@ -310,14 +308,14 @@ begin
   Result := True;
   rBytesWritten := 0;
   operands := ParseOperands(operandsString);
+  r1 := ParseRegisterIndex(operands.op1);
+  r2 := ParseRegisterIndex(operands.op2);
 
   case instruction of
     'ADD':
     begin
       if operands.Count = 2 then
       begin
-        r1 := ParseRegisterIndex(operands.op1);
-        r2 := ParseRegisterIndex(operands.op2);
         if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
         begin
           // ADD R, R
@@ -332,6 +330,43 @@ begin
         begin
           // ADD R, X
           Ram.WriteByte(offset, Ord(OPCode.ADD_R_X));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteWord(offset + 2, n2);
+          rBytesWritten := 4;
+          exit(True);
+        end;
+        // Hier andere Kombinationen angeben.
+        begin
+          // Keine passenden Operanden
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        // NICHT 2 Operatoren
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+    'SUB':
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // SUB R, R
+          Ram.WriteByte(offset, Ord(OPCode.SUB_R_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // SUB R, X
+          Ram.WriteByte(offset, Ord(OPCode.SUB_R_X));
           Ram.WriteByte(offset + 1, Ord(r1));
           Ram.WriteWord(offset + 2, n2);
           rBytesWritten := 4;
@@ -382,8 +417,6 @@ begin
     begin
       if operands.Count = 2 then
       begin
-        r1 := ParseRegisterIndex(operands.op1);
-        r2 := ParseRegisterIndex(operands.op2);
         if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
         begin
           //MOV R, R
@@ -392,6 +425,16 @@ begin
           Ram.WriteByte(offset + 2, Ord(r2));
           rBytesWritten := 3;
           exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // MOV R, X
+          Ram.WriteByte(offset, Ord(OPCode.MOV_R_X));
+          Ram.WriteByte(offset+1, Ord(r1));
+          Ram.WriteWord(offset+2, n2);
+          rBytesWritten := 4;
+          exit(TRUE);
         end
         else
           // Hier andere Kombinationen von Operanden
@@ -407,8 +450,103 @@ begin
         exit(False);
       end;
     end;
-    else
+    'PUSH':
     begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // PUSH R
+          Ram.WriteByte(offset, Ord(OPCode.PUSH_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // PUSH X
+          Ram.WriteByte(offset, Ord(OPCode.PUSH_X));
+          Ram.WriteWord(offset+1, n1);
+          rBytesWritten := 3;
+          exit(TRUE);
+        end
+        else
+        // restliche Kombinationen
+        begin
+          // keine passenden Operanden
+          ReportInvalidOperands();
+          exit(FALSE);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(FALSE);
+      end;
+    end;
+    'POP':
+    begin
+      if operands.Count = 0 then
+      begin
+        // POP
+        Ram.WriteByte(offset, Ord(OPCode.POP));
+        rBytesWritten := 1;
+        exit(TRUE);
+      end
+      else
+      begin
+        if (operands.Count = 1) then
+        begin
+          if (r1 <> RegisterIndex.INVALID) then
+          begin
+            // POP R
+            Ram.WriteByte(offset, Ord(POP_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            rBytesWritten := 2;
+            exit(TRUE);
+          end
+          else
+          begin
+            // keine passenden Operatoren
+            ReportInvalidOperands();
+            exit(FALSE);
+          end;
+        end
+        else
+        begin
+          ReportOPCountError(1);
+          exit(FALSE);
+        end;
+      end;
+    end;
+    'NOT':
+    begin
+      if operands.Count = 1 then
+      begin
+        if r1 <> RegisterIndex.INVALID then
+        begin
+          // NOT R
+          Ram.WriteByte(offset, Ord(OPCode.NOT_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(FALSE);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(FALSE);
+      end;
+    end;
+    otherwise
+    begin
+      // Unbekannte Instruktion
       rBytesWritten := 0;
       rErrorString := 'Invalid instruction "' + instruction +
         '".'#13#13'Maybe not yet implemented...';
@@ -504,21 +642,30 @@ begin
     opString := ExtractOperandsString(befehleDict[i].line);
     if RightStr(inst, 1) = ':' then
     begin
+      // Letztes Zeichen ist ':' => Zeile ist ein Label.
+      // Es ist also keine weitere Verarbeitung nötig, die Adresse des Labels
+      //   muss lediglich gesichert werden.
       if opString = EmptyStr then
       begin
-        // Letztes Zeichen ist ':' => Zeile ist ein Label.
-        // Es ist also keine weitere Verarbeitung nötig, die Adresse des Labels
-        //   muss lediglich gesichert werden.
+        // kein Text nach Labeldeklaration
         tLabelName := GetLabelName(inst);
-        if labelDict.IndexOf(tLabelName) = -1 then
+        if tLabelName = EmptyStr then
         begin
-          // Label noch nicht vorhanden, alles gut
-          labelDict.Add(tLabelName, bytepos);
+          // kein Labelname, nur ':'
+          ReportError('Empty label name not allowed.');
         end
         else
         begin
-          // Label-Duplikat
-          ReportError('Duplicate label "' + tLabelName + '".');
+          if labelDict.IndexOf(tLabelName) = -1 then
+          begin
+            // Label noch nicht vorhanden, alles gut
+            labelDict.Add(tLabelName, bytepos);
+          end
+          else
+          begin
+            // Label-Duplikat
+            ReportError('Duplicate label "' + tLabelName + '".');
+          end;
         end;
       end
       else
@@ -551,6 +698,7 @@ begin
    Schreiben der Labeladressen
   }
   ResolveLabelAddresses();
+  LastSize := bytepos;
 end;
 
 function TCompiler.GetCodePosition(addr: cardinal): cardinal;

@@ -307,23 +307,27 @@ begin
         Reg.IP += 3;
       end; //div R,R
 
-
       29: begin
-
+        setFlag(TFlags.O, false);
+        setFlag(TFlags.S, ReadRegister(Ram.ReadByte(Reg.IP+1))<Ram.ReadWord(Reg.IP+2));
+        setFlag(TFlags.Z, ReadRegister(Ram.ReadByte(Reg.IP+1))=Ram.ReadWord(Reg.IP+2));
+        Reg.IP+=4;
       end; //cmp R,x
 
       30: begin
         Reg.IP:=Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+1)));
-      end; //jmp [R]
+      end; //jmp R
       31: begin
         Reg.IP:=Ram.ReadWord(Ram.ReadWord(Reg.IP+1));
-      end; //jmp [X]
-     // 34 js [R]
-     // 35 js [X]
-     // 37 jz [X]
-     // 38 jz [R]
-     // 40 je [X]
-     // 41 je [R]
+      end; //jmp X
+      34: begin
+
+      end;//js R
+     // 35 js X
+     // 37 jz X
+     // 38 jz R
+      end;
+
       42: begin
         push(Reg.IP+3);
         Reg.IP:=Ram.ReadWord(Reg.IP+1);
@@ -332,6 +336,12 @@ begin
         push(Reg.IP+2);
         Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1));
       end; //call [R]
+      44: begin
+        setFlag(TFlags.O, false);
+        setFlag(TFlags.S, ReadRegister(Ram.ReadByte(Reg.IP+1))<ReadRegister(Ram.ReadByte(Reg.IP+2)));
+        setFlag(TFlags.Z, ReadRegister(Ram.ReadByte(Reg.IP+1))=ReadRegister(Ram.ReadByte(Reg.IP+2)));
+        Reg.IP+=3;
+      end; //cmp R, R
       45: begin
         Reg.IP:=pop();
       end; //pop R

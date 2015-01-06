@@ -42,6 +42,19 @@ type CPU = class
    }
    function pop_w():word;
 
+   {
+   Vor.: -
+   Eff.: Flag f ist b;
+   Erg.: -
+   }
+   procedure setFlag(f:TFlags; b:Boolean);
+
+   {
+   Vor.: -
+   Eff.: -
+   Erg.: Flag f;
+   }
+   function getFlag(f:TFlags):Boolean;
 
    public constructor Create(var r : TRam);
 
@@ -154,6 +167,18 @@ begin
   Reg.SP+=2;
 end;
 
+procedure setFlag(f:TFlags; b:Boolean);
+begin
+  if b then
+    Reg.FLAGS = Reg.FLAGS or f
+  else
+    Reg.FLAGS = Reg.FLAGS and (not f);
+end;
+
+function getFlag(f:TFlags):Boolean;
+begin
+  result:=Boolean(Reg.FLAGS and f);
+end;
 
 function CPU.Step() : Boolean;
 begin

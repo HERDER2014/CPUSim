@@ -274,72 +274,62 @@ begin
 
 
       21: begin
-        try
+        if (Ram.ReadWord(Reg.IP+2) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Reg.IP+2),true);
-        Except
+          Reg.IP += 4;
+        end else
            Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-        Reg.IP += 4;
       end; //div R,x
       22: begin
-        try
+        if (Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
-        Except
+          Reg.IP += 4;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-        Reg.IP += 4;
       end; //div R,[x]
       23: begin
-        try
+        if (Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))),true);
-        Except
+          Reg.IP += 3;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-
-        Reg.IP += 3;
       end; //div R,[R]
       24: begin
-        try
+        if (ReadRegister(Ram.ReadByte(Reg.IP+2))<>0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div ReadRegister(Ram.ReadByte(Reg.IP+2)),true);
-        Except
+          Reg.IP += 3;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-
-        Reg.IP += 3;
       end; //div R,R
 
 
       25: begin
-        try
+        if (Ram.ReadWord(Reg.IP+2) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Reg.IP+2),true);
-        Except
+          Reg.IP += 4;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-        Reg.IP += 4;
       end; //div R,x
       26: begin
-        try
+        if (Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
-        Except
+          Reg.IP += 4;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-        Reg.IP += 4;
       end; //div R,[x]
       27: begin
-        try
+        if (Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))),true);
-        Except
+          Reg.IP += 3;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-        Reg.IP += 3;
       end; //div R,[R]
       28: begin
-        try
+        if (ReadRegister(Ram.ReadByte(Reg.IP+2)) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod ReadRegister(Ram.ReadByte(Reg.IP+2)),true);
-        Except
+          Reg.IP += 3;
+        end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
-        end;
-        Reg.IP += 3;
       end; //div R,R
 
 

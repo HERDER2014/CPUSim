@@ -63,7 +63,7 @@ type CPU = class
          die Flags 'O','S' und 'Z' werden entsprechend gesehtz sofern f.
    Erg.: -
    }
-   procedure WriteRegister(index : RegisterIndex; w:Int; f:Boolean); overload;
+   procedure WriteRegister(index : RegisterIndex; w:Integer; f:Boolean); overload;
 
    public constructor Create(var r : TRam);
 
@@ -97,7 +97,16 @@ implementation
 constructor CPU.Create(var r : TRam);
 begin
    Ram := r;
-   Reg := TRegRecord.Create();
+
+   Reg.IP:=0;
+   Reg.SP:=255;
+   Reg.BP:=2045;
+   Reg.FLAGS:=0;
+   Reg.AX:=0;
+   Reg.BX:=0;
+   Reg.CX:=0;
+   Reg.DX:=0;
+   //   Reg := TRegRecord.Create();
 end;
 
 function CPU.ReadRegister(index : RegisterIndex) : Word;
@@ -152,13 +161,13 @@ begin
    end;
 end;
 
-procedure CPU.WriteRegister(index : RegisterIndex; w: Int; f:Boolean);
+procedure CPU.WriteRegister(index : RegisterIndex; w: Integer; f:Boolean);
 begin
   WriteRegister(index,Word(w));
   if f then begin
     setFlag(TFlags.O, w>65535);
     setFlag(TFlags.S, w<0);
-    setFlag(TFlags.Z, w==0);
+    setFlag(TFlags.Z, w=0);
   end;
 end;
 
@@ -186,17 +195,17 @@ begin
   Reg.SP+=2;
 end;
 
-procedure setFlag(f:TFlags; b:Boolean);
+procedure CPU.setFlag(f:TFlags; b:Boolean);
 begin
   if b then
-    Reg.FLAGS = Reg.FLAGS or f
+    Reg.FLAGS := Reg.FLAGS or word(f)
   else
-    Reg.FLAGS = Reg.FLAGS and (not f);
+    Reg.FLAGS := Reg.FLAGS and (not word(f));
 end;
 
-function getFlag(f:TFlags):Boolean;
+function CPU.getFlag(f:TFlags):Boolean;
 begin
-  result:=Boolean(Reg.FLAGS and f);
+  result:=Boolean(Reg.FLAGS and word(f));
 end;
 
 function CPU.Step() : Boolean;

@@ -707,6 +707,7 @@ object mainFrm: TmainFrm
       Caption = 'Help'
       object MainFrm_Menu_Help_Contents: TMenuItem
         Caption = 'Contents'
+        OnClick = MainFrm_Menu_Help_ContentsClick
       end
       object MainFrm_Menu_Help_Tutorial: TMenuItem
         Caption = 'Tutorial'
@@ -727,7 +728,7 @@ object mainFrm: TmainFrm
     top = 56
   end
   object SaveDlg: TSaveDialog
-    left = 112
+    left = 120
     top = 56
   end
   object FindDlg: TFindDialog

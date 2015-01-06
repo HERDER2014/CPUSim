@@ -62,6 +62,7 @@ type
     procedure MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
+    procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
     procedure MessagesMemoChange(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
@@ -174,6 +175,11 @@ begin
   MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
+procedure TmainFrm.MainFrm_Menu_Help_ContentsClick(Sender: TObject);
+begin
+
+end;
+
 procedure TmainFrm.MessagesMemoChange(Sender: TObject);
 begin
 
@@ -182,8 +188,24 @@ end;
 
 
 procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);
+var
+  path: AnsiString;
+  code: TextFile;
+  text2:AnsiString;
 begin
   OpenDlg.Execute;
+  path:=OpenDlg.FileName;
+  AssignFile(code, path);
+  reset(code);
+
+  //ReadFileToString(text2);
+//  InputSynEdit.Text:=text2;
+  // for i to ZEILENLAENGE do
+    ReadLn(code,text2);
+    //file_line ++
+  InputSynEdit.Lines[i]:=text2;
+
+
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);

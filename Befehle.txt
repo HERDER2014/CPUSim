@@ -28,17 +28,17 @@
 28 mod R,R		()
 29 cmp R,x
 lbl:		(wird nicht im RAM gespeichert)
-30 jmp [R]
-31 jmp [X]
-34 js [R]
-35 js [X]
-37 jz [X]
-38 jz [R]
-40 je [X]
-41 je [R]
-42 call [X]
-43 call [R]
-44 call lbl
+30 jmp R
+31 jmp X
+34 js R
+35 js X
+37 jz X
+38 jz R
+40 -
+41 -
+42 call X
+43 call R
+44 cmp R, R
 45 ret
 46 push R
 47 push x
@@ -51,7 +51,7 @@ lbl:		(wird nicht im RAM gespeichert)
 54 or R,R
 55 xor R,x
 56 xor R,R
-org [x] 	(wird nicht im RAM gespeichert)
+org x 	(wird nicht im RAM gespeichert)
 
 x: Zahlen
 R: Register

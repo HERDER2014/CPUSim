@@ -11,7 +11,7 @@ type CPU = class
 
    private Reg : TRegRecord;
            var Ram : TRAM;
-           function WriteRegister(index : RegisterIndex, w:Word);
+           procedure WriteRegister(index : RegisterIndex; w:Word);
 
    public constructor Create(var r : TRam);
 
@@ -64,7 +64,7 @@ begin
    end;
 end;
 
-function CPU.WriteRegister(index : RegisterIndex, w: Word);
+procedure CPU.WriteRegister(index : RegisterIndex; w: Word);
 begin
    case index of
       AX: Reg.AX := w;
@@ -215,14 +215,20 @@ begin
 
       // 29 cmp R,x
 
-      30 jmp [R]
-      31 jmp [X]
-      34 js [R]
-      35 js [X]
-      37 jz [X]
-      38 jz [R]
-      40 je [X]
-      41 je [R]
+      30: begin
+        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+1))));
+        Reg.IP += 2;
+      end; //jmp [R]
+      31: begin
+        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(Ram.ReadWord(IP+1)));
+        Reg.IP += 3;
+      end; //jmp [X]
+     // 34 js [R]
+     // 35 js [X]
+     // 37 jz [X]
+     // 38 jz [R]
+     // 40 je [X]
+     // 41 je [R]
       42 call [X]
       43 call [R]
       45 ret

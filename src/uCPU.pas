@@ -14,12 +14,6 @@ type CPU = class
    Reg : TRegRecord;
    var Ram : TRAM;
 
-   {
-   Vor.: -
-   Eff.: b steht in Ram an Adresse SP ; SP -=1
-   Erg.: -
-   }
-   procedure push(b : byte); overload;
 
    {
    Vor.: -
@@ -30,17 +24,10 @@ type CPU = class
 
    {
    Vor.: -
-   Eff.: SP +=1;
-   Erg.: wert an adresse SP
-   }
-   function pop_b():byte;
-
-   {
-   Vor.: -
    Eff.: SP +=2;
    Erg.: wert an adresse SP und SP+1
    }
-   function pop_w():word;
+   function pop():word;
 
    {
    Vor.: -
@@ -63,7 +50,7 @@ type CPU = class
          die Flags 'O','S' und 'Z' werden entsprechend gesehtz sofern f.
    Erg.: -
    }
-   procedure WriteRegister(index : RegisterIndex; w:Integer; f:Boolean); overload;
+   procedure WriteRegister(index : Byte; w:Integer; f:Boolean); overload;
 
    public constructor Create(var r : TRam);
 
@@ -72,14 +59,14 @@ type CPU = class
    Eff.: -
    Erg.: Liefert den Wert von Register 'index'.
    }
-   public function ReadRegister(index : RegisterIndex) : Word;
+   public function ReadRegister(index : Byte) : Word;
 
    {
    Vor.: -
    Eff.: w steht im Register 'index'
    Erg.: -
    }
-   public procedure WriteRegister(index : RegisterIndex; w:Word); overload;
+   public procedure WriteRegister(index : Byte; w:Word); overload;
 
    {
    Vor.: Simulation nicht am Ende.
@@ -109,59 +96,61 @@ begin
    //   Reg := TRegRecord.Create();
 end;
 
-function CPU.ReadRegister(index : RegisterIndex) : Word;
+function CPU.ReadRegister(index : byte) : Word;
 begin
    case index of
-      AX: result:=Reg.AX;
-      AL: result:=Reg.AX and 255;
-      AH: result:=Reg.AX shr 8;
+      Integer(AX): result:=Reg.AX;
+      Integer(AL): result:=Reg.AX and 255;
+      Integer(AH): result:=Reg.AX shr 8;
 
-      BX: result:=Reg.BX;
-      BL: result:=Reg.BX and 255;
-      BH: result:=Reg.BX shr 8;
+      Integer(BX): result:=Reg.BX;
+      Integer(BL): result:=Reg.BX and 255;
+      Integer(BH): result:=Reg.BX shr 8;
 
-      CX: result:=Reg.CX;
-      CL: result:=Reg.CX and 255;
-      CH: result:=Reg.CX shr 8;
+      Integer(CX): result:=Reg.CX;
+      Integer(CL): result:=Reg.CX and 255;
+      Integer(CH): result:=Reg.CX shr 8;
 
-      DX: result:=Reg.DX;
-      DL: result:=Reg.DX and 255;
-      DH: result:=Reg.DX shr 8;
+      Integer(DX): result:=Reg.DX;
+      Integer(DL): result:=Reg.DX and 255;
+      Integer(DH): result:=Reg.DX shr 8;
 
-      BP: result:=Reg.BP;
-      IP: result:=Reg.IP;
-      SP: result:=Reg.SP;
-      FLAGS: result:=Reg.FLAGS;
+      Integer(BP): result:=Reg.BP;
+      Integer(IP): result:=Reg.IP;
+      Integer(SP): result:=Reg.SP;
+      Integer(FLAGS): result:=Reg.FLAGS;
+      else raise Exception.CreateFmt('Register with index %b is invalid.',[index]);
    end;
 end;
 
-procedure CPU.WriteRegister(index : RegisterIndex; w: Word);
+procedure CPU.WriteRegister(index : byte; w: Word);
 begin
    case index of
-      AX: Reg.AX := w;
-      AL: Reg.AX := (w and 255) or (Reg.AX and (255 shl 8));
-      AH: Reg.AX := (w and (255 shl 8)) or (Reg.AX and 255);
+      Integer(AX): Reg.AX := w;
+      Integer(AL): Reg.AX := (w and 255) or (Reg.AX and (255 shl 8));
+      Integer(AH): Reg.AX := (w and (255 shl 8)) or (Reg.AX and 255);
 
-      BX: Reg.BX := w;
-      BL: Reg.BX := (w and 255) or (Reg.BX and (255 shl 8));
-      BH: Reg.BX := (w and (255 shl 8)) or (Reg.BX and 255);
+      Integer(BX): Reg.BX := w;
+      Integer(BL): Reg.BX := (w and 255) or (Reg.BX and (255 shl 8));
+      Integer(BH): Reg.BX := (w and (255 shl 8)) or (Reg.BX and 255);
 
-      CX: Reg.CX := w;
-      CL: Reg.CX := (w and 255) or (Reg.CX and (255 shl 8));
-      CH: Reg.CX := (w and (255 shl 8)) or (Reg.CX and 255);
+      Integer(CX): Reg.CX := w;
+      Integer(CL): Reg.CX := (w and 255) or (Reg.CX and (255 shl 8));
+      Integer(CH): Reg.CX := (w and (255 shl 8)) or (Reg.CX and 255);
 
-      DX: Reg.DX := w;
-      DL: Reg.DX := (w and 255) or (Reg.DX and (255 shl 8));
-      DH: Reg.DX := (w and (255 shl 8)) or (Reg.DX and 255);
+      Integer(DX): Reg.DX := w;
+      Integer(DL): Reg.DX := (w and 255) or (Reg.DX and (255 shl 8));
+      Integer(DH): Reg.DX := (w and (255 shl 8)) or (Reg.DX and 255);
 
-      BP: Reg.BP := w;
-      IP: Reg.IP := w;
-      SP: Reg.SP := w;
-      FLAGS: Reg.FLAGS := w;
+      Integer(BP): Reg.BP := w;
+      Integer(IP): Reg.IP := w;
+      Integer(SP): Reg.SP := w;
+      Integer(FLAGS): Reg.FLAGS := w;
+      else raise Exception.CreateFmt('Register with index %b is invalid.',[index]);
    end;
 end;
 
-procedure CPU.WriteRegister(index : RegisterIndex; w: Integer; f:Boolean);
+procedure CPU.WriteRegister(index : Byte; w: Integer; f:Boolean);
 begin
   WriteRegister(index,Word(w));
   if f then begin
@@ -171,11 +160,6 @@ begin
   end;
 end;
 
-procedure CPU.push(b : byte);
-begin
-  Ram.WriteByte(Reg.SP,b);
-  Reg.SP-=1;
-end;
 
 procedure CPU.push(w : word);
 begin
@@ -183,13 +167,7 @@ begin
   Reg.SP-=2;
 end;
 
-function CPU.pop_b():byte;
-begin
-  result:=Ram.ReadByte(Reg.SP+1);
-  Reg.SP+=1;
-end;
-
-function CPU.pop_w():word;
+function CPU.pop():word;
 begin
   result:=Ram.ReadWord(Reg.SP+1);
   Reg.SP+=2;
@@ -217,7 +195,7 @@ begin
         Reg.IP += 4;
       end; // MOV R,x
       2: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+2))));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))));
         Reg.IP += 3;
       end; // MOV R,[R]
       3: begin
@@ -335,10 +313,10 @@ begin
       end; //cmp R,x
 
       30: begin
-        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+1))));
+        Reg.IP:=Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+1)));
       end; //jmp [R]
       31: begin
-        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(Ram.ReadWord(Reg.IP+1)));
+        Reg.IP:=Ram.ReadWord(Ram.ReadWord(Reg.IP+1));
       end; //jmp [X]
      // 34 js [R]
      // 35 js [X]
@@ -347,15 +325,15 @@ begin
      // 40 je [X]
      // 41 je [R]
       42: begin
-        push(ReadRegister(RegisterIndex.IP+3));
-        WriteRegister(RegisterIndex.IP,Ram.ReadWord(Reg.IP+1));
+        push(Reg.IP+3);
+        Reg.IP:=Ram.ReadWord(Reg.IP+1);
       end; //call [X]
       43: begin
-        push(ReadRegister(RegisterIndex.IP+2));
-        WriteRegister(RegisterIndex.IP,ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        push(Reg.IP+2);
+        Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1));
       end; //call [R]
       45: begin
-        WriteRegister(RegisterIndex.IP,pop_b());
+        Reg.IP:=pop();
       end; //pop R
       46: begin
         push(ReadRegister(Ram.ReadByte(Reg.IP+1)));
@@ -366,15 +344,15 @@ begin
         Reg.IP+=2;
       end;// push x
       48: begin
-        pop_w();
+        pop();
         Reg.IP+=1;
       end; //pop			(in kein Register)
       49: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),pop_w());
+        WriteRegister(Ram.ReadByte(Reg.IP+1),pop());
         Reg.IP+=2;
       end; //pop R
       50: begin
-        WriteRegister(ReadByte(Reg.IP+1),not ReadRegister(ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),not ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 2;
       end; //not R		(binär)
       51: begin

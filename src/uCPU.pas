@@ -307,26 +307,104 @@ begin
         Reg.IP += 3;
       end; //div R,R
 
+
       29: begin
         setFlag(TFlags.O, false);
         setFlag(TFlags.S, ReadRegister(Ram.ReadByte(Reg.IP+1))<Ram.ReadWord(Reg.IP+2));
         setFlag(TFlags.Z, ReadRegister(Ram.ReadByte(Reg.IP+1))=Ram.ReadWord(Reg.IP+2));
         Reg.IP+=4;
       end; //cmp R,x
+      44: begin
+        setFlag(TFlags.O, false);
+        setFlag(TFlags.S, ReadRegister(Ram.ReadByte(Reg.IP+1))<ReadRegister(Ram.ReadByte(Reg.IP+2)));
+        setFlag(TFlags.Z, ReadRegister(Ram.ReadByte(Reg.IP+1))=ReadRegister(Ram.ReadByte(Reg.IP+2)));
+        Reg.IP+=3;
+      end; //cmp R, R
 
       30: begin
-        Reg.IP:=Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1));
       end; //jmp R
       31: begin
-        Reg.IP:=Ram.ReadWord(Ram.ReadWord(Reg.IP+1));
+        Reg.IP:=Ram.ReadWord(Reg.IP+1);
       end; //jmp X
-      34: begin
 
-      end;//js R
-     // 35 js X
-     // 37 jz X
-     // 38 jz R
-      end;
+
+      32: begin
+        if (getFlag(S)) then
+          Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1))
+        else
+          Reg.IP+=2;
+      end; //js R
+      33: begin
+        if (getFlag(S)) then
+          Reg.IP:=Ram.ReadWord(Reg.IP+1)
+        else
+          Reg.IP+=3;
+      end; // js X
+      34: begin
+        if (getFlag(Z)) then
+          Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1))
+        else
+          Reg.IP+=2;
+      end; //jz R
+      35: begin
+        if (getFlag(Z)) then
+          Reg.IP:=Ram.ReadWord(Reg.IP+1)
+        else
+          Reg.IP+=3;
+      end; // jz X
+      36: begin
+        if (getFlag(O)) then
+          Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1))
+        else
+          Reg.IP+=2;
+      end; //jo R
+      37: begin
+        if (getFlag(O)) then
+          Reg.IP:=Ram.ReadWord(Reg.IP+1)
+        else
+          Reg.IP+=3;
+      end; // jo X
+
+
+      38: begin
+        if (not getFlag(S)) then
+          Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1))
+        else
+          Reg.IP+=2;
+      end; //jns R
+      39: begin
+        if (not getFlag(S)) then
+          Reg.IP:=Ram.ReadWord(Reg.IP+1)
+        else
+          Reg.IP+=3;
+      end; // jns X
+      40: begin
+        if (not getFlag(Z)) then
+          Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1))
+        else
+          Reg.IP+=2;
+      end; //jnz R
+      41: begin
+        if (not getFlag(Z)) then
+          Reg.IP:=Ram.ReadWord(Reg.IP+1)
+        else
+          Reg.IP+=3;
+      end; // jnz X
+      57: begin
+        if (not getFlag(O)) then
+          Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1))
+        else
+          Reg.IP+=2;
+      end; //jno R
+      58: begin
+        if (not getFlag(O)) then
+          Reg.IP:=Ram.ReadWord(Reg.IP+1)
+        else
+          Reg.IP+=3;
+      end; // jno X
+
+
 
       42: begin
         push(Reg.IP+3);
@@ -336,15 +414,11 @@ begin
         push(Reg.IP+2);
         Reg.IP:=ReadRegister(Ram.ReadByte(Reg.IP+1));
       end; //call [R]
-      44: begin
-        setFlag(TFlags.O, false);
-        setFlag(TFlags.S, ReadRegister(Ram.ReadByte(Reg.IP+1))<ReadRegister(Ram.ReadByte(Reg.IP+2)));
-        setFlag(TFlags.Z, ReadRegister(Ram.ReadByte(Reg.IP+1))=ReadRegister(Ram.ReadByte(Reg.IP+2)));
-        Reg.IP+=3;
-      end; //cmp R, R
       45: begin
         Reg.IP:=pop();
-      end; //pop R
+      end; //ret
+
+
       46: begin
         push(ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP+=1;
@@ -361,6 +435,8 @@ begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),pop());
         Reg.IP+=2;
       end; //pop R
+
+
       50: begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),not ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 2;
@@ -373,7 +449,6 @@ begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+2)) and ReadRegister(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //and R,R
-
       53: begin
         WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) or Ram.ReadWord(Reg.IP+2),true);
         Reg.IP += 4;
@@ -382,7 +457,6 @@ begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+2)) or ReadRegister(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //or R,R
-
       55: begin
         WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) xor Ram.ReadWord(Reg.IP+2),true);
         Reg.IP += 4;

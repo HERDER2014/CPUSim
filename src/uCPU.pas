@@ -104,15 +104,15 @@ begin
         Reg.IP += 3;
       end; // MOV R,[R]
       3: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Ram.ReadWord(IP+2)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Ram.ReadWord(Reg.IP+2)));
         Reg.IP += 4;
       end; // MOV R,[x]
       4: begin
-        Ram.WriteWord(ReadRegister(Ram.ReadByte(IP+1)),ReadRegister(Ram.ReadByte(IP+2)));
+        Ram.WriteWord(ReadRegister(Ram.ReadByte(Reg.IP+1)),ReadRegister(Ram.ReadByte(Reg.IP+2)));
         Reg.IP += 3;
       end; // MOV [R],R
       5: begin
-        Ram.WriteWord(Ram.ReadWord(IP+1),ReadRegister(Ram.ReadByte(IP+3)));
+        Ram.WriteWord(Ram.ReadWord(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+3)));
         Reg.IP += 4;
       end; // mov [x],R
       6: begin
@@ -128,11 +128,11 @@ begin
         Reg.IP += 4;
       end; //add R,x
       10: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+2))) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 3;
       end; //add R,[R]
       11: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Ram.ReadWord(IP+2)) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 4;
       end; //add R,[x]
       12: begin
@@ -146,11 +146,11 @@ begin
         Reg.IP += 4;
       end; //sub R,x
       14: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),-Ram.ReadWord(Ram.ReadWord(IP+2)) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),-Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 4;
       end; //sub R,[x]
       15: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),-Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+2))) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),-Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))) + ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 3;
       end; //sub R,[R]
       16: begin
@@ -164,11 +164,11 @@ begin
         Reg.IP += 4;
       end; //mul R,x
       18: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Ram.ReadWord(IP+2)) * ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) * ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 4;
       end; //mul R,[x]
       19: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+2))) * ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))) * ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 3;
       end; //mul R,[R]
       20: begin
@@ -182,11 +182,11 @@ begin
         Reg.IP += 4;
       end; //div R,x
       22: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Ram.ReadWord(IP+2)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Ram.ReadWord(Reg.IP+2)));
         Reg.IP += 4;
       end; //div R,[x]
       23: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+2))));
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))));
         Reg.IP += 3;
       end; //div R,[R]
       24: begin
@@ -200,11 +200,11 @@ begin
         Reg.IP += 4;
       end; //div R,x
       26: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Ram.ReadWord(IP+2)));
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Ram.ReadWord(Reg.IP+2)));
         Reg.IP += 4;
       end; //div R,[x]
       27: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+2))));
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))));
         Reg.IP += 3;
       end; //div R,[R]
       28: begin
@@ -216,11 +216,11 @@ begin
       // 29 cmp R,x
 
       30: begin
-        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(ReadRegister(Ram.ReadByte(IP+1))));
+        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+1))));
         Reg.IP += 2;
       end; //jmp [R]
       31: begin
-        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(Ram.ReadWord(IP+1)));
+        WriteRegister(RegisterIndex.IP ,Ram.ReadWord(Ram.ReadWord(Reg.IP+1)));
         Reg.IP += 3;
       end; //jmp [X]
      // 34 js [R]
@@ -236,13 +236,36 @@ begin
       47 push x
       48 pop			(in kein Register)
       49 pop R
-      50 not R		(binär)
-      51 and R,x
-      52 and R,R
-      53 or R,x
-      54 or R,R
-      55 xor R,x
-      56 xor R,R
+      50: begin
+        WriteRegister(ReadByte(Reg.IP+1),not ReadRegister(ReadByte(Reg.IP+1)));
+        Reg.IP += 2;
+      end; //not R		(binär)
+      51: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) and Ram.ReadWord(Reg.IP+2));
+        Reg.IP += 4;
+      end; //and R,x
+      52: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+2)) and ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        Reg.IP += 3;
+      end; //and R,R
+
+      53: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) or Ram.ReadWord(Reg.IP+2));
+        Reg.IP += 4;
+      end; //or R,x
+      54: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+2)) or ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        Reg.IP += 3;
+      end; //or R,R
+
+      55: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) xor Ram.ReadWord(Reg.IP+2));
+        Reg.IP += 4;
+      end; //xor R,x
+      56: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+2)) xor ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        Reg.IP += 3;
+      end; //xor R,R
 }
    end;
 end;

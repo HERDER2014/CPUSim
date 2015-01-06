@@ -5,7 +5,7 @@
 5 mov [x],R
 6 mov R,R
 7 mov R,[R+x]	()
-8 mov [R+x],R
+8 mov [R+x],R   ()
 9 add R,x
 10 add R,[R]
 11 add R,[x]
@@ -22,12 +22,11 @@
 22 div R,[X]
 23 div R,[R]
 24 div R,R
-25 mod R,x		()
-26 mod R,[X]	()
-27 mod R,[R]	()
-28 mod R,R		()
+25 mod R,x
+26 mod R,[X]
+27 mod R,[R]
+28 mod R,R
 29 cmp R,x
-lbl:		(wird nicht im RAM gespeichert)
 30 jmp R
 31 jmp X
 32 js R
@@ -55,9 +54,23 @@ lbl:		(wird nicht im RAM gespeichert)
 54 or R,R
 55 xor R,x
 56 xor R,R
-org x 	(wird nicht im RAM gespeichert)
 57 jno R
 58 jno X
+59 and R,[X]
+60 and R,[R]
+61 or R,[X]
+62 or R,[R]
+63 xor R,[X]
+64 xor R,[R]
+
+org x 	(wird nicht im RAM gespeichert)
+<<<<<<< HEAD
+57 jno R
+58 jno X
+=======
+lbl:		(wird nicht im RAM gespeichert)
+
+>>>>>>> origin/master
 
 x: Zahlen
 R: Register

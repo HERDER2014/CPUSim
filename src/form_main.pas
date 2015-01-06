@@ -14,6 +14,7 @@ type
   { TmainFrm }
 
   TmainFrm = class(TForm)
+    FindDlg: TFindDialog;
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
     MainFrm_Menu_File_New: TMenuItem;
@@ -37,20 +38,29 @@ type
     MainFrm_Menu_File_OpenRecent: TMenuItem;
     MainFrm_Menu_File_Save: TMenuItem;
     MainFrm_Menu_File_SaveAs: TMenuItem;
-    MainFrm_Menu_File_Close: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
+    ReplaceDialog1: TReplaceDialog;
     SaveDlg: TSaveDialog;
     BottomVSplitter: TSplitter;
     StatusBar1: TStatusBar;
     TopVSplitter: TSplitter;
     HSplitter: TSplitter;
-    RAMViewStaticTxt: TStaticText;
     InputSynEdit: TSynEdit;
     RegistersValueList: TValueListEditor;
+    ValueListEditor1: TValueListEditor;
     procedure Button1Click(Sender: TObject);
+    procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_FindClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_PasteClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_RedoClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_UndoClick(Sender: TObject);
+    procedure MainFrm_Menu_File_NewClick(Sender: TObject);
+    procedure MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
+    procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MessagesMemoChange(Sender: TObject);
     procedure ShowExitDlg;
@@ -81,16 +91,15 @@ begin
   RegistersValueList.InsertRow('AX','0000000000000000',true);
 
   InputSynEdit.Text:='';
-
   MessagesMemo.Text:='Hit "Run" to test your program!';
 
-  RAMViewStaticTxt.Caption:='';
 end;
 
 procedure TmainFrm.ShowExitDlg;
 var
   answer : LongInt;
 begin
+  //SaveDlg if saved=false?
   answer := MessageDlg('Do you really want to quit?', mtConfirmation, mbYesNoCancel, 0);
   if  answer = mrYes then
   begin
@@ -109,6 +118,52 @@ end;
 
 procedure TmainFrm.Button1Click(Sender: TObject);
 begin
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_CopyClick(Sender: TObject);
+begin
+  InputSynEdit.CopyToClipboard;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
+begin
+  InputSynEdit.CutToClipboard;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_FindClick(Sender: TObject);
+begin
+  FindDlg.Execute;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_PasteClick(Sender: TObject);
+begin
+  InputSynEdit.PasteFromClipboard;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_RedoClick(Sender: TObject);
+begin
+  InputSynEdit.Redo;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_UndoClick(Sender: TObject);
+begin
+  InputSynEdit.Undo;
+end;
+
+
+procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
+begin
+  //TODO
+end;
+
+procedure TmainFrm.MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
+begin
+  //Keep trackk of recent files?
+end;
+
+procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
+begin
+  //SaveDlg
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -133,6 +188,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
 begin
+  //if saved: save; else:
   SaveDlg.Execute;
 end;
 

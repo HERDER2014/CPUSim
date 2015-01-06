@@ -1,10 +1,10 @@
 object mainFrm: TmainFrm
-  Left = 443
+  Left = 482
   Height = 442
-  Top = 193
+  Top = 119
   Width = 848
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 422
+  ClientHeight = 418
   ClientWidth = 848
   Menu = MainFrm_Menu
   OnCreate = FormCreate
@@ -16,7 +16,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = TopVSplitter
     AnchorSideBottom.Control = HSplitter
     Left = 0
-    Height = 301
+    Height = 298
     Top = 0
     Width = 387
     Align = alCustom
@@ -532,8 +532,8 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = BottomVSplitter
     AnchorSideBottom.Control = StatusBar1
     Left = 0
-    Height = 96
-    Top = 306
+    Height = 91
+    Top = 303
     Width = 547
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -548,8 +548,8 @@ object mainFrm: TmainFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
     Left = 547
-    Height = 96
-    Top = 306
+    Height = 91
+    Top = 303
     Width = 5
     Align = alNone
     Anchors = [akTop, akBottom]
@@ -558,26 +558,11 @@ object mainFrm: TmainFrm
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = HSplitter
     Left = 387
-    Height = 301
+    Height = 298
     Top = 0
     Width = 5
     Align = alNone
     Anchors = [akTop, akBottom]
-  end
-  object RAMViewStaticTxt: TStaticText
-    AnchorSideLeft.Control = TopVSplitter
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = HSplitter
-    Left = 392
-    Height = 301
-    Top = 0
-    Width = 456
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    Caption = 'RAMViewStaticTxt'
-    TabOrder = 4
   end
   object HSplitter: TSplitter
     AnchorSideLeft.Control = Owner
@@ -586,7 +571,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 0
     Height = 5
-    Top = 301
+    Top = 298
     Width = 848
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -601,13 +586,13 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
     Left = 552
-    Height = 96
-    Top = 306
+    Height = 91
+    Top = 303
     Width = 296
     Anchors = [akTop, akLeft, akRight, akBottom]
     FixedCols = 0
     RowCount = 2
-    TabOrder = 6
+    TabOrder = 5
     Strings.Strings = (
       ''
     )
@@ -618,10 +603,33 @@ object mainFrm: TmainFrm
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Height = 20
-    Top = 402
+    Height = 24
+    Top = 394
     Width = 848
     Panels = <>
+  end
+  object ValueListEditor1: TValueListEditor
+    AnchorSideLeft.Control = TopVSplitter
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = HSplitter
+    Left = 392
+    Height = 298
+    Top = 0
+    Width = 456
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    FixedCols = 0
+    RowCount = 2
+    TabOrder = 7
+    Strings.Strings = (
+      ''
+    )
+    ColWidths = (
+      64
+      388
+    )
   end
   object MainFrm_Menu: TMainMenu
     left = 192
@@ -630,6 +638,7 @@ object mainFrm: TmainFrm
       Caption = 'File'
       object MainFrm_Menu_File_New: TMenuItem
         Caption = 'New'
+        OnClick = MainFrm_Menu_File_NewClick
       end
       object MainFrm_Menu_File_Spacer1: TMenuItem
         Caption = '-'
@@ -640,6 +649,7 @@ object mainFrm: TmainFrm
       end
       object MainFrm_Menu_File_OpenRecent: TMenuItem
         Caption = 'Open Recent'
+        OnClick = MainFrm_Menu_File_OpenRecentClick
       end
       object MainFrm_Menu_File_Save: TMenuItem
         Caption = 'Save'
@@ -647,9 +657,7 @@ object mainFrm: TmainFrm
       end
       object MainFrm_Menu_File_SaveAs: TMenuItem
         Caption = 'Save As'
-      end
-      object MainFrm_Menu_File_Close: TMenuItem
-        Caption = 'Close'
+        OnClick = MainFrm_Menu_File_SaveAsClick
       end
       object MainFrm_Menu_File_Spacer2: TMenuItem
         Caption = '-'
@@ -663,27 +671,33 @@ object mainFrm: TmainFrm
       Caption = 'Edit'
       object MainFrm_Menu_Edit_Undo: TMenuItem
         Caption = 'Undo'
+        OnClick = MainFrm_Menu_Edit_UndoClick
       end
       object MainFrm_Menu_Edit_Redo: TMenuItem
         Caption = 'Redo'
+        OnClick = MainFrm_Menu_Edit_RedoClick
       end
       object MainFrm_Menu_Edit_Spacer1: TMenuItem
         Caption = '-'
       end
       object MainFrm_Menu_Edit_Cut: TMenuItem
         Caption = 'Cut'
+        OnClick = MainFrm_Menu_Edit_CutClick
       end
       object MainFrm_Menu_Edit_Copy: TMenuItem
         Caption = 'Copy'
+        OnClick = MainFrm_Menu_Edit_CopyClick
       end
       object MainFrm_Menu_Edit_Paste: TMenuItem
         Caption = 'Paste'
+        OnClick = MainFrm_Menu_Edit_PasteClick
       end
       object MainFrm_Menu_Edit_Spacer2: TMenuItem
         Caption = '-'
       end
       object MainFrm_Menu_Edit_Find: TMenuItem
         Caption = 'Find'
+        OnClick = MainFrm_Menu_Edit_FindClick
       end
       object MainFrm_Menu_Edit_FindNext: TMenuItem
         Caption = 'Find Next'
@@ -714,6 +728,15 @@ object mainFrm: TmainFrm
   end
   object SaveDlg: TSaveDialog
     left = 112
+    top = 56
+  end
+  object FindDlg: TFindDialog
+    left = 232
+    top = 56
+  end
+  object ReplaceDialog1: TReplaceDialog
+    Options = [frDown, frReplace, frReplaceAll, frHidePromptOnReplace]
+    left = 264
     top = 56
   end
 end

@@ -6,7 +6,7 @@ interface
 
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, Dialogs;
 
 type TRAM = class
   constructor Create(size : Cardinal);
@@ -44,20 +44,24 @@ implementation
 
    end;
    function TRAM.ReadByte(addr : Cardinal) : Byte;
+   var value : String ;
    begin
-
+     InputQuery('RAM TEST', 'Gelesen wird Byte an Adresse ' + IntToStr(addr), value);
+     result := StrToInt(value);
    end;
    procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
    begin
-
+     ShowMessage('Geschrieben wird an Adresse ' + IntToStr(addr) + ' das Byte ' + IntToStr(b));
    end;
    function TRAM.ReadWord(addr : Cardinal) : Word;
+   var value : String ;
    begin
-
+     InputQuery('RAM TEST', 'Gelesen wird Word an Adresse ' + IntToStr(addr), value);
+     result := StrToInt(value);
    end;
    procedure TRAM.WriteWord(addr : Cardinal; w : Word);
    begin
-
+     ShowMessage('Geschrieben wird an Adresse ' + IntToStr(addr) + ' das Word ' + IntToStr(w));
    end;
 
 end.

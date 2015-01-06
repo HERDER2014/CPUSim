@@ -72,6 +72,7 @@ type CPU = class
    Vor.: Simulation nicht am Ende.
    Eff.: Befehl im RAM an Stelle IP wurde ausgeführt.
    Erg.: Liefert genau dann TRUE, wenn die Simulation zu Ende ist.
+   Exeptions.: Runtimeerrors
    }
    public function Step() : Boolean;
 
@@ -86,7 +87,7 @@ begin
    Ram := r;
 
    Reg.IP:=0;
-   Reg.SP:=255;
+   Reg.SP:=2045;
    Reg.BP:=2045;
    Reg.FLAGS:=0;
    Reg.AX:=0;
@@ -128,19 +129,19 @@ begin
    case index of
       Integer(AX): Reg.AX := w;
       Integer(AL): Reg.AX := (w and 255) or (Reg.AX and (255 shl 8));
-      Integer(AH): Reg.AX := (w and (255 shl 8)) or (Reg.AX and 255);
+      Integer(AH): Reg.AX := ((w and 255) shl 8) or (Reg.AX and 255);
 
       Integer(BX): Reg.BX := w;
       Integer(BL): Reg.BX := (w and 255) or (Reg.BX and (255 shl 8));
-      Integer(BH): Reg.BX := (w and (255 shl 8)) or (Reg.BX and 255);
+      Integer(BH): Reg.BX := ((w and 255) shl 8) or (Reg.BX and 255);
 
       Integer(CX): Reg.CX := w;
       Integer(CL): Reg.CX := (w and 255) or (Reg.CX and (255 shl 8));
-      Integer(CH): Reg.CX := (w and (255 shl 8)) or (Reg.CX and 255);
+      Integer(CH): Reg.CX := ((w and 255) shl 8) or (Reg.CX and 255);
 
       Integer(DX): Reg.DX := w;
       Integer(DL): Reg.DX := (w and 255) or (Reg.DX and (255 shl 8));
-      Integer(DH): Reg.DX := (w and (255 shl 8)) or (Reg.DX and 255);
+      Integer(DH): Reg.DX := ((w and 255) shl 8) or (Reg.DX and 255);
 
       Integer(BP): Reg.BP := w;
       Integer(IP): Reg.IP := w;
@@ -156,7 +157,7 @@ begin
   if f then begin
     setFlag(TFlags.O, w>65535);
     setFlag(TFlags.S, w<0);
-    setFlag(TFlags.Z, w=0);
+    setFlag(TFlags.Z, Word(w)=0);
   end;
 end;
 
@@ -273,37 +274,71 @@ begin
 
 
       21: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Reg.IP+2),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Reg.IP+2),true);
+        Except
+           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
         Reg.IP += 4;
       end; //div R,x
       22: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
         Reg.IP += 4;
       end; //div R,[x]
       23: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
+
         Reg.IP += 3;
       end; //div R,[R]
       24: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div ReadRegister(Ram.ReadByte(Reg.IP+2)),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) div ReadRegister(Ram.ReadByte(Reg.IP+2)),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
+
         Reg.IP += 3;
       end; //div R,R
 
 
       25: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Reg.IP+2),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Reg.IP+2),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
         Reg.IP += 4;
       end; //div R,x
       26: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
         Reg.IP += 4;
       end; //div R,[x]
       27: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+2))),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
         Reg.IP += 3;
       end; //div R,[R]
       28: begin
-        WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod ReadRegister(Ram.ReadByte(Reg.IP+2)),true);
+        try
+          WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod ReadRegister(Ram.ReadByte(Reg.IP+2)),true);
+        Except
+          Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
+        end;
         Reg.IP += 3;
       end; //div R,R
 

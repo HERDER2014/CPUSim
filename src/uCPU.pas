@@ -9,9 +9,39 @@ uses
 
 type CPU = class
 
-   private Reg : TRegRecord;
-           var Ram : TRAM;
-           procedure WriteRegister(index : RegisterIndex; w:Word);
+   private
+
+   Reg : TRegRecord;
+   var Ram : TRAM;
+
+   {
+   Vor.: -
+   Eff.: b steht in Ram an Adresse SP ; SP -=1
+   Erg.: -
+   }
+   procedure push(b : byte); overload;
+
+   {
+   Vor.: -
+   Eff.: w steht in Ram an Adresse SP und SP-1 ; SP -=2
+   Erg.: -
+   }
+   procedure push(w : word); overload;
+
+   {
+   Vor.: -
+   Eff.: SP +=1;
+   Erg.: wert an adresse SP
+   }
+   function pop_b():byte;
+
+   {
+   Vor.: -
+   Eff.: SP +=2;
+   Erg.: wert an adresse SP und SP+1
+   }
+   function pop_w():word;
+
 
    public constructor Create(var r : TRam);
 
@@ -23,11 +53,21 @@ type CPU = class
    public function ReadRegister(index : RegisterIndex) : Word;
 
    {
+   Vor.: -
+   Eff.: w steht im Register 'index'
+   Erg.: -
+   }
+   public procedure WriteRegister(index : RegisterIndex; w:Word);
+
+   {
    Vor.: Simulation nicht am Ende.
    Eff.: Befehl im RAM an Stelle IP wurde ausgeführt.
    Erg.: Liefert genau dann TRUE, wenn die Simulation zu Ende ist.
    }
-   function Step() : Boolean;
+   public function Step() : Boolean;
+
+
+
 end;
 
 implementation
@@ -88,6 +128,30 @@ begin
       SP: Reg.SP := w;
       FLAGS: Reg.FLAGS := w;
    end;
+end;
+
+procedure CPU.push(b : byte);
+begin
+  Ram.WriteByte(Reg.SP,b);
+  Reg.SP-=1;
+end;
+
+procedure CPU.push(w : word);
+begin
+  Ram.WriteWord(Reg.SP-1,w);
+  Reg.SP-=2;
+end;
+
+function CPU.pop_b():byte;
+begin
+  result:=Ram.ReadByte(Reg.SP+1);
+  Reg.SP+=1;
+end;
+
+function CPU.pop_w():word;
+begin
+  result:=Ram.ReadWord(Reg.SP+1);
+  Reg.SP+=2;
 end;
 
 
@@ -266,7 +330,7 @@ begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),ReadRegister(Ram.ReadByte(Reg.IP+2)) xor ReadRegister(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 3;
       end; //xor R,R
-}
+
    end;
 end;
 

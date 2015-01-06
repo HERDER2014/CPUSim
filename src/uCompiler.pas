@@ -95,7 +95,7 @@ end;
  Liefert nur die Anweisung aus einer Codezeile in GROSSBUCHSTABEN.
  Eine Labelzeile wird vollständig zurückgegeben.
 
- Bsp.: "add al, 4" => "ADD", "pop" => "POP"
+ Bsp.: "add al, 4" => "ADD", "pop" => "POP", "label:" => "label:"
 }
 function ExtractInstructionString(line: string): string;
 var
@@ -105,7 +105,7 @@ begin
   if i = 0 then
     i := Length(line)
   else
-    Dec(i);
+    Dec(i); // 1-basiert
   Result := UpperCase(Copy(line, 1, i));
 end;
 
@@ -604,7 +604,7 @@ var
 
 begin
   cpos := 0;
-  zNr := 1;
+  zNr := 1;    // Zeilennummer
   befehleDict := TCommandLineList.Create;
   len := Length(input);
   while cpos < len do
@@ -618,13 +618,14 @@ begin
       // Zeilenumbruch gefunden, korrigieren.
       zlen := zlen - cpos - 1;
     zeile := Copy(input, cpos + 1, zlen);
-    commentpos := Pos(';', zeile);
+    commentpos := Pos(';', zeile);    // Entfernt Kommentare
     if commentpos > 0 then
       zeile := Copy(zeile, 1, commentpos - 1);
     zeile := Trim(zeile); // Entfernt alle vorhergehenden und nachfolgenden Leerzeichen.
     if zeile <> EmptyStr then
       // Zeile ist nicht leer
       befehleDict.Add(CrTCodeLineNr(UpperCase(zeile), zNr));
+
     cpos += zlen + 2; // wegen \r\n
     Inc(zNr);
   end;
@@ -636,6 +637,7 @@ begin
   i := 0;
   errString := '';
 
+  //
   while i < cardinal(befehleDict.Count) do
   begin
     inst := ExtractInstructionString(befehleDict[i].line);
@@ -677,6 +679,7 @@ begin
     end
     else
     begin
+      // kein Label, Befehl in RAM schreiben.
       if not WriteInstrucitonLineToRAM(inst, opString, bytepos,
         befehleDict[i].nr, labelResolveList, rwritten, errString) then
       begin

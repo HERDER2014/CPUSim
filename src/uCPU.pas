@@ -281,11 +281,9 @@ begin
 
       30: begin
         WriteRegister(RegisterIndex.IP ,Ram.ReadWord(ReadRegister(Ram.ReadByte(Reg.IP+1))));
-        Reg.IP += 2;
       end; //jmp [R]
       31: begin
         WriteRegister(RegisterIndex.IP ,Ram.ReadWord(Ram.ReadWord(Reg.IP+1)));
-        Reg.IP += 3;
       end; //jmp [X]
      // 34 js [R]
      // 35 js [X]
@@ -293,13 +291,33 @@ begin
      // 38 jz [R]
      // 40 je [X]
      // 41 je [R]
-      42 call [X]
-      43 call [R]
-      45 ret
-      46 push R
-      47 push x
-      48 pop			(in kein Register)
-      49 pop R
+      42: begin
+        push(ReadRegister(RegisterIndex.IP+3));
+        WriteRegister(RegisterIndex.IP,Ram.ReadWord(Reg.IP+1));
+      end; //call [X]
+      43: begin
+        push(ReadRegister(RegisterIndex.IP+2));
+        WriteRegister(RegisterIndex.IP,ReadRegister(Ram.ReadByte(Reg.IP+1)));
+      end; //call [R]
+      45: begin
+        WriteRegister(RegisterIndex.IP,pop_b());
+      end; //pop R
+      46: begin
+        push(ReadRegister(Ram.ReadByte(Reg.IP+1)));
+        Reg.IP+=1;
+      end;// push R
+      47: begin
+        push(Ram.ReadWord(Reg.IP+1));
+        Reg.IP+=2;
+      end;// push x
+      48: begin
+        pop_w();
+        Reg.IP+=1;
+      end; //pop			(in kein Register)
+      49: begin
+        WriteRegister(Ram.ReadByte(Reg.IP+1),pop_w());
+        Reg.IP+=2;
+      end; //pop R
       50: begin
         WriteRegister(ReadByte(Reg.IP+1),not ReadRegister(ReadByte(Reg.IP+1)));
         Reg.IP += 2;

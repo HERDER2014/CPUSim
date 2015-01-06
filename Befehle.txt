@@ -30,13 +30,16 @@
 lbl:		(wird nicht im RAM gespeichert)
 30 jmp R
 31 jmp X
-34 js R
-35 js X
-37 jz R
-38 jz X
-39 jo R
-40 jo X
-41 --
+32 js R
+33 js X
+34 jz R
+35 jz X
+36 jo R
+37 jo X
+38 jns R
+39 jns X
+40 jnz R
+41 jnz X
 42 call X
 43 call R
 44 cmp R, R
@@ -53,12 +56,8 @@ lbl:		(wird nicht im RAM gespeichert)
 55 xor R,x
 56 xor R,R
 org x 	(wird nicht im RAM gespeichert)
-57 jns R
-58 jns X
-59 jnz R
-60 jnz X
-61 jno R
-62 jno X
+57 jno R
+58 jno X
 
 x: Zahlen
 R: Register

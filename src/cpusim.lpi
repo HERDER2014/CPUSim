@@ -4,9 +4,6 @@
     <Version Value="9"/>
     <PathDelim Value="\"/>
     <General>
-      <Flags>
-        <UseDesignTimePackages Value="True"/>
-      </Flags>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
       <Title Value="CPU Simulator Herder 14"/>
@@ -31,7 +28,6 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="--debug-log=log.txt"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">
@@ -42,7 +38,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="6">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -76,16 +72,6 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uTypen"/>
       </Unit5>
-      <Unit6>
-        <Filename Value="uadvancedrecords.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="uAdvancedRecords"/>
-      </Unit6>
-      <Unit7>
-        <Filename Value="uopcodes.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="uOPCodes"/>
-      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -113,7 +99,7 @@
     </Other>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="4">
+    <Exceptions Count="3">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -123,9 +109,6 @@
       <Item3>
         <Name Value="EFOpenError"/>
       </Item3>
-      <Item4>
-        <Name Value="TCompilerException"/>
-      </Item4>
     </Exceptions>
   </Debugging>
 </CONFIG>

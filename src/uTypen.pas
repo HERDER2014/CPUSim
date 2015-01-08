@@ -7,32 +7,25 @@ interface
 uses
   Classes, SysUtils;
 
-type
-  RegisterIndex = (AX, BX, CX, DX,
-    AL, BL, CL, DL,
-    AH, BH, CH, DH,
-    BP, SP, IP, FLAGS,
+   type RegisterIndex = (AX, BX, CX, DX,
+                         AL, BL, CL, DL,
+                         AH, BH, CH, DH,
+                         BP, SP, IP, FLAGS);
 
-    {
-     Wird vom Compiler dazu genutzt, ungültige Register-
-     Eingaben zu identifizieren.
-    }
-    INVALID);
+   type TRegRecord = Record
+      AX : Word;
+      BX : Word;
+      CX : Word;
+      DX : Word;
 
-type
-  TRegRecord = record
-    AX: word;
-    BX: word;
-    CX: word;
-    DX: word;
+      BP : Word;
+      SP : Word;
+      IP : Word;
 
-    BP: word;
-    SP: word;
-    IP: word;
-
-    FLAGS: word;
-  end;
+      FLAGS : Word;
+   end;
 
 implementation
 
 end.
+

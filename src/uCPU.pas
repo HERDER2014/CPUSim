@@ -221,6 +221,7 @@ begin
       end; //mov R,[R+x]	()
       8: begin
         Ram.WriteWord(ReadRegister(Ram.ReadByte(Reg.IP+1))+Ram.ReadWord(Reg.IP+2),ReadRegister(Ram.ReadByte(Reg.IP+4)));
+        Reg.IP += 5;
       end; //mov [R+x],R
 
 

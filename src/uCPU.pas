@@ -5,7 +5,7 @@ unit uCPU;
 interface
 
 uses
-  Classes, SysUtils, uRAM, UTypen;
+  Classes, SysUtils, uRAM, UTypen, uOPCodes;
 
 type CPU = class
 
@@ -227,9 +227,10 @@ end;
 
 function CPU.Step() : Boolean;
 begin
+
    case Ram.ReadByte(Reg.IP) of
-      0: result:=True;
-      1: begin
+      _END: result:=True;
+      MOV_R_X: begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2));
         Reg.IP += 4;
       end; // MOV R,x
@@ -536,6 +537,7 @@ begin
       end; //xor R,R
 
    end;
+  end;
 end;
 
 end.

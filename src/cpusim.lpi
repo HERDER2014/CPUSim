@@ -6,7 +6,7 @@
     <General>
       <SessionStorage Value="InProjectDir"/>
       <MainUnit Value="0"/>
-      <Title Value="CPU Simulator Herder14"/>
+      <Title Value="CPU Simulator Herder 14"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <Icon Value="0"/>
@@ -30,12 +30,15 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="1">
+    <RequiredPackages Count="2">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="SynEdit"/>
       </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="8">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -69,6 +72,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uTypen"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="uopcodes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uOPCodes"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="ucputhread.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uCPUThread"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

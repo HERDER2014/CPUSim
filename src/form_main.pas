@@ -69,7 +69,6 @@ type
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
-    procedure InputSynEditChange(Sender: TObject);
   private
     { private declarations }
   public
@@ -79,6 +78,7 @@ type
 var
   mainFrm: TmainFrm;
   SavePath: String;
+  Saved: Boolean;
 
 implementation
 
@@ -102,14 +102,25 @@ var
   answer : LongInt;
 begin
   //SaveDlg if saved=false?
-  answer := MessageDlg('Do you really want to quit?', mtConfirmation, mbYesNoCancel, 0);
-  if  answer = mrYes then
+
+
+
+  if saved then
   begin
     Application.Terminate;
-  end else if answer = mrNo then
+  end else
   begin
-    SaveDlg.Execute;
+    answer := MessageDlg('Unsaved Changes! Do you really want to quit?', mtConfirmation, mbYesNoCancel, 0);
+    if answer = mrYes then
+    begin
+      Application.Terminate;
+    end else
+    if answer = mrNo then
+    begin
+      SaveDlg.Execute;
+    end;
   end;
+
 end;
 
 
@@ -203,16 +214,11 @@ begin
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
-var
 begin
   if SavePath = '' then
   begin
     MainFrm_Menu_File_SaveAsClick(MainFrm_Menu_File_Save);
   end else InputSynEdit.Lines.SaveToFile(SavePath);
-end;
-
-procedure TmainFrm.InputSynEditChange(Sender: TObject);
-begin
 end;
 
 

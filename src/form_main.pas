@@ -5,7 +5,7 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo, Forms, Controls,
+  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
   ComCtrls;
 
@@ -78,6 +78,7 @@ type
 
 var
   mainFrm: TmainFrm;
+  SavePath: String;
 
 implementation
 
@@ -163,8 +164,13 @@ begin
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
+var
+  path: String;
 begin
-  //SaveDlg
+  SaveDlg.Execute;
+  path:=SaveDlg.FileName;
+  InputSynEdit.Lines.SaveToFile(path);
+  SavePath:=path;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -189,29 +195,20 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);
 var
-  path: AnsiString;
-  code: TextFile;
-  text2:AnsiString;
+  path: String;
 begin
   OpenDlg.Execute;
   path:=OpenDlg.FileName;
-  AssignFile(code, path);
-  reset(code);
-
-  //ReadFileToString(text2);
-//  InputSynEdit.Text:=text2;
-  // for i to ZEILENLAENGE do
-    ReadLn(code,text2);
-    //file_line ++
-  InputSynEdit.Lines[i]:=text2;
-
-
+  InputSynEdit.Lines.LoadFromFile(path);
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
+var
 begin
-  //if saved: save; else:
-  SaveDlg.Execute;
+  if SavePath = '' then
+  begin
+    MainFrm_Menu_File_SaveAsClick(MainFrm_Menu_File_Save);
+  end else InputSynEdit.Lines.SaveToFile(SavePath);
 end;
 
 procedure TmainFrm.InputSynEditChange(Sender: TObject);

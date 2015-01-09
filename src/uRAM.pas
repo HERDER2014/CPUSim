@@ -46,22 +46,22 @@ implementation
    function TRAM.ReadByte(addr : Cardinal) : Byte;
    var value : String ;
    begin
-     InputQuery('RAM TEST', 'Gelesen wird Byte an Adresse ' + IntToStr(addr), value);
-     result := StrToInt(value);
+     InputQuery('RAM TEST', format('Gelesen wird Byte an Adresse %x', [addr]), value);
+     result := StrToInt64('$'+value);
    end;
    procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
    begin
-     ShowMessage('Geschrieben wird an Adresse ' + IntToStr(addr) + ' das Byte ' + IntToStr(b));
+     ShowMessage(format('Geschrieben wird an Adresse %x das Byte %x',[addr,b]));
    end;
    function TRAM.ReadWord(addr : Cardinal) : Word;
    var value : String ;
    begin
-     InputQuery('RAM TEST', 'Gelesen wird Word an Adresse ' + IntToStr(addr), value);
-     result := StrToInt(value);
+     InputQuery('RAM TEST', format('Gelesen wird Word an Adresse %x', [addr]), value);
+     result := StrToInt64('$'+value);
    end;
    procedure TRAM.WriteWord(addr : Cardinal; w : Word);
    begin
-     ShowMessage('Geschrieben wird an Adresse ' + IntToStr(addr) + ' das Word ' + IntToStr(w));
+     ShowMessage(format('Geschrieben wird an Adresse %x das Word %x',[addr,w]));
    end;
 
 end.

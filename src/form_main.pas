@@ -44,30 +44,30 @@ begin
   ram := TRAM.Create(0);
   simulator := CPU.Create(ram);
 
-  Label1.Caption := 'AX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.AX)));
-  Label2.Caption := 'BX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.BX)));
-  Label3.Caption := 'CX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.CX)));
-  Label4.Caption := 'DX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.DX)));
+  Label1.Caption := format('AX : %x',[simulator.ReadRegister(Integer(RegisterIndex.AX))]);
+  Label2.Caption := format('BX : %x',[simulator.ReadRegister(Integer(RegisterIndex.BX))]);
+  Label3.Caption := format('CX : %x',[simulator.ReadRegister(Integer(RegisterIndex.CX))]);
+  Label4.Caption := format('DX : %x',[simulator.ReadRegister(Integer(RegisterIndex.DX))]);
 
-  Label5.Caption := 'IP : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.IP)));
-  Label6.Caption := 'SP : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.SP)));
-  Label7.Caption := 'BP : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.BP)));
-  Label8.Caption := 'FLAGS : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.FLAGS)));
+  Label5.Caption := format('IP : %x',[simulator.ReadRegister(Integer(RegisterIndex.IP))]);
+  Label6.Caption := format('SP : %x',[simulator.ReadRegister(Integer(RegisterIndex.SP))]);
+  Label7.Caption := format('BP : %x',[simulator.ReadRegister(Integer(RegisterIndex.BP))]);
+  Label8.Caption := format('FLAGS : %x',[simulator.ReadRegister(Integer(RegisterIndex.FLAGS))]);
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   simulator.Step();
 
-  Label1.Caption := 'AX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.AX)));
-  Label2.Caption := 'BX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.BX)));
-  Label3.Caption := 'CX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.CX)));
-  Label4.Caption := 'DX : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.DX)));
+  Label1.Caption := format('AX : %x',[simulator.ReadRegister(Integer(RegisterIndex.AX))]);
+  Label2.Caption := format('BX : %x',[simulator.ReadRegister(Integer(RegisterIndex.BX))]);
+  Label3.Caption := format('CX : %x',[simulator.ReadRegister(Integer(RegisterIndex.CX))]);
+  Label4.Caption := format('DX : %x',[simulator.ReadRegister(Integer(RegisterIndex.DX))]);
 
-  Label5.Caption := 'IP : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.IP)));
-  Label6.Caption := 'SP : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.SP)));
-  Label7.Caption := 'BP : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.BP)));
-  Label8.Caption := 'FLAGS : ' + IntToStr(simulator.ReadRegister(Integer(RegisterIndex.FLAGS)));
+  Label5.Caption := format('IP : %x',[simulator.ReadRegister(Integer(RegisterIndex.IP))]);
+  Label6.Caption := format('SP : %x',[simulator.ReadRegister(Integer(RegisterIndex.SP))]);
+  Label7.Caption := format('BP : %x',[simulator.ReadRegister(Integer(RegisterIndex.BP))]);
+  Label8.Caption := format('FLAGS : %x',[simulator.ReadRegister(Integer(RegisterIndex.FLAGS))]);
 end;
 
 end.

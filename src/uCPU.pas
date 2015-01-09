@@ -45,28 +45,47 @@ type CPU = class
 
 
    {
-   Vor.: -
-   Eff.: die ersten 16 bit von w stehen im Register 'index'
+   Vor.: index ist Registerindex
+   Eff.: die ersten 16 bit von w stehen im Register 'index' sofern Erlaubt
          die Flags 'O','S' und 'Z' werden entsprechend gesehtz sofern f.
    Erg.: -
+   Exceptions: Invalid Register / Not Allowed
    }
-   procedure WriteRegister(index : Byte; w:Integer; f:Boolean); overload;
+   procedure WriteRegister(index : Byte; w:Word; flags:Boolean); overload;
+
+   {
+   Vor.: index ist Registerindex
+   Eff.: w steht im Register 'index' sofern erlaubt.
+   Erg.: -
+   Exceptions: Invalid Register / Not Allowed
+   }
+   procedure WriteRegister(index : Byte; w:Word); overload;
+
+   {
+   Vor.: index ist Registerindex
+   Eff.: die ersten 16 bit von w stehen im Register 'index' sofern erlaubt. Ist force, so steht w immer in Register 'index'
+         die Flags 'O','S' und 'Z' werden entsprechend gesehtz sofern f.
+   Erg.: -
+   Exceptions: Invalid Register / Not Allowed
+   }
+   procedure WriteRegister(force:Boolean; index : Byte; w:Integer; flags:Boolean); overload;
 
    public constructor Create(var r : TRam);
 
    {
-   Vor.: -
+   Vor.: index ist Registerindex
    Eff.: -
    Erg.: Liefert den Wert von Register 'index'.
    }
    public function ReadRegister(index : Byte) : Word;
 
    {
-   Vor.: -
-   Eff.: w steht im Register 'index'
+   Vor.: index ist Registerindex
+   Eff.: w steht im Register 'index' sofern erlaubt. Ist force, so steht w immer in Register 'index'
    Erg.: -
+   Exceptions: Invalid Register / Not Allowed
    }
-   public procedure WriteRegister(index : Byte; w:Word); overload;
+   public procedure WriteRegister(force:Boolean; index : Byte; w:Word); overload;
 
    {
    Vor.: Simulation nicht am Ende.
@@ -124,7 +143,28 @@ begin
    end;
 end;
 
+
 procedure CPU.WriteRegister(index : byte; w: Word);
+begin
+   WriteRegister(false,index,w);
+end;
+
+procedure CPU.WriteRegister(index : byte; w: Word; flags: Boolean);
+begin
+   WriteRegister(false,index,w, flags);
+end;
+
+procedure CPU.WriteRegister(force: Boolean; index : Byte; w: Integer; flags:Boolean);
+begin
+  WriteRegister(force,index,Word(w));
+  if flags then begin
+    setFlag(TFlags.O, w>65535);
+    setFlag(TFlags.S, w<0);
+    setFlag(TFlags.Z, Word(w)=0);
+  end;
+end;
+
+procedure CPU.WriteRegister(force: Boolean; index : byte; w: Word);
 begin
    case index of
       Integer(AX): Reg.AX := w;
@@ -144,22 +184,20 @@ begin
       Integer(DH): Reg.DX := ((w and 255) shl 8) or (Reg.DX and 255);
 
       Integer(BP): Reg.BP := w;
-      Integer(IP): Reg.IP := w;
-      Integer(SP): Reg.SP := w;
-      Integer(FLAGS): Reg.FLAGS := w;
-      else raise Exception.CreateFmt('Register with index %b is invalid.',[index]);
+      else begin
+        if force then begin
+          case index of
+            Integer(IP): Reg.IP := w;
+            Integer(SP): Reg.SP := w;
+            Integer(FLAGS): Reg.FLAGS := w;
+            else raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
+          end;
+        end else
+          raise Exception.CreateFmt('Not allowed to write register with index %x.',[index]);
+      end;
    end;
 end;
 
-procedure CPU.WriteRegister(index : Byte; w: Integer; f:Boolean);
-begin
-  WriteRegister(index,Word(w));
-  if f then begin
-    setFlag(TFlags.O, w>65535);
-    setFlag(TFlags.S, w<0);
-    setFlag(TFlags.Z, Word(w)=0);
-  end;
-end;
 
 
 procedure CPU.push(w : word);

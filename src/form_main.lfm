@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 462
+  Left = 281
   Height = 442
-  Top = 142
+  Top = 133
   Width = 848
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 418

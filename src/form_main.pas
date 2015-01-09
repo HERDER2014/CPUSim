@@ -69,6 +69,7 @@ type
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
+    function ListToStr: string;
   private
     { private declarations }
   public
@@ -222,6 +223,22 @@ begin
 end;
 
 
+function TmainFrm.ListToStr: string;
+var
+  Code: String;
+  i : Cardinal;
+begin
+  for i:=0 to InputSynEdit.Lines.Count do
+    Code += InputSynEdit.Text[i];
+  result:=Code
+end;
+
+//procedure TmainFrm.CompileClick(Sender: TObject); //Achtung! Umbennennung nötig
+//var
+//
+//begin
+//  TODO
+//  Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
+//end;
 
 end.
-

@@ -485,6 +485,7 @@ object mainFrm: TmainFrm
     LineHighlightColor.Background = clNone
     LineHighlightColor.Foreground = clNone
     LineHighlightColor.FrameEdges = sfeAround
+    OnChange = InputSynEditChange
     inline SynLeftGutterPartList1: TSynGutterPartList
       object SynGutterMarks1: TSynGutterMarks
         Width = 24
@@ -539,7 +540,6 @@ object mainFrm: TmainFrm
     Lines.Strings = (
       'Memo1'
     )
-    OnChange = MessagesMemoChange
     TabOrder = 1
   end
   object BottomVSplitter: TSplitter

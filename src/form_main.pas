@@ -51,7 +51,7 @@ type
     InputSynEdit: TSynEdit;
     RegistersValueList: TValueListEditor;
     ValueListEditor1: TValueListEditor;
-    procedure Button1Click(Sender: TObject);
+    procedure InputSynEditChange(Sender: TObject);
     procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_FindClick(Sender: TObject);
@@ -63,7 +63,6 @@ type
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
-    procedure MessagesMemoChange(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -92,20 +91,15 @@ begin
   //example code for registers:
   RegistersValueList.Row := 0;
   RegistersValueList.InsertRow('AX','0000000000000000',true);
-
   InputSynEdit.Text:='';
   MessagesMemo.Text:='Hit "Run" to test your program!';
-
+  Saved:=True;
 end;
 
 procedure TmainFrm.ShowExitDlg;
 var
   answer : LongInt;
 begin
-  //SaveDlg if saved=false?
-
-
-
   if saved then
   begin
     Application.Terminate;
@@ -113,15 +107,10 @@ begin
   begin
     answer := MessageDlg('Unsaved Changes! Do you really want to quit?', mtConfirmation, mbYesNoCancel, 0);
     if answer = mrYes then
-    begin
-      Application.Terminate;
-    end else
+      Application.Terminate else
     if answer = mrNo then
-    begin
       SaveDlg.Execute;
-    end;
   end;
-
 end;
 
 
@@ -130,13 +119,14 @@ begin
   ShowExitDlg;
 end;
 
-procedure TmainFrm.Button1Click(Sender: TObject);
-begin
-end;
-
 procedure TmainFrm.MainFrm_Menu_Edit_CopyClick(Sender: TObject);
 begin
   InputSynEdit.CopyToClipboard;
+end;
+
+procedure TmainFrm.InputSynEditChange(Sender: TObject);
+begin
+  Saved:=False;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
@@ -164,15 +154,14 @@ begin
   InputSynEdit.Undo;
 end;
 
-
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
 begin
-  //TODO
+  //
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
 begin
-  //Keep trackk of recent files?
+  //Keep track of recent files?
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
@@ -197,12 +186,6 @@ procedure TmainFrm.MainFrm_Menu_Help_ContentsClick(Sender: TObject);
 begin
 
 end;
-
-procedure TmainFrm.MessagesMemoChange(Sender: TObject);
-begin
-
-end;
-
 
 
 procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);

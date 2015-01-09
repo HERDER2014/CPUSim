@@ -228,7 +228,7 @@ end;
 function CPU.Step() : Boolean;
 begin
 
-   case Ram.ReadByte(Reg.IP) of
+   case OPCode(Ram.ReadByte(Reg.IP)) of
       _END: result:=True;
       MOV_R_X: begin
         WriteRegister(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2));
@@ -355,7 +355,7 @@ begin
         end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
       end; //mod R,x
-      MOV_R_ADDR_X: begin
+      MOD_R_ADDR_X: begin
         if (Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) <> 0) then begin
           WriteRegister(Ram.ReadByte(Reg.IP+1), ReadRegister(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Ram.ReadWord(Reg.IP+2)),true);
           Reg.IP += 4;

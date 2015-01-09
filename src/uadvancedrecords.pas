@@ -10,7 +10,7 @@ unit uAdvancedRecords;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, uTypen;
 
 type
   {
@@ -58,6 +58,13 @@ type
        die Eingabe ungültig sein.
     }
     Count: cardinal;
+  end;
+
+type
+  TAddress = record
+    R: RegisterIndex;
+    x: SmallInt;
+    valid : Boolean;
   end;
 
 function CrTCodeLineNr(line: string; nr: cardinal): TCodeLineNr;

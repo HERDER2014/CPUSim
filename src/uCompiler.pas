@@ -49,7 +49,7 @@ type
    Vor.: -
    Eff.: Das kompilierte Programm steht im RAM.
    Erg.: -
-   Ausnahmen: Fehlermeldungen.
+   Ausnahmen: Fehlermeldungen (TCompilerException).
    }
     procedure Compile(input: string);
 
@@ -62,7 +62,6 @@ type
     function GetCodePosition(addr: cardinal): cardinal;
 
   {
-
    Schreibt die Instruktion mit ihren Operanden in den RAM.
    Gibt TRUE zurück, wenn die Eingaben in instruction und operands gültig sind.
 
@@ -72,7 +71,6 @@ type
    operands: Operanden; bspw.            "AL, BL"
    offset: gibt die Startposition zum Schreiben in den RAM an.
    var rBytesWritten: Wenn TRUE zurückgegeben wurde, enthält nach Ausführung die Anzahl an Bytes, die in den RAM geschrieben wurden.
-
   }
   private
     function WriteInstrucitonLineToRAM(instruction, operandsString: string;
@@ -282,6 +280,109 @@ begin
   end;
 end;
 
+
+// TODO: überprüfen, ob Zahl > SmallInt
+function ParseAddress(addressString : string) : TAddress;
+var inbrackets : string;
+  pluspos : Cardinal;
+  minuspos : Cardinal;
+  left, right : String;
+  longX : LongInt;
+begin
+  if (LeftStr(addressString, 1) = '[') and (RightStr(addressString, 1) = ']') then
+  begin
+    inbrackets:=Copy(addressString, 2, Length(addressString) - 2);
+    inbrackets := Trim(inbrackets);
+    pluspos := Pos('+', inbrackets);
+    if pluspos = 0 then
+    begin
+      minuspos := Pos('-', inbrackets);
+      if minuspos = 0 then
+      begin
+        // kein + oder - => nur [R] oder [X] möglich.
+        if TryStrToInt(inbrackets, LongX) then
+        begin
+          Result.valid:=true;
+          Result.x:=SmallInt(LongX);
+          Result.R:=RegisterIndex.INVALID;
+        end
+        else
+        begin
+          Result.R := ParseRegisterIndex(inbrackets);
+          if Result.R <> RegisterIndex.INVALID then
+          begin
+            Result.x:=0;
+            Result.valid:=true;
+          end
+          else
+          begin
+            // Eingabe ungültig
+            Result.valid:=false;
+          end;
+        end;
+      end
+      else
+      begin
+        // MINUS
+        left := Trim(Copy(inbrackets, 1, minuspos-1));
+        right := Trim(Copy(inbrackets, minuspos+1, Length(inbrackets) - minuspos));
+          if TryStrToInt(right, LongX) then
+          begin
+            // rechtes ist Zahl => linkes muss Register sein
+            Result.x:=SmallInt(LongX);
+            Result.R:=ParseRegisterIndex(left);
+            if Result.R <> RegisterIndex.INVALID then
+            begin
+              Result.valid:=true;
+              Result.x:=-Result.x;
+            end
+            else
+            begin
+              // kein Register
+              Result.valid:=false;
+            end;
+          end
+          else
+          begin
+            // keine Zahl
+            Result.valid:=false;
+          end;
+      end;
+    end
+    else
+    begin
+      // PLUS
+      left := Trim(Copy(inbrackets, 1, pluspos-1));
+        right := Trim(Copy(inbrackets, pluspos+1, Length(inbrackets) - pluspos));
+          if TryStrToInt(right, LongX) then
+          begin
+            // rechtes ist Zahl => linkes muss Register sein
+            Result.x:=SmallInt(LongX);
+            Result.R:=ParseRegisterIndex(left);
+            if Result.R <> RegisterIndex.INVALID then
+            begin
+              Result.valid:=true;
+            end
+            else
+            begin
+              // kein Register
+              Result.valid:=false;
+            end;
+          end
+          else
+          begin
+            // keine Zahl
+            Result.valid:=false;
+          end;
+    end;
+  end
+  else
+  begin
+    // keine [ ]
+    Result.valid:=false;
+  end;
+end;
+
 // ======================= TCompiler functions =================================
 
 function TCompiler.WriteInstrucitonLineToRAM(instruction, operandsString: string;
@@ -289,9 +390,9 @@ function TCompiler.WriteInstrucitonLineToRAM(instruction, operandsString: string
   var rBytesWritten: word; var rErrorString: string): boolean;
 var
   operands: TOperands;
-  r1: RegisterIndex;
-  r2: RegisterIndex;
+  r1, r2: RegisterIndex;
   n1, n2: integer;
+  a1, a2: TAddress;
 
   procedure ReportOPCountError(expected: cardinal);
   begin
@@ -310,6 +411,8 @@ begin
   operands := ParseOperands(operandsString);
   r1 := ParseRegisterIndex(operands.op1);
   r2 := ParseRegisterIndex(operands.op2);
+  a1 := ParseAddress(operands.op1);
+  a2 := ParseAddress(operands.op2);
 
   case instruction of
     'ADD':
@@ -334,7 +437,29 @@ begin
           Ram.WriteWord(offset + 2, n2);
           rBytesWritten := 4;
           exit(True);
-        end;
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) then
+        begin
+          // ADD R, [A]
+          if a2.R = RegisterIndex.INVALID then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.ADD_R_ADDR_X));
+            Ram.WriteWord(offset+1, Word(a2.x));
+            rBytesWritten := 3;
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.ADD_R_ADDR_R));
+            Ram.WriteByte(offset+1, Ord(a2.R));
+            rBytesWritten := 2;
+          end;
+          exit(TRUE);
+          ////////////////////////////////////////////////////////////
+        end
+        else
         // Hier andere Kombinationen angeben.
         begin
           // Keine passenden Operanden
@@ -543,7 +668,7 @@ begin
         ReportOPCountError(1);
         exit(FALSE);
       end;
-    end;
+    end
     otherwise
     begin
       // Unbekannte Instruktion

@@ -417,7 +417,7 @@ begin
         else
           Reg.IP+=2;
       end; //jz R
-      SZ_X: begin
+      JZ_X: begin
         if (getFlag(Z)) then
           Reg.IP:=Ram.ReadWord(Reg.IP+1)
         else
@@ -497,7 +497,7 @@ begin
         push(Ram.ReadWord(Reg.IP+1));
         Reg.IP+=2;
       end;// push x
-      POP: begin
+      OPCode.POP: begin
         pop();
         Reg.IP+=1;
       end; //pop			(in kein Register)
@@ -537,7 +537,6 @@ begin
       end; //xor R,R
 
    end;
-  end;
 end;
 
 end.

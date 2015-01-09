@@ -12,6 +12,8 @@ uses
 
 type
   OPCode = (
+    // END
+    _END = 0,
     // MOV R, X
     MOV_R_X = 1,
     // MOV R, [R]
@@ -77,8 +79,43 @@ type
     // CMP R, X
     CMP_R_X = 29,
 
+    // JMP R
+    JMP_R = 30,
     // JMP X
     JMP_ADDR = 31,
+
+    // JS R
+    JS_R = 32,
+    // JS X
+    JS_X = 33,
+    // JZ R
+    JZ_R = 34,
+    // JZ X
+    JZ_X = 35,
+    // JO R
+    JO_R = 36,
+    // JO X
+    JO_X = 37,
+    // JNS R
+    JNS_R = 38,
+    // JNS X
+    JNS_X = 39,
+    // JNZ R
+    JNZ_R = 40,
+    // JNZ X
+    JNZ_X = 41,
+
+    // CALL X
+    CALL_X = 42,
+    // CALL R
+    CALL_R = 43,
+
+    // CMP R, R
+    CMP_R_R = 44,
+
+    // RET
+    RET = 45,
+
     // PUSH R
     PUSH_R = 46,
     // PUSH X
@@ -88,7 +125,38 @@ type
     // POP R
     POP_R = 49,
     // NOT R
-    NOT_R = 50
+    NOT_R = 50,
+
+    // AND R, X
+    AND_R_X = 51,
+    // AND R, R
+    AND_R_R = 52,
+    // OR R, X
+    OR_R_X = 53,
+    // OR R, R
+    OR_R_R = 54,
+    // XOR R, X
+    XOR_R_X = 55,
+    // XOR R, R
+    XOR_R_R = 56,
+    // JNO R
+    JNO_R = 57,
+    // JNO X
+    JNO_X = 58,
+    // AND R, [X]
+    AND_R_ADDR_X = 59,
+    // AND R, [R]
+    AND_R_ADDR_R = 60,
+    // OR R, [X]
+    OR_R_ADDR_X = 61,
+    // OR R, [R]
+    OR_R_ADDR_R = 62,
+    // XOR R, [X]
+    XOR_R_ADDR_X = 63,
+    // XOR R, [R]
+    XOR_R_ADDR_R = 64
+
+>>>>>>> origin/master
     );
 
 implementation

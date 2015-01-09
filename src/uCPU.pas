@@ -5,7 +5,7 @@ unit uCPU;
 interface
 
 uses
-  Classes, SysUtils, uRAM, UTypen;
+  Classes, SysUtils, uRAM, uTypen;
 
 type CPU = class
 

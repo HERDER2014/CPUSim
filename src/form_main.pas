@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls;
+  ComCtrls, (*uRAM, uCPU,*) uCompiler;
 
 type
 
@@ -63,6 +63,7 @@ type
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
+    procedure CompileClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -216,12 +217,20 @@ begin
   result:=Code
 end;
 
-//procedure TmainFrm.CompileClick(Sender: TObject); //Achtung! Umbennennung nötig
-//var
-//
-//begin
-//  TODO
-//  Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
-//end;
+procedure TmainFrm.CompileClick(Sender: TObject); //Achtung! Umbennennung nötig
+var
+  //ram : TRAM;
+ // cpu : CPU;
+  comp : TCompiler;
+begin
+  //TODO
+  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
+  //ram:=TRAM.Create((*SIZE*));
+  comp:=TCompiler.Create(ram);
+//  cpu:=CPU.Create(ram); notwendig?
+
+
+
+end;
 
 end.

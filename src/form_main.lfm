@@ -18,7 +18,7 @@ object mainFrm: TmainFrm
     Left = 0
     Height = 298
     Top = 0
-    Width = 387
+    Width = 400
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = 13
@@ -556,7 +556,7 @@ object mainFrm: TmainFrm
   object TopVSplitter: TSplitter
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = HSplitter
-    Left = 387
+    Left = 400
     Height = 298
     Top = 0
     Width = 5
@@ -614,10 +614,10 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = HSplitter
-    Left = 392
+    Left = 405
     Height = 298
     Top = 0
-    Width = 456
+    Width = 443
     Anchors = [akTop, akLeft, akRight, akBottom]
     FixedCols = 0
     RowCount = 2
@@ -627,7 +627,7 @@ object mainFrm: TmainFrm
     )
     ColWidths = (
       64
-      388
+      375
     )
   end
   object MainFrm_Menu: TMainMenu

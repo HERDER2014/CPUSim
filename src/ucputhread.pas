@@ -42,6 +42,30 @@ uses
   end;
 implementation
 
+constructor CPUThread.create(sim : CPU);
+begin
+
+end;
+
+procedure CPUThread.step();
+begin
+
+end;
+
+procedure CPUThread.start(v :int64);
+begin
+
+end;
+
+procedure CPUThread.stop();
+begin
+
+end;
+
+procedure destroy();
+begin
+
+end;
 
 end.
 

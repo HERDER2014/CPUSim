@@ -30,7 +30,20 @@ end;
 
 implementation
 
+constructor CPU.Create(var r : TRAM);
+begin
 
+end;
+
+function CPU.ReadRegister(index : RegisterIndex) : Word;
+begin
+
+end;
+
+function CPU.Step() : Boolean;
+begin
+
+end;
 
 end.
 

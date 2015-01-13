@@ -189,48 +189,28 @@ end;
 
 function TCPU.ReadRegister(index : Byte) : Word;
 begin
-  {$IFDEF windows}
-    EnterCriticalSection(cs.LockCount);
-  {$ELSE}
-    EnterCriticalSection(cs.__m_count);
-  {$ENDIF}
+    EnterCriticalSection(cs);
   try
-    RR(index);
+    result:=RR(index);
   finally
-    {$IFDEF windows}
-      LeaveCriticalSection(cs.LockCount);
-    {$ELSE}
-      LeaveCriticalSection(cs.__m_count);
-    {$ENDIF}
+      LeaveCriticalSection(cs);
   end;
 end;
 
 procedure TCPU.WriteRegister(index : Byte; w : Word);
 begin
-  {$IFDEF windows}
-    EnterCriticalSection(cs.LockCount);
-  {$ELSE}
-    EnterCriticalSection(cs.__m_count);
-  {$ENDIF}
+    EnterCriticalSection(cs);
   try
     WR(true,index, w);
   finally
-    {$IFDEF windows}
-      LeaveCriticalSection(cs.LockCount);
-    {$ELSE}
-      LeaveCriticalSection(cs.__m_count);
-    {$ENDIF}
+    LeaveCriticalSection(cs);
   end;
 end;
 
 
 function TCPU.Step() : Boolean;
 begin
-  {$IFDEF windows}
-    EnterCriticalSection(cs.LockCount);
-  {$ELSE}
-    EnterCriticalSection(cs.__m_count);
-  {$ENDIF}
+    EnterCriticalSection(cs);
   try
     case OPCode(Ram.ReadByte(Reg.IP)) of
       _END: result:=True;
@@ -542,11 +522,8 @@ begin
 
      end;
   finally
-    {$IFDEF windows}
-       LeaveCriticalSection(cs.LockCount);
-    {$ELSE}
-       LeaveCriticalSection(cs.__m_count);
-    {$ENDIF} end;
+    LeaveCriticalSection(cs);
+  end;
 end;
 
 end.

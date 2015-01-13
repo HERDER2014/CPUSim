@@ -49,41 +49,25 @@ end;
 
 procedure TCPUThread.setVel(v :int64);
 begin
-  {$IFDEF windows}
-    EnterCriticalSection(cs.LockCount);
-  {$ELSE}
-    EnterCriticalSection(cs.__m_count);
-  {$ENDIF}
+    EnterCriticalSection(cs);
   try
     self.v := v;
   finally
-    {$IFDEF windows}
-      LeaveCriticalSection(cs.LockCount);
-    {$ELSE}
-      LeaveCriticalSection(cs.__m_count);
-    {$ENDIF}
+    LeaveCriticalSection(cs);
   end;
 end;
 
 procedure TCPUThread.Execute;
 begin
   while (not Terminated) and (not sim.Step()) do begin
-   {$IFDEF windows}
-     EnterCriticalSection(cs.LockCount);
-   {$ELSE}
-     EnterCriticalSection(cs.__m_count);
-   {$ENDIF}
+     EnterCriticalSection(cs);
    try
      start := GetTickCount;
      repeat
        stop := GetTickCount;
      until (stop - start) >= v;
    finally
-     {$IFDEF windows}
-       LeaveCriticalSection(cs.LockCount);
-     {$ELSE}
-       LeaveCriticalSection(cs.__m_count);
-     {$ENDIF}
+     LeaveCriticalSection(cs);
    end;
   end;
 end;

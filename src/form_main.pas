@@ -72,6 +72,7 @@ type
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
     function ListToStr: string;
+    procedure updateRAM;
   private
     { private declarations }
   public
@@ -90,8 +91,6 @@ implementation
 { TmainFrm }
 
 procedure TmainFrm.FormCreate(Sender: TObject);
-var
-  i : Cardinal;
 begin
   // init:
   RegistersValueList.Row := 0;
@@ -113,13 +112,6 @@ begin
   InputSynEdit.ClearAll;
   MessagesMemo.Text:='Hit "Run" to test your program!';
   Saved:=True; // Don't ask for save when program just started
-
-  // init RAM:
-  for i:=0 to 65535 do
-    begin
-      RAMValueList.Row := i;
-      RAMValueList.InsertRow(FloatToStr(i),'0000000000000000',true);
-    end;
 end;
 
 procedure TmainFrm.ShowExitDlg;
@@ -143,6 +135,7 @@ end;
 procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
 begin
   ShowExitDlg;
+//TODO use TAction
 //  ActionList.;
 //  TFileExit.ActionList.;
 end;
@@ -184,12 +177,12 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
 begin
-  //
+  //TODO
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
 begin
-  //Keep track of recent files?
+  //TODO Keep track of recent files?
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
@@ -241,7 +234,7 @@ var
 begin
   for i:=0 to InputSynEdit.Lines.Count do
     Code += InputSynEdit.Text[i];
-  result:=Code
+  result:=Code;
 end;
 
 procedure TmainFrm.Compile;
@@ -249,14 +242,39 @@ var
   RAM : TRAM;
   CPU : TCPU;
   Comp : TCompiler;
-//  Thread : TCPUThread;
+  Thread : TCPUThread;
+  i : Cardinal;
 begin
   //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
-  RAM:=TRAM.Create((65536));
+  RAM:=TRAM.Create((65536));            //TODO use size instead
+  // init RAM viewer:
+  for i:=0 to 255 do //TODO use size instead
+    begin
+      RAMValueList.Row := i;
+      RAMValueList.InsertRow(FloatToStr(i),'0000000000000000',true);
+    end;
   Comp:=TCompiler.Create(RAM);
   Comp.Compile(mainFrm.ListToStr);
   CPU:=CPU.Create(RAM);
-//  Thread:=TCPUThread.Create(CPU);
+  Thread:=TCPUThread.Create(CPU);
+end;
+
+procedure TmainFrm.updateRAM;
+var
+  size : Cardinal;
+  i : Cardinal;
+  RAM : TRAM;
+  b : Byte;
+  c : Char;
+begin
+  size:=65536; //TODO get size
+  for i:=0 to size-1 do
+    begin
+      RAMValueList.Row := i;
+      b := RAM.ReadByte(i);
+      c := chr(b);
+      RAMValueList.InsertRow(FloatToStr(i),c,true);
+    end;
 end;
 
 end.

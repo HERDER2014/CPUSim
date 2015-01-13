@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, process, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, uCPU, uRAM, uTypen;
+  StdCtrls, uCPU, uRAM, uTypen, uCPUThread;
 
 type
 

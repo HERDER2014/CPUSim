@@ -6,7 +6,7 @@ interface
 
 
 uses
-  Classes, SysUtils, LazLogger;
+  Classes, SysUtils, LazLogger, Dialogs;
 
 type
   TRAM = class
@@ -53,6 +53,7 @@ end;
 
 procedure TRAM.WriteByte(addr: cardinal; b: byte);
 begin
+  ShowMessage('Writing byte ' + IntToStr(b) + ' at ' + IntToStr(addr));
   //DebugLn('Writing byte at ' + IntToStr(addr) + ': "' + IntToStr(b) + '"');
 end;
 
@@ -63,6 +64,7 @@ end;
 
 procedure TRAM.WriteWord(addr: cardinal; w: word);
 begin
+  ShowMessage('Writing word ' + IntToStr(w) + ' at ' + IntToStr(addr));
   //DebugLn('Writing word at ' + IntToStr(addr) + ': "' + IntToStr(w) + '"');
 end;
 

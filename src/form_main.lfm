@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 75
+  Left = 47
   Height = 344
-  Top = 493
+  Top = 613
   Width = 558
   Caption = 'Form1'
   ClientHeight = 344
@@ -28,14 +28,8 @@ object Form1: TForm1
     Font.Pitch = fpFixed
     Font.Quality = fqDraft
     Lines.Strings = (
-      'jmp start     ; startet an der stelle start'
-      'mov al, 3       ; sinnvoller kommentar'
-      'mov bl, al'
-      'start:           ; hier wird gestartet'
-      'add al, bl'
-      'sub al, 2'
-      'push ax'
-      'pop cx'
+      'mov ax, 5'
+      'mov [ax], 6'
     )
     ParentFont = False
     TabOrder = 1

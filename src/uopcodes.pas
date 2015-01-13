@@ -12,6 +12,8 @@ uses
 
 type
   OPCode = (
+    // END
+    _END = 0,
     // MOV R, X
     MOV_R_X = 1,
     // MOV R, [R]

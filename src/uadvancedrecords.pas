@@ -65,6 +65,7 @@ type
     R: RegisterIndex;
     x: SmallInt;
     valid : Boolean;
+    rFound, xFound : Boolean;
   end;
 
 function CrTCodeLineNr(line: string; nr: cardinal): TCodeLineNr;

@@ -74,7 +74,7 @@ type
   }
   private
     function WriteInstrucitonLineToRAM(instruction, operandsString: string;
-      offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
+      var offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
       var rBytesWritten: word; var rErrorString: string): boolean;
 
     public
@@ -294,6 +294,8 @@ begin
     inbrackets:=Copy(addressString, 2, Length(addressString) - 2);
     inbrackets := Trim(inbrackets);
     pluspos := Pos('+', inbrackets);
+    Result.rFound:=true;    // sowohl X als auch R sind vorhanden, sonst
+    Result.xFound:=true;    // wird das weiter unten geändert!
     if pluspos = 0 then
     begin
       minuspos := Pos('-', inbrackets);
@@ -305,13 +307,14 @@ begin
           Result.valid:=true;
           Result.x:=SmallInt(LongX);
           Result.R:=RegisterIndex.INVALID;
+          Result.rFound:=false;
         end
         else
         begin
+          Result.xFound:=false;
           Result.R := ParseRegisterIndex(inbrackets);
           if Result.R <> RegisterIndex.INVALID then
           begin
-            Result.x:=0;
             Result.valid:=true;
           end
           else
@@ -380,13 +383,15 @@ begin
   begin
     // keine [ ]
     Result.valid:=false;
+    Result.rFound:=false;
+    Result.xFound:=false;
   end;
 end;
 
 // ======================= TCompiler functions =================================
 
 function TCompiler.WriteInstrucitonLineToRAM(instruction, operandsString: string;
-  offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
+  var offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
   var rBytesWritten: word; var rErrorString: string): boolean;
 var
   operands: TOperands;
@@ -415,7 +420,122 @@ begin
   a2 := ParseAddress(operands.op2);
 
   case instruction of
-    'ADD':
+    'END': // 1
+    begin
+      if (operands.Count = 0) then
+      begin
+        Ram.WriteByte(offset, Ord(OPCode._END));
+        rBytesWritten:=1;
+      end
+      else
+      begin
+        ReportOPCountError(0);
+      end;
+    end;
+
+    'MOV': // 8
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // MOV R, R
+          Ram.WriteByte(offset, Ord(OPCode.MOV_R_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // MOV R, X
+          Ram.WriteByte(offset, Ord(OPCode.MOV_R_X));
+          Ram.WriteByte(offset+1, Ord(r1));
+          Ram.WriteWord(offset+2, n2);
+          rBytesWritten := 4;
+          exit(TRUE);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) then
+        begin
+          // MOV R, [A]
+          if (a2.rFound and a2.xFound) then
+          begin
+            // A = R+X
+            Ram.WriteByte(offset, Ord(OPCode.MOV_R_ADDR_RX));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            Ram.WriteWord(offset+3, a2.x);
+            rBytesWritten := 5;
+          end
+          else
+          if a2.xFound then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MOV_R_ADDR_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, Word(a2.x));
+            rBytesWritten := 4;
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOV_R_ADDR_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            rBytesWritten := 3;
+          end;
+          exit(TRUE);
+        end
+        else
+        if (a1.valid) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // MOV [A], R
+          if (a1.rFound) and (not a1.xFound) then
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_R_R));
+            Ram.WriteByte(offset+1, Ord(a1.R));
+            Ram.WriteByte(offset+2, Ord(r2));
+            rBytesWritten := 3;
+          end
+          else
+          if (a1.xFound) and (not a1.rFound) then
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_X_R));
+            Ram.WriteWord(offset+1, Ord(a1.x));
+            Ram.WriteByte(offset+3, Ord(r2));
+            rBytesWritten := 4;
+          end
+          else
+          if (a1.rFound) and (a1.xFound) then
+          begin
+            // A = R+X
+            Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_RX_R));
+            Ram.WriteByte(offset+1, Ord(a1.R));
+            Ram.WriteWord(offset+2, Ord(a1.x));
+            Ram.WriteByte(offset+4, Ord(r2));
+            rBytesWritten := 5;
+          end;
+          exit(True);
+        end;
+          // Keine anderen Kombinationen von Operanden
+        begin
+          // Keine passenden Operanden
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'ADD': // 4
     begin
       if operands.Count = 2 then
       begin
@@ -439,25 +559,28 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and (a2.valid) then
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) and (a2.xFound xor a2.rFound) then
         begin
           // ADD R, [A]
           if a2.R = RegisterIndex.INVALID then
           begin
             // A = X
             Ram.WriteByte(offset, Ord(OPCode.ADD_R_ADDR_X));
-            Ram.WriteWord(offset+1, Word(a2.x));
-            rBytesWritten := 3;
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, Word(a2.x));
+            rBytesWritten := 4;
+            exit(True);
           end
           else
           begin
             // A = R
             Ram.WriteByte(offset, Ord(OPCode.ADD_R_ADDR_R));
-            Ram.WriteByte(offset+1, Ord(a2.R));
-            rBytesWritten := 2;
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            rBytesWritten := 3;
+            exit(True);
           end;
           exit(TRUE);
-          ////////////////////////////////////////////////////////////
         end
         else
         // Hier andere Kombinationen angeben.
@@ -474,7 +597,8 @@ begin
         exit(False);
       end;
     end;
-    'SUB':
+
+    'SUB': // 4
     begin
       if operands.Count = 2 then
       begin
@@ -496,7 +620,32 @@ begin
           Ram.WriteWord(offset + 2, n2);
           rBytesWritten := 4;
           exit(True);
-        end;
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) and (a2.xFound xor a2.rFound) then
+        begin
+          // SUB R, [A]
+          if a2.R = RegisterIndex.INVALID then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.SUB_R_ADDR_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, Word(a2.x));
+            rBytesWritten := 4;
+            exit(True);
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.SUB_R_ADDR_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            rBytesWritten := 3;
+            exit(True);
+          end;
+          exit(TRUE);
+        end
+        else
         // Hier andere Kombinationen angeben.
         begin
           // Keine passenden Operanden
@@ -511,10 +660,247 @@ begin
         exit(False);
       end;
     end;
-    'JMP':
+
+    'MUL': // 4
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // MUL R, R
+          Ram.WriteByte(offset, Ord(OPCode.MUL_R_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // MUL R, X
+          Ram.WriteByte(offset, Ord(OPCode.MUL_R_X));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteWord(offset + 2, n2);
+          rBytesWritten := 4;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) and (a2.xFound xor a2.rFound) then
+        begin
+          // MUL R, [A]
+          if a2.R = RegisterIndex.INVALID then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MUL_R_ADDR_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, Word(a2.x));
+            rBytesWritten := 4;
+            exit(True);
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MUL_R_ADDR_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            rBytesWritten := 3;
+            exit(True);
+          end;
+          exit(TRUE);
+        end
+        else
+        // Hier andere Kombinationen angeben.
+        begin
+          // Keine passenden Operanden
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        // NICHT 2 Operatoren
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'DIV': // 4
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // DIV R, R
+          Ram.WriteByte(offset, Ord(OPCode.DIV_R_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // DIV R, X
+          Ram.WriteByte(offset, Ord(OPCode.DIV_R_X));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteWord(offset + 2, n2);
+          rBytesWritten := 4;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) and (a2.xFound xor a2.rFound) then
+        begin
+          // DIV R, [A]
+          if a2.R = RegisterIndex.INVALID then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.DIV_R_ADDR_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, Word(a2.x));
+            rBytesWritten := 4;
+            exit(True);
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.DIV_R_ADDR_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            rBytesWritten := 3;
+            exit(True);
+          end;
+          exit(TRUE);
+        end
+        else
+        // Hier andere Kombinationen angeben.
+        begin
+          // Keine passenden Operanden
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        // NICHT 2 Operatoren
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'MOD': // 4
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // MOD R, R
+          Ram.WriteByte(offset, Ord(OPCode.MOD_R_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // MOD R, X
+          Ram.WriteByte(offset, Ord(OPCode.MOD_R_X));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteWord(offset + 2, n2);
+          rBytesWritten := 4;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) and (a2.xFound xor a2.rFound) then
+        begin
+          // MOD R, [A]
+          if a2.R = RegisterIndex.INVALID then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MOD_R_ADDR_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, Word(a2.x));
+            rBytesWritten := 4;
+            exit(True);
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOD_R_ADDR_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(a2.R));
+            rBytesWritten := 3;
+            exit(True);
+          end;
+          exit(TRUE);
+        end
+        else
+        // Hier andere Kombinationen angeben.
+        begin
+          // Keine passenden Operanden
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        // NICHT 2 Operatoren
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'CMP': // 2
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // CMP R, R
+          Ram.WriteByte(offset, Ord(OPCode.CMP_R_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          Ram.WriteByte(offset+2, Ord(r2));
+          rBytesWritten:=3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
+        begin
+          // CMP R, X
+          Ram.WriteByte(offset, Ord(OPCode.CMP_R_X));
+          Ram.WriteByte(offset+1, Ord(r1));
+          Ram.WriteWord(offset+2, n2);
+          rBytesWritten:=4;
+          exit(True);
+        end
+        else
+        begin
+          // Keine passenden Operanden.
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+      // Falsche Anzahl an Operanden.
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'JMP': // 2
     begin
       if operands.Count = 1 then
       begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JMP R
+          Ram.WriteByte(offset, Ord(OPCode.JMP_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
         if TryStrToInt(operands.op1, n1) then
         begin
           // JMP X
@@ -538,44 +924,282 @@ begin
         exit(False);
       end;
     end;
-    'MOV':
+
+    'JS': // 2
     begin
-      if operands.Count = 2 then
+      if operands.Count = 1 then
       begin
-        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        if (r1 <> RegisterIndex.INVALID) then
         begin
-          //MOV R, R
-          Ram.WriteByte(offset, Ord(OPCode.MOV_R_R));
+          // JS R
+          Ram.WriteByte(offset, Ord(OPCode.JS_R));
           Ram.WriteByte(offset + 1, Ord(r1));
-          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // JS X
+          Ram.WriteByte(offset, Ord(OPCode.JS_X));
+          Ram.WriteWord(offset + 1, n1);
           rBytesWritten := 3;
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryStrToInt(operands.op2, n2) then
         begin
-          // MOV R, X
-          Ram.WriteByte(offset, Ord(OPCode.MOV_R_X));
-          Ram.WriteByte(offset+1, Ord(r1));
-          Ram.WriteWord(offset+2, n2);
-          rBytesWritten := 4;
-          exit(TRUE);
-        end
-        else
-          // Hier andere Kombinationen von Operanden
-        begin
-          // Keine passenden Operanden
-          ReportInvalidOperands();
-          exit(False);
+          // JS LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JS_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
         end;
       end
       else
       begin
-        ReportOPCountError(2);
+        ReportOPCountError(1);
         exit(False);
       end;
     end;
-    'PUSH':
+
+    'JZ': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JZ R
+          Ram.WriteByte(offset, Ord(OPCode.JZ_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // JZ X
+          Ram.WriteByte(offset, Ord(OPCode.JZ_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JZ LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JZ_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'JO': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JO R
+          Ram.WriteByte(offset, Ord(OPCode.JO_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // JO X
+          Ram.WriteByte(offset, Ord(OPCode.JO_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JO LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JO_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'JNS': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JNS R
+          Ram.WriteByte(offset, Ord(OPCode.JNS_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // JNS X
+          Ram.WriteByte(offset, Ord(OPCode.JNS_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JNS LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JNS_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'JNZ': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JNZ R
+          Ram.WriteByte(offset, Ord(OPCode.JNZ_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // JNZ X
+          Ram.WriteByte(offset, Ord(OPCode.JNZ_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JNZ LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JNZ_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'JNO': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JNO R
+          Ram.WriteByte(offset, Ord(OPCode.JNO_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // JNO X
+          Ram.WriteByte(offset, Ord(OPCode.JNO_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JNO LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JNO_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'CALL': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // CALL R
+          Ram.WriteByte(offset, Ord(OPCode.CALL_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          // CALL X
+          Ram.WriteByte(offset, Ord(OPCode.CALL_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // CALL LABEL
+          Ram.WriteByte(offset, Ord(OPCode.CALL_X));
+          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'RET': // 1
+    begin
+      if (operands.Count = 0) then
+      begin
+        Ram.WriteByte(offset, Ord(OPCode.RET));
+        rBytesWritten:=1;
+        exit(True)
+      end
+      else
+      begin
+        ReportOPCountError(0);
+        exit(False);
+      end;
+    end;
+
+    'PUSH': // 2
     begin
       if operands.Count = 1 then
       begin
@@ -610,7 +1234,8 @@ begin
         exit(FALSE);
       end;
     end;
-    'POP':
+
+    'POP': // 2
     begin
       if operands.Count = 0 then
       begin
@@ -645,7 +1270,8 @@ begin
         end;
       end;
     end;
-    'NOT':
+
+    'NOT': // 1
     begin
       if operands.Count = 1 then
       begin
@@ -668,7 +1294,217 @@ begin
         ReportOPCountError(1);
         exit(FALSE);
       end;
-    end
+    end;
+
+    'AND': // 4
+    begin
+      if (operands.Count = 2) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          if TryStrToInt(operands.op2, n2) then
+          begin
+            // AND R, X
+            Ram.WriteByte(offset, Ord(OPCode.AND_R_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, n2);
+            rBytesWritten:=4;
+            exit(True);
+          end
+          else
+          if (r2 <> RegisterIndex.INVALID) then
+          begin
+            // AND R, R
+            Ram.WriteByte(offset, Ord(OPCode.AND_R_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(r2));
+            rBytesWritten:=3;
+            exit(True);
+          end
+          else
+          if a2.valid then
+          begin
+            // AND R, [A]
+            if a2.xFound and (not a2.rFound) then
+            begin
+              // A = X
+              Ram.WriteByte(offset, Ord(OPCode.AND_R_ADDR_X));
+              Ram.WriteByte(offset+1, Ord(r1));
+              Ram.WriteWord(offset+2, a2.x);
+              rBytesWritten:=4;
+              exit(True);
+            end
+            else
+            if a2.rFound and (not a2.xFound) then
+            begin
+              // A = R
+              Ram.WriteByte(offset, Ord(OPCode.AND_R_ADDR_R));
+              Ram.WriteByte(offset+1, Ord(r1));
+              Ram.WriteByte(offset+2, Ord(a2.R));
+              rBytesWritten:=3;
+              exit(True);
+            end;
+          end;
+        end;
+
+        // Keine passenden Operanden.
+        ReportInvalidOperands();
+        exit(False);
+      end
+      else
+      begin
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'OR': // 4
+    begin
+      if (operands.Count = 2) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          if TryStrToInt(operands.op2, n2) then
+          begin
+            // OR R, X
+            Ram.WriteByte(offset, Ord(OPCode.OR_R_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, n2);
+            rBytesWritten:=4;
+            exit(True);
+          end
+          else
+          if (r2 <> RegisterIndex.INVALID) then
+          begin
+            // OR R, R
+            Ram.WriteByte(offset, Ord(OPCode.OR_R_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(r2));
+            rBytesWritten:=3;
+            exit(True);
+          end
+          else
+          if a2.valid then
+          begin
+            // OR R, [A]
+            if a2.xFound and (not a2.rFound) then
+            begin
+              // A = X
+              Ram.WriteByte(offset, Ord(OPCode.OR_R_ADDR_X));
+              Ram.WriteByte(offset+1, Ord(r1));
+              Ram.WriteWord(offset+2, a2.x);
+              rBytesWritten:=4;
+              exit(True);
+            end
+            else
+            if a2.rFound and (not a2.xFound) then
+            begin
+              // A = R
+              Ram.WriteByte(offset, Ord(OPCode.OR_R_ADDR_R));
+              Ram.WriteByte(offset+1, Ord(r1));
+              Ram.WriteByte(offset+2, Ord(a2.R));
+              rBytesWritten:=3;
+              exit(True);
+            end;
+          end;
+        end;
+
+        // Keine passenden Operanden.
+        ReportInvalidOperands();
+        exit(False);
+      end
+      else
+      begin
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'XOR': // 4
+    begin
+      if (operands.Count = 2) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          if TryStrToInt(operands.op2, n2) then
+          begin
+            // XOR R, X
+            Ram.WriteByte(offset, Ord(OPCode.XOR_R_X));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteWord(offset+2, n2);
+            rBytesWritten:=4;
+            exit(True);
+          end
+          else
+          if (r2 <> RegisterIndex.INVALID) then
+          begin
+            // XOR R, R
+            Ram.WriteByte(offset, Ord(OPCode.XOR_R_R));
+            Ram.WriteByte(offset+1, Ord(r1));
+            Ram.WriteByte(offset+2, Ord(r2));
+            rBytesWritten:=3;
+            exit(True);
+          end
+          else
+          if a2.valid then
+          begin
+            // XOR R, [A]
+            if a2.xFound and (not a2.rFound) then
+            begin
+              // A = X
+              Ram.WriteByte(offset, Ord(OPCode.XOR_R_ADDR_X));
+              Ram.WriteByte(offset+1, Ord(r1));
+              Ram.WriteWord(offset+2, a2.x);
+              rBytesWritten:=4;
+              exit(True);
+            end
+            else
+            if a2.rFound and (not a2.xFound) then
+            begin
+              // A = R
+              Ram.WriteByte(offset, Ord(OPCode.XOR_R_ADDR_R));
+              Ram.WriteByte(offset+1, Ord(r1));
+              Ram.WriteByte(offset+2, Ord(a2.R));
+              rBytesWritten:=3;
+              exit(True);
+            end;
+          end;
+        end;
+
+        // Keine passenden Operanden.
+        ReportInvalidOperands();
+        exit(False);
+      end
+      else
+      begin
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'ORG':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if TryStrToInt(operands.op1, n1) then
+        begin
+          offset := n1;
+          rBytesWritten:=0;
+          exit(True);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end
+    end;
+
     otherwise
     begin
       // Unbekannte Instruktion

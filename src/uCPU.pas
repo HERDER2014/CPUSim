@@ -189,7 +189,7 @@ end;
 
 function TCPU.ReadRegister(index : Byte) : Word;
 begin
-    EnterCriticalSection(cs);
+  EnterCriticalSection(cs);
   try
     result:=RR(index);
   finally

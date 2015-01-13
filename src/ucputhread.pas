@@ -5,7 +5,7 @@ unit uCPUThread;
 interface
 
 uses
-  Classes, SysUtils, uCPU, LCLIntf;
+  Classes, SysUtils, uCPU;
   type TCPUThread = class(TThread)
     private
       cpu : TCPU;
@@ -36,7 +36,7 @@ uses
 
       procedure execute(); override;
 
-      destructor destroy();
+      destructor destroy(); override;
   end;
 implementation
 
@@ -50,28 +50,30 @@ end;
 
 procedure TCPUThread.setVel(v :int64);
 begin
- // EnterCriticalSection(cs);
+  EnterCriticalSection(cs);
   try
     p := v;
   finally
-   // LeaveCriticalSection(cs);
+    LeaveCriticalSection(cs);
   end;
 end;
 
 procedure TCPUThread.Execute;
 var
-  a,e : Int64;
+  a,e : TDateTime;
+  t : Int64;
 begin
   while (not Terminated) and (not cpu.Step()) do begin
-   //  EnterCriticalSection(cs);
+   EnterCriticalSection(cs);
    try
-     a := GetTickCount;
-     repeat
-       e := GetTickCount;
-     until (e - a) >= p;
+     t := p;
    finally
- //    LeaveCriticalSection(cs);
+     LeaveCriticalSection(cs);
    end;
+   a := Time();
+   repeat
+     e := Time();
+   until (e - a) >= t;
   end;
 end;
 

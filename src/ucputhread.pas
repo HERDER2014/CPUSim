@@ -36,7 +36,7 @@ uses
 
       procedure execute(); override;
 
-      destructor destroy();
+      destructor destroy(); override;
   end;
 implementation
 
@@ -61,17 +61,19 @@ end;
 procedure TCPUThread.Execute;
 var
   a,e : TDateTime;
+  t : Int64;
 begin
   while (not Terminated) and (not cpu.Step()) do begin
-     EnterCriticalSection(cs);
+   EnterCriticalSection(cs);
    try
-     a := Time();
-     repeat
-       e := Time();
-     until (e - a) >= p;
+     t := p;
    finally
      LeaveCriticalSection(cs);
    end;
+   a := Time();
+   repeat
+     e := Time();
+   until (e - a) >= t;
   end;
 end;
 

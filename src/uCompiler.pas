@@ -426,10 +426,12 @@ begin
       begin
         Ram.WriteByte(offset, Ord(OPCode._END));
         rBytesWritten:=1;
+        exit(True);
       end
       else
       begin
         ReportOPCountError(0);
+        exit(False);
       end;
     end;
 
@@ -1534,10 +1536,9 @@ var
   bytepos: word;
   rwritten: word;
 
-  procedure ReportError(Text: string);
+  procedure ReportError(Text: string; line : Cardinal);
   begin
-    raise TCompilerException.Create('Error at line ' + IntToStr(
-      befehleDict[i].nr) + ':'#13#13 + Text);
+    raise TCompilerException.Create('Error at line ' + IntToStr(line) + ':'#13#13 + Text);
   end;
 
   procedure ResolveLabelAddresses();
@@ -1552,7 +1553,7 @@ var
       if not labelDict.Find(item.labelName, index) then
       begin
         // Label nicht gefunden
-        ReportError('Label "' + item.labelName + '" not found.');
+        ReportError('Label "' + item.labelName + '" not found.', item.line);
       end
       else
       begin
@@ -1615,7 +1616,7 @@ begin
         if tLabelName = EmptyStr then
         begin
           // kein Labelname, nur ':'
-          ReportError('Empty label name not allowed.');
+          ReportError('Empty label name not allowed.', befehleDict[i].nr);
         end
         else
         begin
@@ -1627,14 +1628,14 @@ begin
           else
           begin
             // Label-Duplikat
-            ReportError('Duplicate label "' + tLabelName + '".');
+            ReportError('Duplicate label "' + tLabelName + '".', befehleDict[i].nr);
           end;
         end;
       end
       else
       begin
         // Nach Label-Deklaration steht noch was, das soll nicht sein.
-        ReportError('Text after label declaration.');
+        ReportError('Text after label declaration.', befehleDict[i].nr);
       end;
       rwritten := 0;
     end
@@ -1644,7 +1645,7 @@ begin
       if not WriteInstrucitonLineToRAM(inst, opString, bytepos,
         befehleDict[i].nr, labelResolveList, rwritten, errString) then
       begin
-        ReportError(errString);
+        ReportError(errString, befehleDict[i].nr);
         exit;
       end;
     end;

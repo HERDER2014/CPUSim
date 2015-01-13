@@ -64,8 +64,13 @@
 64 xor R,[R]
 
 org x 	(wird nicht im RAM gespeichert)
+<<<<<<< HEAD
+57 jno R
+58 jno X
+=======
 lbl:		(wird nicht im RAM gespeichert)
 
+>>>>>>> origin/master
 
 x: Zahlen
 R: Register

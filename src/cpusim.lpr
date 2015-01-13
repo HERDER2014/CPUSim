@@ -13,10 +13,10 @@ uses
 {$R *.res}
 
 begin
-  Application.Title:='CPU Simulator Herder 14';
+  Application.Title:='CPU Simulator Herder14';
   RequireDerivedFormResource := True;
   Application.Initialize;
-  Application.CreateForm(TmainFrm, mainFrm);
+  Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.
 

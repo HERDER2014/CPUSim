@@ -25,6 +25,8 @@ uses
       FLAGS : Word;
    end;
 
+   type TFlags = (O=2048,S=128,Z=64);
+
 implementation
 
 end.

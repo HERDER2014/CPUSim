@@ -30,15 +30,18 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="SynEdit"/>
+        <PackageName Value="FCL"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="SynEdit"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="8">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -72,6 +75,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uTypen"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="uopcodes.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uOPCodes"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="ucputhread.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uCPUThread"/>
+      </Unit7>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -79,11 +79,6 @@ type
     procedure step;
     procedure stop;
     procedure delete;
-  private
-    { private declarations }
-  public
-    { public declarations }
-  end;
 
 var
   mainFrm: TmainFrm;
@@ -98,9 +93,9 @@ implementation
 
 {$R *.lfm}
 
-{ TmainFrm }
+{ TForm1 }
 
-procedure TmainFrm.FormCreate(Sender: TObject);
+procedure TForm1.FormCreate(Sender: TObject);
 begin
   // init:
   RegistersValueList.Row := 0;
@@ -124,9 +119,7 @@ begin
   Saved:=True; // Don't ask for save when program just started
 end;
 
-procedure TmainFrm.ShowExitDlg;
-var
-  answer : LongInt;
+procedure TForm1.Button1Click(Sender: TObject);
 begin
   if saved then
   begin
@@ -140,7 +133,6 @@ begin
       SaveDlg.Execute;
   end;
 end;
-
 
 procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
 begin

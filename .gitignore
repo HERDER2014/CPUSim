@@ -5,6 +5,9 @@
 # Lazarus local files (user-specific info)
 *.lps
 
+# Lockfiles
+*~
+
 # Lazarus history and backups
 backup/
 lib/

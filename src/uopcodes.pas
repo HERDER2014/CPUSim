@@ -156,7 +156,7 @@ type
     // XOR R, [R]
     XOR_R_ADDR_R = 64
 
-    );
+  );
 
 implementation
 

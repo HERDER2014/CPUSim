@@ -539,7 +539,6 @@ object mainFrm: TmainFrm
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Lines.Strings = (
-      'Memo1'
     )
     OnChange = Memo1Change
     TabOrder = 1

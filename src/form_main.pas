@@ -5,7 +5,8 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls, uCPU, uRAM, uTypen;
+  Classes, SysUtils, process, FileUtil, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, uCPU, uRAM, uTypen;
 
 type
 
@@ -24,7 +25,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-    simulator : CPU;
+    simulator : TCPU;
     ram : TRAM;
   public
     { public declarations }
@@ -42,7 +43,7 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   ram := TRAM.Create(0);
-  simulator := CPU.Create(ram);
+  simulator := TCPU.Create(ram);
 
   Label1.Caption := format('AX : %x',[simulator.ReadRegister(Integer(RegisterIndex.AX))]);
   Label2.Caption := format('BX : %x',[simulator.ReadRegister(Integer(RegisterIndex.BX))]);

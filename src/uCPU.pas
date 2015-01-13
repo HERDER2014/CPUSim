@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, uRAM, UTypen, uOPCodes;
 
-type CPU = class
+type TCPU = class
 
    private
 
@@ -101,7 +101,7 @@ end;
 
 implementation
 
-constructor CPU.Create(var r : TRam);
+constructor TCPU.Create(var r : TRam);
 begin
    Ram := r;
 
@@ -116,7 +116,7 @@ begin
    //   Reg := TRegRecord.Create();
 end;
 
-function CPU.ReadRegister(index : byte) : Word;
+function TCPU.ReadRegister(index : byte) : Word;
 begin
    case index of
       Integer(AX): result:=Reg.AX;
@@ -144,17 +144,17 @@ begin
 end;
 
 
-procedure CPU.WriteRegister(index : byte; w: Word);
+procedure TCPU.WriteRegister(index : byte; w: Word);
 begin
    WriteRegister(false,index,w);
 end;
 
-procedure CPU.WriteRegister(index : byte; w: Word; flags: Boolean);
+procedure TCPU.WriteRegister(index : byte; w: Word; flags: Boolean);
 begin
    WriteRegister(false,index,w, flags);
 end;
 
-procedure CPU.WriteRegister(force: Boolean; index : Byte; w: Integer; flags:Boolean);
+procedure TCPU.WriteRegister(force: Boolean; index : Byte; w: Integer; flags:Boolean);
 begin
   WriteRegister(force,index,Word(w));
   if flags then begin
@@ -164,7 +164,7 @@ begin
   end;
 end;
 
-procedure CPU.WriteRegister(force: Boolean; index : byte; w: Word);
+procedure TCPU.WriteRegister(force: Boolean; index : byte; w: Word);
 begin
    case index of
       Integer(AX): Reg.AX := w;
@@ -200,19 +200,19 @@ end;
 
 
 
-procedure CPU.push(w : word);
+procedure TCPU.push(w : word);
 begin
   Ram.WriteWord(Reg.SP-1,w);
   Reg.SP-=2;
 end;
 
-function CPU.pop():word;
+function TCPU.pop():word;
 begin
   result:=Ram.ReadWord(Reg.SP+1);
   Reg.SP+=2;
 end;
 
-procedure CPU.setFlag(f:TFlags; b:Boolean);
+procedure TCPU.setFlag(f:TFlags; b:Boolean);
 begin
   if b then
     Reg.FLAGS := Reg.FLAGS or word(f)
@@ -220,12 +220,12 @@ begin
     Reg.FLAGS := Reg.FLAGS and (not word(f));
 end;
 
-function CPU.getFlag(f:TFlags):Boolean;
+function TCPU.getFlag(f:TFlags):Boolean;
 begin
   result:=Boolean(Reg.FLAGS and word(f));
 end;
 
-function CPU.Step() : Boolean;
+function TCPU.Step() : Boolean;
 begin
 
    case OPCode(Ram.ReadByte(Reg.IP)) of

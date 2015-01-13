@@ -5,7 +5,7 @@ unit uCPUThread;
 interface
 
 uses
-  Classes, SysUtils, uCPU, Windows;
+  Classes, SysUtils, uCPU;
   type TCPUThread = class(TThread)
     private
       sim : TCPU;

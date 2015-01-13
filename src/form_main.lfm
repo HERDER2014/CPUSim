@@ -81,4 +81,10 @@ object Form1: TForm1
     Caption = 'Label8'
     ParentColor = False
   end
+  object RefreshTimer: TTimer
+    Interval = 100
+    OnTimer = RefreshTimerTimer
+    left = 419
+    top = 93
+  end
 end

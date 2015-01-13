@@ -48,10 +48,10 @@ implementation
 
 constructor TCPUThread.create(sim: TCPU);
 begin
-  inherited Create(true);
   cpu := sim;
   InitCriticalSection(cs);
   stopAtSP := High(Word);
+  inherited Create(true);
 end;
 
 procedure TCPUThread.setVel(v :int64);

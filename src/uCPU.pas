@@ -59,6 +59,7 @@ type TCPU = class
 end;
 
 implementation
+
 constructor TCPU.Create(var r : TRam);
 begin
    Ram := r;
@@ -188,7 +189,7 @@ end;
 
 function TCPU.ReadRegister(index : Byte) : Word;
 begin
-    EnterCriticalSection(cs);
+  EnterCriticalSection(cs);
   try
     result:=RR(index);
   finally
@@ -263,6 +264,8 @@ begin
         WR(Ram.ReadByte(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+2)) + RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //add R,R
+
+
       SUB_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1),-Ram.ReadWord(Reg.IP+2) + RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 4;
@@ -279,6 +282,8 @@ begin
         WR(Ram.ReadByte(Reg.IP+1),-RR(Ram.ReadByte(Reg.IP+2)) + RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //sub R,R
+
+
       MUL_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2) * RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 4;
@@ -295,6 +300,8 @@ begin
         WR(Ram.ReadByte(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+2)) * RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //mul R,R
+
+
       DIV_R_X: begin
         if (Ram.ReadWord(Reg.IP+2) <> 0) then begin
           WR(Ram.ReadByte(Reg.IP+1), RR(Ram.ReadByte(Reg.IP+1)) div Ram.ReadWord(Reg.IP+2),true);
@@ -323,6 +330,8 @@ begin
         end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
       end; //div R,R
+
+
       MOD_R_X: begin
         if (Ram.ReadWord(Reg.IP+2) <> 0) then begin
           WR(Ram.ReadByte(Reg.IP+1), RR(Ram.ReadByte(Reg.IP+1)) mod Ram.ReadWord(Reg.IP+2),true);
@@ -351,6 +360,8 @@ begin
         end else
           Raise Exception.CreateFmt('Division by zero is not allowed.',[]);
       end; //mod R,R
+
+
       CMP_R_X: begin
         setFlag(TFlags.O, false);
         setFlag(TFlags.S, RR(Ram.ReadByte(Reg.IP+1))<Ram.ReadWord(Reg.IP+2));
@@ -363,6 +374,7 @@ begin
         setFlag(TFlags.Z, RR(Ram.ReadByte(Reg.IP+1))=RR(Ram.ReadByte(Reg.IP+2)));
         Reg.IP+=3;
       end; //cmp R, R
+
       JMP_R: begin
         Reg.IP:=RR(Ram.ReadByte(Reg.IP+1));
       end; //jmp R

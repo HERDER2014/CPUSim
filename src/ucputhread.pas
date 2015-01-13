@@ -5,13 +5,12 @@ unit uCPUThread;
 interface
 
 uses
-  Classes, SysUtils, uCPU;
+  Classes, SysUtils, uCPU, LCLIntf;
   type TCPUThread = class(TThread)
     private
-      sim : TCPU;
-      Handle : THandle;
+      cpu : TCPU;
       cs:TRTLCriticalSection;
-      v:Int64;
+      p:Int64;
     public
 
       {
@@ -26,7 +25,7 @@ uses
       Eff.: CPU.step wurde ausgefuehrt
       Erg.: -
       }
-      procedure step();
+     // procedure step();
 
       {
       Vor.: start wurde nicht oder stop wurde nach start aufgerufen
@@ -34,6 +33,8 @@ uses
       Erg.: -
       }
       procedure setVel(v :int64);
+
+      procedure execute(); override;
 
       destructor destroy();
   end;
@@ -43,31 +44,33 @@ implementation
 constructor TCPUThread.create(sim: TCPU);
 begin
   inherited Create(true);
-  self.sim = sim;
+  cpu := sim;
   InitCriticalSection(cs);
 end;
 
 procedure TCPUThread.setVel(v :int64);
 begin
-    EnterCriticalSection(cs);
+ // EnterCriticalSection(cs);
   try
-    self.v := v;
+    p := v;
   finally
-    LeaveCriticalSection(cs);
+   // LeaveCriticalSection(cs);
   end;
 end;
 
 procedure TCPUThread.Execute;
+var
+  a,e : Int64;
 begin
-  while (not Terminated) and (not sim.Step()) do begin
-     EnterCriticalSection(cs);
+  while (not Terminated) and (not cpu.Step()) do begin
+   //  EnterCriticalSection(cs);
    try
-     start := GetTickCount;
+     a := GetTickCount;
      repeat
-       stop := GetTickCount;
-     until (stop - start) >= v;
+       e := GetTickCount;
+     until (e - a) >= p;
    finally
-     LeaveCriticalSection(cs);
+ //    LeaveCriticalSection(cs);
    end;
   end;
 end;

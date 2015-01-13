@@ -308,7 +308,7 @@ procedure TmainFrm.Step;
 begin
   if RunStatus=1 then
   begin
-    Thread.Step();
+   // Thread.Step();
     mainFrm.Update;
   end; //TODO else at Messagebox: same as in TmainFrm.Play (look up)
 end;
@@ -317,7 +317,7 @@ procedure TmainFrm.Stop;
 begin
   if RunStatus=2 then
   begin
-    Thread.Stop();
+   // Thread.Stop();
     RunStatus:=1;
   end; //TODO else at Messagebox: not possible when thread isn't running
 end;

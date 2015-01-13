@@ -34,7 +34,7 @@ type TCPU = class
    Eff.: -
    Erg.: Liefert den Wert von Register 'index'.
    }
-   public function ReadRegister(index : Byte) : Word;
+   public function ReadRegister(index : RegisterIndex) : Word;
 
    {
      DEBUG ONLY
@@ -44,15 +44,15 @@ type TCPU = class
    Erg.: -
    Exceptions: Invalid Register / Not Allowed
    }
-   public procedure WriteRegister(index : Byte; w:Word);
+   public procedure WriteRegister(index : RegisterIndex; w:Word);
 
    {
    Vor.: Simulation nicht am Ende.
    Eff.: Befehl im RAM an Stelle IP wurde ausgeführt.
-   Erg.: Liefert genau dann TRUE, wenn die Simulation zu Ende ist.
+   Erg.: Lifert den OPCode des zuletzt aufgerufenen Befehlt.
    Exeptions.: Runtimeerrors
    }
-   public function Step() : Boolean;
+   public function Step() : OPCode;
 
 
 
@@ -187,33 +187,34 @@ end;
 //============================================================
 // PUBLIC
 
-function TCPU.ReadRegister(index : Byte) : Word;
+function TCPU.ReadRegister(index : RegisterIndex) : Word;
 begin
   EnterCriticalSection(cs);
   try
-    result:=RR(index);
+    result:=RR(Byte(index));
   finally
       LeaveCriticalSection(cs);
   end;
 end;
 
-procedure TCPU.WriteRegister(index : Byte; w : Word);
+procedure TCPU.WriteRegister(index : RegisterIndex; w : Word);
 begin
     EnterCriticalSection(cs);
   try
-    WR(true,index, w);
+    WR(true,Byte(index), w);
   finally
     LeaveCriticalSection(cs);
   end;
 end;
 
 
-function TCPU.Step() : Boolean;
+function TCPU.Step() : OPCode;
 begin
     EnterCriticalSection(cs);
   try
-    case OPCode(Ram.ReadByte(Reg.IP)) of
-      _END: result:=True;
+    result:=OPCode(Ram.ReadByte(Reg.IP));
+    case result of
+//      _END: result:=True;
       MOV_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2));
         Reg.IP += 4;

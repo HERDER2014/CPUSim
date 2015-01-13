@@ -33,12 +33,14 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  rahm := TRam.create(1000000);
+  rahm := TRam.create(64);
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  Button1.caption := IntToStr(rahm.get_size);
+  rahm.WriteByte(1,3);
+  rahm.WriteByte(2,232);
+  Button1.caption := IntToStr(rahm.ReadWord(1));
 end;
 
 end.

@@ -43,7 +43,7 @@ type TRAM = class
 end;
 
 implementation
-var ram : ARRAY OF Word;
+var ram : ARRAY OF Byte;
 var size_RAM : Cardinal;
 
    constructor TRAM.Create(size : Cardinal);
@@ -64,12 +64,24 @@ var size_RAM : Cardinal;
 
    function TRAM.ReadWord(addr : Cardinal) : Word;
    begin
-     if addr < (size_RAM - 1) then result := ram[addr];
+     if addr < (size_RAM - 1) then result := ((ram[addr]*256)+ram[addr+1]);
    end;
 
    procedure TRAM.WriteWord(addr : Cardinal; w : Word);
+   var x, sum : Cardinal;
    begin
-     if addr < (size_RAM - 1) then ram[addr] := w;
+     x := 0;
+     if addr < (size_RAM - 1) then
+     begin
+       sum := w;
+       while (sum >= 256) do
+       begin
+         INC(x);
+         sum := (sum - 256);
+       end;
+       ram[addr] := x;
+       ram[addr+1] := sum;
+     end;
    end;
 
    function TRAM.GetSize : Cardinal;

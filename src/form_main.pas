@@ -42,6 +42,7 @@ type
     MainFrm_Menu_File_SaveAs: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
+    MainFrm_Menu_Play: TMenuItem;
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
     ReplaceDialog1: TReplaceDialog;
@@ -66,6 +67,7 @@ type
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
     procedure Compile;
+    procedure MainFrm_Menu_PlayClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -73,7 +75,7 @@ type
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
     function ListToStr: string;
     procedure updateRAM;
-    procedure play (v : cardinal);
+    procedure play (v : int64);
     procedure step;
     procedure stop;
     procedure delete;
@@ -269,6 +271,11 @@ begin
   end; //TODO else at Messegebox: not possible when old thread isn't closed
 end;
 
+procedure TmainFrm.MainFrm_Menu_PlayClick(Sender: TObject);
+begin
+  Play(0);
+end;
+
 procedure TmainFrm.updateRAM;
 var
   size : Cardinal;
@@ -285,14 +292,14 @@ begin
       c := chr(b);
       RAMValueList.InsertRow(FloatToStr(i),c,true);
     end;
+end;
 
-procedure TmainFrm.Play(v: Cardinal); //v für Geschwindigkeit, es wird die Pausenzeit zwischen zwei Schritten in ms übergeben
+procedure TmainFrm.Play(v: int64); //v für Geschwindigkeit, es wird die Pausenzeit zwischen zwei Schritten in ms übergeben
 begin
   if RunStatus=1 then
   begin
-    if v=NIL
-    then Thread.Play(0)
-    else Thread.Play(v);
+    //Thread.setVel(v) // if v set
+    //Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and Code isn't compiled
 end;

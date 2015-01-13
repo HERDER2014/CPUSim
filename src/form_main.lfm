@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 193
+  Left = 178
   Height = 442
-  Top = 197
+  Top = 343
   Width = 848
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 416
@@ -718,6 +718,10 @@ object mainFrm: TmainFrm
         Caption = 'About'
         OnClick = MainFrm_Menu_Help_AboutClick
       end
+    end
+    object MainFrm_Menu_Play: TMenuItem
+      Caption = 'Play'
+      OnClick = MainFrm_Menu_PlayClick
     end
   end
   object OpenDlg: TOpenDialog

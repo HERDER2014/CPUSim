@@ -7,13 +7,15 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, (*uRAM, uCPU,*) uCompiler;
+  ComCtrls, ActnList, StdActns, (*uRAM, uCPU,*) uCompiler;
 
 type
 
   { TmainFrm }
 
   TmainFrm = class(TForm)
+    ActionList: TActionList;
+    FileExit1: TFileExit;
     FindDlg: TFindDialog;
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
@@ -50,7 +52,7 @@ type
     HSplitter: TSplitter;
     InputSynEdit: TSynEdit;
     RegistersValueList: TValueListEditor;
-    ValueListEditor1: TValueListEditor;
+    RAMValueList: TValueListEditor;
     procedure InputSynEditChange(Sender: TObject);
     procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
@@ -88,13 +90,36 @@ implementation
 { TmainFrm }
 
 procedure TmainFrm.FormCreate(Sender: TObject);
+var
+  i : Cardinal;
 begin
-  //example code for registers:
+  // init:
   RegistersValueList.Row := 0;
   RegistersValueList.InsertRow('AX','0000000000000000',true);
-  InputSynEdit.Text:='';
+  RegistersValueList.Row := 1;
+  RegistersValueList.InsertRow('BX','0000000000000000',true);
+  RegistersValueList.Row := 2;
+  RegistersValueList.InsertRow('CX','0000000000000000',true);
+  RegistersValueList.Row := 3;
+  RegistersValueList.InsertRow('DX','0000000000000000',true);
+  RegistersValueList.Row := 4;
+  RegistersValueList.InsertRow('BP','0000000000000000',true); // BasePointer
+  RegistersValueList.Row := 5;
+  RegistersValueList.InsertRow('IP','0000000000000000',true); // InstructionPointer
+  RegistersValueList.Row := 6;
+  RegistersValueList.InsertRow('SP','0000000000000000',true); // StackPointer
+  RegistersValueList.Row := 7;
+  RegistersValueList.InsertRow('FLAGS','0000000000000000',true);
+  InputSynEdit.ClearAll;
   MessagesMemo.Text:='Hit "Run" to test your program!';
-  Saved:=True;
+  Saved:=True; // Don't ask for save when program just started
+
+  // init RAM:
+  for i:=0 to 65535 do
+    begin
+      RAMValueList.Row := i;
+      RAMValueList.InsertRow(FloatToStr(i),'0000000000000000',true);
+    end;
 end;
 
 procedure TmainFrm.ShowExitDlg;
@@ -118,6 +143,8 @@ end;
 procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
 begin
   ShowExitDlg;
+//  ActionList.;
+//  TFileExit.ActionList.;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CopyClick(Sender: TObject);
@@ -216,6 +243,7 @@ begin
     Code += InputSynEdit.Text[i];
   result:=Code
 end;
+
 //
 //procedure TmainFrm.CompileClick(Sender: TObject); //Achtung! Umbennennung nötig
 //var

@@ -1,10 +1,10 @@
 object mainFrm: TmainFrm
-  Left = 281
+  Left = 66
   Height = 442
-  Top = 133
+  Top = 171
   Width = 848
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 418
+  ClientHeight = 416
   ClientWidth = 848
   Menu = MainFrm_Menu
   OnCreate = FormCreate
@@ -16,7 +16,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = TopVSplitter
     AnchorSideBottom.Control = HSplitter
     Left = 0
-    Height = 298
+    Height = 297
     Top = 0
     Width = 400
     Align = alCustom
@@ -532,8 +532,8 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = BottomVSplitter
     AnchorSideBottom.Control = StatusBar1
     Left = 0
-    Height = 91
-    Top = 303
+    Height = 90
+    Top = 302
     Width = 547
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -547,8 +547,8 @@ object mainFrm: TmainFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
     Left = 547
-    Height = 91
-    Top = 303
+    Height = 90
+    Top = 302
     Width = 5
     Align = alNone
     Anchors = [akTop, akBottom]
@@ -557,7 +557,7 @@ object mainFrm: TmainFrm
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = HSplitter
     Left = 400
-    Height = 298
+    Height = 297
     Top = 0
     Width = 5
     Align = alNone
@@ -570,7 +570,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 0
     Height = 5
-    Top = 298
+    Top = 297
     Width = 848
     Align = alNone
     Anchors = [akLeft, akRight]
@@ -585,8 +585,8 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
     Left = 552
-    Height = 91
-    Top = 303
+    Height = 90
+    Top = 302
     Width = 296
     Anchors = [akTop, akLeft, akRight, akBottom]
     FixedCols = 0
@@ -603,11 +603,11 @@ object mainFrm: TmainFrm
   object StatusBar1: TStatusBar
     Left = 0
     Height = 24
-    Top = 394
+    Top = 392
     Width = 848
     Panels = <>
   end
-  object ValueListEditor1: TValueListEditor
+  object RAMValueList: TValueListEditor
     AnchorSideLeft.Control = TopVSplitter
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
@@ -615,7 +615,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = HSplitter
     Left = 405
-    Height = 298
+    Height = 297
     Top = 0
     Width = 443
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -738,5 +738,14 @@ object mainFrm: TmainFrm
     Options = [frDown, frReplace, frReplaceAll, frHidePromptOnReplace]
     left = 264
     top = 56
+  end
+  object ActionList: TActionList
+    left = 256
+    top = 150
+    object FileExit1: TFileExit
+      Category = 'File'
+      Caption = 'E&xit'
+      Hint = 'Exit'
+    end
   end
 end

@@ -73,6 +73,10 @@ type
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
     function ListToStr: string;
     procedure updateRAM;
+    procedure play (v : cardinal);
+    procedure step;
+    procedure stop;
+    procedure delete;
   private
     { private declarations }
   public
@@ -83,6 +87,10 @@ var
   mainFrm: TmainFrm;
   SavePath: String;
   Saved: Boolean;
+  Thread: TCPUThread;
+  RAM: TRAM;
+  RunStatus: integer;
+  // 0, wenn nicht bereit für Play/Step -- 1, wenn kompiliert und initialisiert, bereit für Play/Step -- 2, wenn play aktiv, bereit für Stop
 
 implementation
 
@@ -226,7 +234,6 @@ begin
   end else InputSynEdit.Lines.SaveToFile(SavePath);
 end;
 
-
 function TmainFrm.ListToStr: string;
 var
   Code: String;
@@ -239,24 +246,27 @@ end;
 
 procedure TmainFrm.Compile;
 var
-  RAM : TRAM;
   CPU : TCPU;
   Comp : TCompiler;
   Thread : TCPUThread;
   i : Cardinal;
 begin
   //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
-  RAM:=TRAM.Create((65536));            //TODO use size instead
+  if RunStatus=0 then
+  begin
+      RAM:=TRAM.Create((65536));            //TODO use size instead
   // init RAM viewer:
   for i:=0 to 255 do //TODO use size instead
     begin
       RAMValueList.Row := i;
       RAMValueList.InsertRow(FloatToStr(i),'0000000000000000',true);
     end;
-  Comp:=TCompiler.Create(RAM);
-  Comp.Compile(mainFrm.ListToStr);
-  CPU:=CPU.Create(RAM);
-  Thread:=TCPUThread.Create(CPU);
+    Comp:=TCompiler.Create(RAM);
+    Comp.Compile(mainFrm.ListToStr);
+    CPU:=CPU.Create(RAM);
+    Thread:=TCPUThread.Create(CPU);
+    RunStatus:=1;
+  end; //TODO else at Messegebox: not possible when old thread isn't closed
 end;
 
 procedure TmainFrm.updateRAM;
@@ -275,6 +285,47 @@ begin
       c := chr(b);
       RAMValueList.InsertRow(FloatToStr(i),c,true);
     end;
+
+procedure TmainFrm.Play(v: Cardinal); //v für Geschwindigkeit, es wird die Pausenzeit zwischen zwei Schritten in ms übergeben
+begin
+  if RunStatus=1 then
+  begin
+    if v=NIL
+    then Thread.Play(0)
+    else Thread.Play(v);
+    RunStatus:=2;
+  end; //TODO else at Messagebox: not possible when thread isn't initialized and Code isn't compiled
+end;
+
+procedure TmainFrm.Step;
+begin
+  if RunStatus=1 then
+  begin
+    Thread.Step();
+    mainFrm.Update;
+  end; //TODO else at Messagebox: same as in TmainFrm.Play (look up)
+end;
+
+procedure TmainFrm.Stop;
+begin
+  if RunStatus=2 then
+  begin
+    Thread.Stop();
+    RunStatus:=1;
+  end; //TODO else at Messagebox: not possible when thread isn't running
+end;
+
+procedure TmainFrm.Delete;
+begin
+  if RunStatus=1 then
+  begin
+    Thread.Destroy();
+    RunStatus:=0;
+  end else if RunStatus=2 then
+      begin
+        mainFrm.Stop;
+        mainFrm.Delete;
+      end; //TODO else at Messagebox: not possible when there is no initialized thread
 end;
 
 end.

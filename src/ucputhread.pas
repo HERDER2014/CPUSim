@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, uCPU;
-  type CPUThread = class
+  type TCPUThread = class
     private
       //nichts
     public
@@ -16,7 +16,7 @@ uses
       Eff.: thread ist kreiert
       Erg.: -
       }
-      constructor create(sim : CPU);
+      constructor create(sim : TCPU);
 
       {
       Vor.: start wurde nicht oder stop wurde nach start aufgerufen
@@ -42,27 +42,27 @@ uses
   end;
 implementation
 
-constructor CPUThread.create(sim : CPU);
+constructor TCPUThread.create(sim : TCPU);
 begin
 
 end;
 
-procedure CPUThread.step();
+procedure TCPUThread.step();
 begin
 
 end;
 
-procedure CPUThread.start(v :int64);
+procedure TCPUThread.start(v :int64);
 begin
 
 end;
 
-procedure CPUThread.stop();
+procedure TCPUThread.stop();
 begin
 
 end;
 
-procedure destroy();
+destructor TCPUThread.destroy();
 begin
 
 end;

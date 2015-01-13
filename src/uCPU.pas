@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, uRAM, uTypen;
 
-type CPU = class
+type TCPU = class
 
    private Reg : TRegRecord;
 
@@ -30,17 +30,17 @@ end;
 
 implementation
 
-constructor CPU.Create(var r : TRAM);
+constructor TCPU.Create(var r : TRAM);
 begin
 
 end;
 
-function CPU.ReadRegister(index : RegisterIndex) : Word;
+function TCPU.ReadRegister(index : RegisterIndex) : Word;
 begin
 
 end;
 
-function CPU.Step() : Boolean;
+function TCPU.Step() : Boolean;
 begin
 
 end;

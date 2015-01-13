@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, ActnList, StdActns, (*uRAM, uCPU,*) uCompiler;
+  ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler;
 
 type
 
@@ -65,7 +65,7 @@ type
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
-    //procedure CompileClick(Sender: TObject);
+    procedure Compile;
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -244,21 +244,19 @@ begin
   result:=Code
 end;
 
-//
-//procedure TmainFrm.CompileClick(Sender: TObject); //Achtung! Umbennennung nötig
-//var
-//  ram : TRAM;
-// // cpu : CPU;
-//  comp : TCompiler;
-//begin
-//  //TODO
-//  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
-//  //ram:=TRAM.Create((*SIZE*));
-//  comp:=TCompiler.Create(ram);
-////  cpu:=CPU.Create(ram); notwendig?
-//
-//
-//
-//end;
+procedure TmainFrm.Compile;
+var
+  RAM : TRAM;
+  CPU : TCPU;
+  Comp : TCompiler;
+//  Thread : TCPUThread;
+begin
+  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
+  RAM:=TRAM.Create((65536));
+  Comp:=TCompiler.Create(RAM);
+  Comp.Compile(mainFrm.ListToStr);
+  CPU:=CPU.Create(RAM);
+//  Thread:=TCPUThread.Create(CPU);
+end;
 
 end.

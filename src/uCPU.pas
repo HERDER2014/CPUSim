@@ -63,7 +63,7 @@ implementation
 constructor TCPU.Create(var r : TRam);
 begin
    Ram := r;
-
+   InitCriticalSection(cs);
    Reg.IP:=0;
    Reg.SP:=2045;
    Reg.BP:=2045;

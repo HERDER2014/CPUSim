@@ -98,7 +98,7 @@ begin
       Integer(IP): result:=Reg.IP;
       Integer(SP): result:=Reg.SP;
       Integer(FLAGS): result:=Reg.FLAGS;
-      else raise Exception.CreateFmt('Register with index %b is invalid.',[index]);
+      else raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
    end;
 end;
 
@@ -210,11 +210,12 @@ end;
 
 function TCPU.Step() : OPCode;
 begin
-    EnterCriticalSection(cs);
+  EnterCriticalSection(cs);
   try
     result:=OPCode(Ram.ReadByte(Reg.IP));
     case result of
-//      _END: result:=True;
+      _END: begin
+      end;
       MOV_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2));
         Reg.IP += 4;
@@ -520,7 +521,9 @@ begin
         WR(Ram.ReadByte(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+2)) xor RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //xor R,R
-
+      else begin
+        Raise Exception.CreateFmt('OP-Code with Index %x is invalid',[result]);
+      end;
      end;
   finally
     LeaveCriticalSection(cs);

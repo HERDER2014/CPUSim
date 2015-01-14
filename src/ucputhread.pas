@@ -12,6 +12,7 @@ uses
       cs:TRTLCriticalSection;
       p:Int64;
       stopAtSP: Word;
+      FException: String;
     public
 
       {
@@ -34,6 +35,14 @@ uses
       }
       procedure setVel(v :int64);
 
+      {
+      Vor.: Der Thread wurde beendet (Terminated = True)
+      Eff.: -
+      Erg.: Gibt den Fehler zurueck, welcher fuer die beendung des Thread gesorgt
+            hat. Wurde der Thread durch den Aufruf von Terminate oder durch das
+            Erreichen des OP-Codes END (ID 0) beendet, so wird nil zurueckgegeben
+      }
+      function getException():String;
 
       {
         DO NOT CALL THIS OR YOU WILL EXECUTE IT IN THE SAME THREAD
@@ -50,7 +59,6 @@ constructor TCPUThread.create(sim: TCPU);
 begin
   cpu := sim;
   InitCriticalSection(cs);
-  stopAtSP := High(Word);
   inherited Create(true);
 end;
 
@@ -71,12 +79,28 @@ var
   t : Int64;
   op_code : OPCode;
   StackPointer: Word;
+
 begin
+  stopAtSP := High(Word);
+  FException := '';
   while (not Terminated) do begin
    StackPointer := cpu.ReadRegister(SP);
-   if (StackPointer = stopAtSP) then Break;
-   op_code := cpu.Step();
-   if (op_code = _END) then Break;
+   if (StackPointer = stopAtSP) then begin
+     stopAtSP := High(Word);
+     suspend;
+     continue;
+   end;
+   try
+     op_code := cpu.Step();
+   except
+     on Ex:Exception do begin
+       FException := Ex.Message;
+       break;
+     end;
+   end;
+   if (op_code = _END) then begin
+     break;
+   end;
    EnterCriticalSection(cs);
    try
      t := p;
@@ -84,17 +108,21 @@ begin
      LeaveCriticalSection(cs);
    end;
 
-   if ((op_code = CALL_X) or (op_code = CALL_R)) and (stopAtSP <> High(Word)) and (t=-2) then
+   if ((op_code = CALL_X) or (op_code = CALL_R)) and (stopAtSP = High(Word)) and (t=-2) then
       stopAtSP := StackPointer
-   else if ((t<0) and (stopAtSP <> High(Word))) then begin
-     Break;
+   else if ((t<0) and (stopAtSP = High(Word))) then begin
+     stopAtSP := High(Word);
+     suspend;
+     continue;
    end;
 
-   a := Time();
-   repeat
-     e := Time();
-   until (e - a) >= t;
+   Sleep(t);
   end;
+end;
+
+function TCPUThread.getException():String;
+begin
+  result:=FException;
 end;
 
 destructor TCPUThread.destroy();

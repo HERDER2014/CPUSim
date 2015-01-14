@@ -14,6 +14,11 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Edit1: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -22,10 +27,16 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    Label9: TLabel;
     RefreshTimer: TTimer;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure RefreshTimerTimer(Sender: TObject);
+    procedure OnCPUTerminate(Sender: TObject);
   private
     simulator : TCPU;
     ram : TRAM;
@@ -47,7 +58,6 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   ram := TRAM.Create(0);
   simulator := TCPU.Create(ram);
-  cpuThread := TCPUThread.Create(simulator);
 end;
 
 procedure TForm1.RefreshTimerTimer(Sender: TObject);
@@ -61,13 +71,48 @@ begin
   Label6.Caption := format('SP : %x',[simulator.ReadRegister(SP)]);
   Label7.Caption := format('BP : %x',[simulator.ReadRegister(BP)]);
   Label8.Caption := format('FLAGS : %x',[simulator.ReadRegister(FLAGS)]);
+
+
+end;
+
+procedure TForm1.OnCPUTerminate(Sender: TObject);
+begin
+  if (cpuThread.getException() = '') then
+     Label9.Caption:='Program ended Successfully'
+  else
+     Label9.Caption:= cpuThread.getException();
+  cpuThread.free;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-
+  Label9.Caption:='';
+  simulator.free;
+  simulator := TCPU.Create(ram);
+  cpuThread := TCPUThread.Create(simulator);
+  Button5Click(nil);
+  cpuThread.OnTerminate := @OnCPUTerminate;
   cpuThread.Start;
+end;
 
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+    cpuThread.Resume;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+    cpuThread.Suspend;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+    cpuThread.Terminate;
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+     cpuThread.setVel(StrToInt64(Edit1.Text));
 end;
 
 end.

@@ -9,80 +9,132 @@ object Form1: TForm1
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object Button1: TButton
-    Left = 50
+    Left = 56
     Height = 25
-    Top = 27
+    Top = 24
     Width = 75
-    Caption = 'Button1'
+    Caption = 'Strat'
     OnClick = Button1Click
     TabOrder = 0
   end
   object Label1: TLabel
-    Left = 74
+    Left = 72
     Height = 13
-    Top = 88
+    Top = 144
     Width = 31
     Caption = 'Label1'
     ParentColor = False
   end
   object Label2: TLabel
-    Left = 144
+    Left = 142
     Height = 13
-    Top = 88
+    Top = 144
     Width = 31
     Caption = 'Label2'
     ParentColor = False
   end
   object Label3: TLabel
-    Left = 216
+    Left = 214
     Height = 13
-    Top = 88
+    Top = 144
     Width = 31
     Caption = 'Label3'
     ParentColor = False
   end
   object Label4: TLabel
-    Left = 288
+    Left = 286
     Height = 13
-    Top = 88
+    Top = 144
     Width = 31
     Caption = 'Label4'
     ParentColor = False
   end
   object Label5: TLabel
-    Left = 74
+    Left = 72
     Height = 13
-    Top = 128
+    Top = 184
     Width = 31
     Caption = 'Label5'
     ParentColor = False
   end
   object Label6: TLabel
-    Left = 144
+    Left = 142
     Height = 13
-    Top = 128
+    Top = 184
     Width = 31
     Caption = 'Label6'
     ParentColor = False
   end
   object Label7: TLabel
-    Left = 216
+    Left = 214
     Height = 13
-    Top = 128
+    Top = 184
     Width = 31
     Caption = 'Label7'
     ParentColor = False
   end
   object Label8: TLabel
-    Left = 288
+    Left = 286
     Height = 13
-    Top = 128
+    Top = 184
     Width = 31
     Caption = 'Label8'
     ParentColor = False
   end
+  object Button2: TButton
+    Left = 136
+    Height = 25
+    Top = 24
+    Width = 75
+    Caption = 'Resume'
+    OnClick = Button2Click
+    TabOrder = 1
+  end
+  object Button3: TButton
+    Left = 216
+    Height = 25
+    Top = 24
+    Width = 75
+    Caption = 'Suspend'
+    OnClick = Button3Click
+    TabOrder = 2
+  end
+  object Button4: TButton
+    Left = 296
+    Height = 25
+    Top = 24
+    Width = 75
+    Caption = 'Terminate'
+    OnClick = Button4Click
+    TabOrder = 3
+  end
+  object Edit1: TEdit
+    Left = 56
+    Height = 21
+    Top = 56
+    Width = 80
+    TabOrder = 4
+    Text = '0'
+  end
+  object Button5: TButton
+    Left = 142
+    Height = 25
+    Top = 52
+    Width = 75
+    Caption = 'SetPause'
+    OnClick = Button5Click
+    TabOrder = 5
+  end
+  object Label9: TLabel
+    Left = 176
+    Height = 13
+    Top = 280
+    Width = 31
+    Caption = 'Label9'
+    ParentColor = False
+  end
   object RefreshTimer: TTimer
-    Interval = 100
+    Interval = 10
     OnTimer = RefreshTimerTimer
     left = 419
     top = 93

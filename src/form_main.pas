@@ -56,8 +56,8 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  ram := TRAM.Create(0);
-  simulator := TCPU.Create(ram);
+  ram := TRAM.Create(0);         // \ sollte auch bei Start (Button1Click) sein
+  simulator := TCPU.Create(ram); // / Hier nicht notwendig, da kein Compiler
 end;
 
 procedure TForm1.RefreshTimerTimer(Sender: TObject);
@@ -84,7 +84,7 @@ begin
   cpuThread.free;
 end;
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.Button1Click(Sender: TObject); //Start (also sets vel)
 begin
   Label9.Caption:='';
   simulator.free;
@@ -95,22 +95,22 @@ begin
   cpuThread.Start;
 end;
 
-procedure TForm1.Button2Click(Sender: TObject);
+procedure TForm1.Button2Click(Sender: TObject); //Resume
 begin
     cpuThread.Resume;
 end;
 
-procedure TForm1.Button3Click(Sender: TObject);
+procedure TForm1.Button3Click(Sender: TObject); //Suspent / Pause
 begin
     cpuThread.Suspend;
 end;
 
-procedure TForm1.Button4Click(Sender: TObject);
+procedure TForm1.Button4Click(Sender: TObject); //Terminate / Stop
 begin
     cpuThread.Terminate;
 end;
 
-procedure TForm1.Button5Click(Sender: TObject);
+procedure TForm1.Button5Click(Sender: TObject); //SetVel
 begin
      cpuThread.setVel(StrToInt64(Edit1.Text));
 end;

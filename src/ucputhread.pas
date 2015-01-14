@@ -96,11 +96,11 @@ begin
    except
      on Ex:Exception do begin
        FException := Ex.Message;
-       break;
+       terminate;
      end;
    end;
    if (op_code = _END) then begin
-     break;
+     terminate;
    end;
    EnterCriticalSection(cs);
    try

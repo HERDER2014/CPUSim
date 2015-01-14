@@ -82,10 +82,12 @@ var
   StackPointer: Word;
 
 begin
-  stopAtSP := High(Word);
+  stopAtSP := High(Word); // at start do not stop at any specific Stack-Pointer
   FException := '';
   while (not Terminated) do begin
    StackPointer := cpu.ReadRegister(SP);
+
+   // stop at specific Stack-Pointer
    if (StackPointer = stopAtSP) then begin
      stopAtSP := High(Word);
      suspend;
@@ -95,13 +97,18 @@ begin
      op_code := cpu.Step();
    except
      on Ex:Exception do begin
+       // break on Exception
        FException := Ex.Message;
-       terminate;
+       break;
      end;
    end;
+
+   // break on END
    if (op_code = _END) then begin
-     terminate;
+     break;
    end;
+
+   // get sleep duration in t inside CriticalSection
    EnterCriticalSection(cs);
    try
      t := p;
@@ -109,15 +116,15 @@ begin
      LeaveCriticalSection(cs);
    end;
 
+   // suspend or sleep depending on t and other parameters
    if ((op_code = CALL_X) or (op_code = CALL_R)) and (stopAtSP = High(Word)) and (t=-2) then
       stopAtSP := StackPointer
    else if ((t<0) and (stopAtSP = High(Word))) then begin
      stopAtSP := High(Word);
      suspend;
      continue;
-   end;
-
-   Sleep(t);
+   end else if (t>0) then
+     Sleep(t);
   end;
 end;
 

@@ -247,7 +247,7 @@ begin
       MOV_R_ADDR_RX: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(RR(Ram.ReadByte(Reg.IP+2))+Ram.ReadWord(Reg.IP+3)));
         Reg.IP += 5;
-      end; //mov R,[R+x]	()
+      end; //mov R,[R+x]
       MOV_ADDR_RX_R: begin
         Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1))+Ram.ReadWord(Reg.IP+2),RR(Ram.ReadByte(Reg.IP+4)));
         Reg.IP += 5;
@@ -490,7 +490,7 @@ begin
       OPCode.POP: begin
         pop();
         Reg.IP+=1;
-      end; //pop			(in kein Register)
+      end; //pop(in kein Register)
       POP_R: begin
         WR(Ram.ReadByte(Reg.IP+1),pop());
         Reg.IP+=2;
@@ -500,7 +500,7 @@ begin
       NOT_R: begin
         WR(Ram.ReadByte(Reg.IP+1),not RR(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 2;
-      end; //not R		(binär)
+      end; //not R
       AND_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1), RR(Ram.ReadByte(Reg.IP+1)) and Ram.ReadWord(Reg.IP+2),true);
         Reg.IP += 4;

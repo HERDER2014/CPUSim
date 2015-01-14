@@ -16,6 +16,8 @@ type
     Button1: TButton;
     Button2: TButton;
     Memo1: TMemo;
+    radioDecimal: TRadioButton;
+    RadioButton2: TRadioButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -46,6 +48,13 @@ var
 begin
   ram := TRAM.Create(2 shl 16); // 2^16 bytes (2B-Adressen)
   comp := TCompiler.Create(ram);
+  if radioDecimal.Checked then
+  begin
+    comp.NumberInputMode:=TNumberInputMode.Decimal;
+  end
+  else
+    comp.NumberInputMode:=TNumberInputMode.Hexadecimal;
+
   try
     comp.Compile(Memo1.Text);
   except
@@ -57,6 +66,8 @@ begin
   end;
   Button2.Enabled := True;
   ShowMessage('Compilation successful.'#13'Binary image size: '+IntToStr(comp.LastSize)+' bytes');
+  //comp.Destroy;
+  ram.Destroy;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);

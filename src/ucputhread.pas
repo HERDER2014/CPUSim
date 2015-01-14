@@ -38,9 +38,10 @@ uses
       {
       Vor.: Der Thread wurde beendet (Terminated = True)
       Eff.: -
-      Erg.: Gibt den Fehler zurueck, welcher fuer die beendung des Thread gesorgt
-            hat. Wurde der Thread durch den Aufruf von Terminate oder durch das
-            Erreichen des OP-Codes END (ID 0) beendet, so wird nil zurueckgegeben
+      Erg.: Gibt die Fehlermeldung des Fehlers zurueck, welcher fuer die beendung
+            des Thread gesorgt hat. Wurde der Thread durch den Aufruf von Terminate
+            oder durch das Erreichen des OP-Codes END (ID 0) beendet, so wird ''
+            zurueckgegeben
       }
       function getException():String;
 

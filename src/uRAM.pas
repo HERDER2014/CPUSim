@@ -47,7 +47,7 @@ implementation
    var value : String ;
    begin
     // InputQuery('RAM TEST', format('Gelesen wird Byte an Adresse %x', [addr]), value);
-     result := Random(15) ;//StrToInt64('$'+value);
+     result := Random(17) ;//StrToInt64('$'+value);
    end;
    procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
    begin
@@ -57,7 +57,7 @@ implementation
    var value : String ;
    begin
  //    InputQuery('RAM TEST', format('Gelesen wird Word an Adresse %x', [addr]), value);
-     result := Random(15) ;//StrToInt64('$'+value);
+     result := Random(17) ;//StrToInt64('$'+value);
    end;
    procedure TRAM.WriteWord(addr : Cardinal; w : Word);
    begin

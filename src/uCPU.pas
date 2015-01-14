@@ -143,16 +143,19 @@ begin
       Integer(DH): Reg.DX := ((w and 255) shl 8) or (Reg.DX and 255);
 
       Integer(BP): Reg.BP := w;
+      Integer(SP): Reg.SP := w;
       else begin
         if force then begin
           case index of
             Integer(IP): Reg.IP := w;
-            Integer(SP): Reg.SP := w;
             Integer(FLAGS): Reg.FLAGS := w;
             else raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
           end;
         end else
-          raise Exception.CreateFmt('Not allowed to write register with index %x.',[index]);
+          if (index = Integer(IP)) or (index = Integer(FLAGS)) then
+            raise Exception.CreateFmt('Not allowed to write into register with index %x.',[index])
+          else
+            raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
       end;
    end;
 end;

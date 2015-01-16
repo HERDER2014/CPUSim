@@ -42,6 +42,9 @@ type TRAM = class
   function GetSize : Cardinal;
 end;
 
+type
+  TCompilerException = class(Exception);
+
 implementation
 var ram : ARRAY OF Byte;
 var size_RAM : Cardinal;
@@ -54,17 +57,20 @@ var size_RAM : Cardinal;
 
    function TRAM.ReadByte(addr : Cardinal) : Byte;
    begin
-     if addr < size_RAM then result := ram[addr];
+     if addr < size_RAM then result := ram[addr]
+     else raise TCompilerException.Create('Error: invalid RAM address');
    end;
 
    procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
    begin
-     if addr < size_RAM then ram[addr] := b;
+     if addr < size_RAM then ram[addr] := b
+     else raise TCompilerException.Create('Error: invalid RAM address');
    end;
 
    function TRAM.ReadWord(addr : Cardinal) : Word;
    begin
-     if addr < (size_RAM - 1) then result := ((ram[addr]*256)+ram[addr+1]);
+     if addr < (size_RAM - 1) then result := ((ram[addr]*256)+ram[addr+1])
+     else raise TCompilerException.Create('Error: invalid RAM address');
    end;
 
    procedure TRAM.WriteWord(addr : Cardinal; w : Word);
@@ -73,15 +79,12 @@ var size_RAM : Cardinal;
      x := 0;
      if addr < (size_RAM - 1) then
      begin
-       sum := w;
-       while (sum >= 256) do
-       begin
-         INC(x);
-         sum := (sum - 256);
-       end;
+       sum := (w mod 256);
+       x := ((w-sum) div 256);
        ram[addr] := x;
        ram[addr+1] := sum;
-     end;
+     end
+     else raise TCompilerException.Create('Error: invalid RAM address');
    end;
 
    function TRAM.GetSize : Cardinal;

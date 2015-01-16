@@ -34,7 +34,7 @@ type TCPU = class
    Eff.: -
    Erg.: Liefert den Wert von Register 'index'.
    }
-   public function ReadRegister(index : Byte) : Word;
+   public function ReadRegister(index : RegisterIndex) : Word;
 
    {
      DEBUG ONLY
@@ -44,15 +44,15 @@ type TCPU = class
    Erg.: -
    Exceptions: Invalid Register / Not Allowed
    }
-   public procedure WriteRegister(index : Byte; w:Word);
+   public procedure WriteRegister(index : RegisterIndex; w:Word);
 
    {
    Vor.: Simulation nicht am Ende.
    Eff.: Befehl im RAM an Stelle IP wurde ausgeführt.
-   Erg.: Liefert genau dann TRUE, wenn die Simulation zu Ende ist.
+   Erg.: Lifert den OPCode des zuletzt aufgerufenen Befehlt.
    Exeptions.: Runtimeerrors
    }
-   public function Step() : Boolean;
+   public function Step() : OPCode;
 
 
 
@@ -98,7 +98,7 @@ begin
       Integer(IP): result:=Reg.IP;
       Integer(SP): result:=Reg.SP;
       Integer(FLAGS): result:=Reg.FLAGS;
-      else raise Exception.CreateFmt('Register with index %b is invalid.',[index]);
+      else raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
    end;
 end;
 
@@ -143,16 +143,19 @@ begin
       Integer(DH): Reg.DX := ((w and 255) shl 8) or (Reg.DX and 255);
 
       Integer(BP): Reg.BP := w;
+      Integer(SP): Reg.SP := w;
       else begin
         if force then begin
           case index of
             Integer(IP): Reg.IP := w;
-            Integer(SP): Reg.SP := w;
             Integer(FLAGS): Reg.FLAGS := w;
             else raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
           end;
         end else
-          raise Exception.CreateFmt('Not allowed to write register with index %x.',[index]);
+          if (index = Integer(IP)) or (index = Integer(FLAGS)) then
+            raise Exception.CreateFmt('Not allowed to write into register with index %x.',[index])
+          else
+            raise Exception.CreateFmt('Register with index %x is invalid.',[index]);
       end;
    end;
 end;
@@ -187,33 +190,35 @@ end;
 //============================================================
 // PUBLIC
 
-function TCPU.ReadRegister(index : Byte) : Word;
+function TCPU.ReadRegister(index : RegisterIndex) : Word;
 begin
   EnterCriticalSection(cs);
   try
-    result:=RR(index);
+    result:=RR(Byte(index));
   finally
       LeaveCriticalSection(cs);
   end;
 end;
 
-procedure TCPU.WriteRegister(index : Byte; w : Word);
+procedure TCPU.WriteRegister(index : RegisterIndex; w : Word);
 begin
     EnterCriticalSection(cs);
   try
-    WR(true,index, w);
+    WR(true,Byte(index), w);
   finally
     LeaveCriticalSection(cs);
   end;
 end;
 
 
-function TCPU.Step() : Boolean;
+function TCPU.Step() : OPCode;
 begin
-    EnterCriticalSection(cs);
+  EnterCriticalSection(cs);
   try
-    case OPCode(Ram.ReadByte(Reg.IP)) of
-      _END: result:=True;
+    result:=OPCode(Ram.ReadByte(Reg.IP));
+    case result of
+      _END: begin
+      end;
       MOV_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2));
         Reg.IP += 4;
@@ -230,6 +235,10 @@ begin
         Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1)),RR(Ram.ReadByte(Reg.IP+2)));
         Reg.IP += 3;
       end; // MOV [R],R
+      MOV_ADDR_R_X: begin
+        Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1)),Ram.ReadWord(Reg.IP+2));
+        Reg.IP += 3;
+      end; // MOV [R],X
       MOV_ADDR_X_R: begin
         Ram.WriteWord(Ram.ReadWord(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+3)));
         Reg.IP += 4;
@@ -241,7 +250,7 @@ begin
       MOV_R_ADDR_RX: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(RR(Ram.ReadByte(Reg.IP+2))+Ram.ReadWord(Reg.IP+3)));
         Reg.IP += 5;
-      end; //mov R,[R+x]	()
+      end; //mov R,[R+x]
       MOV_ADDR_RX_R: begin
         Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1))+Ram.ReadWord(Reg.IP+2),RR(Ram.ReadByte(Reg.IP+4)));
         Reg.IP += 5;
@@ -484,7 +493,7 @@ begin
       OPCode.POP: begin
         pop();
         Reg.IP+=1;
-      end; //pop			(in kein Register)
+      end; //pop(in kein Register)
       POP_R: begin
         WR(Ram.ReadByte(Reg.IP+1),pop());
         Reg.IP+=2;
@@ -494,7 +503,7 @@ begin
       NOT_R: begin
         WR(Ram.ReadByte(Reg.IP+1),not RR(Ram.ReadByte(Reg.IP+1)));
         Reg.IP += 2;
-      end; //not R		(binär)
+      end; //not R
       AND_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1), RR(Ram.ReadByte(Reg.IP+1)) and Ram.ReadWord(Reg.IP+2),true);
         Reg.IP += 4;
@@ -519,7 +528,9 @@ begin
         WR(Ram.ReadByte(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+2)) xor RR(Ram.ReadByte(Reg.IP+1)),true);
         Reg.IP += 3;
       end; //xor R,R
-
+      else begin
+        Raise Exception.CreateFmt('OP-Code with Index %x is invalid',[result]);
+      end;
      end;
   finally
     LeaveCriticalSection(cs);

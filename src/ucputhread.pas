@@ -5,12 +5,14 @@ unit uCPUThread;
 interface
 
 uses
-  Classes, SysUtils, uCPU;
+  Classes, SysUtils, uCPU, uOPCodes, uTypen;
   type TCPUThread = class(TThread)
     private
       cpu : TCPU;
       cs:TRTLCriticalSection;
       p:Int64;
+      stopAtSP: Word;
+      FException: String;
     public
 
       {
@@ -21,19 +23,32 @@ uses
       constructor create(sim : TCPU);
 
       {
-      Vor.: start wurde nicht oder stop wurde nach start aufgerufen
-      Eff.: CPU.step wurde ausgefuehrt
-      Erg.: -
-      }
-     // procedure step();
-
-      {
-      Vor.: start wurde nicht oder stop wurde nach start aufgerufen
-      Eff.: CPU.step wird ausgefuehrt mit v ms pause zwischen jeder Ausfuehrung
+      Vor.: -
+      Eff.: Die Pause zwischen jeder ausfuehrung wird auf v (in ms) gesetzt. Ist
+            v = -1 so wird beim aufruf von resume nur ein schritt ausgefuehrt.
+            Ist v = -2 und der naechste auszufuehrende Befehl CALL ist, so
+            werden beim aufruf von resume genau soviele schritte ausgefuehrt,
+            dass die aufgerufenen funktion (CALL) wieder zuruckgekehrt ist (RET).
+            Ist v = -2 und der naechste auszufuehrende Befehl ist nicht CALL, so
+            wird nur ein schritt ausgefuehrt
       Erg.: -
       }
       procedure setVel(v :int64);
 
+      {
+      Vor.: Der Thread wurde beendet (Terminated = True)
+      Eff.: -
+      Erg.: Gibt die Fehlermeldung des Fehlers zurueck, welcher fuer die beendung
+            des Thread gesorgt hat. Wurde der Thread durch den Aufruf von Terminate
+            oder durch das Erreichen des OP-Codes END (ID 0) beendet, so wird ''
+            zurueckgegeben
+      }
+      function getException():String;
+
+      {
+        DO NOT CALL THIS OR YOU WILL EXECUTE IT IN THE SAME THREAD
+         -> use the resume and terminate procedures provided by TThread
+      }
       procedure execute(); override;
 
       destructor destroy(); override;
@@ -43,9 +58,9 @@ implementation
 
 constructor TCPUThread.create(sim: TCPU);
 begin
-  inherited Create(true);
   cpu := sim;
   InitCriticalSection(cs);
+  inherited Create(true);
 end;
 
 procedure TCPUThread.setVel(v :int64);
@@ -58,23 +73,64 @@ begin
   end;
 end;
 
+
 procedure TCPUThread.Execute;
 var
   a,e : TDateTime;
   t : Int64;
+  op_code : OPCode;
+  StackPointer: Word;
+
 begin
-  while (not Terminated) and (not cpu.Step()) do begin
+  stopAtSP := High(Word); // at start do not stop at any specific Stack-Pointer
+  FException := '';
+  while (not Terminated) do begin
+   StackPointer := cpu.ReadRegister(SP);
+
+   // stop at specific Stack-Pointer
+   if (StackPointer = stopAtSP) then begin
+     stopAtSP := High(Word);
+     suspend;
+     continue;
+   end;
+   try
+     op_code := cpu.Step();
+   except
+     on Ex:Exception do begin
+       // break on Exception
+       FException := Ex.Message;
+       break;
+     end;
+   end;
+
+   // break on END
+   if (op_code = _END) then begin
+     break;
+   end;
+
+   // get sleep duration in t inside CriticalSection
    EnterCriticalSection(cs);
    try
      t := p;
    finally
      LeaveCriticalSection(cs);
    end;
-   a := Time();
-   repeat
-     e := Time();
-   until (e - a) >= t;
+
+   // suspend or sleep depending on t and other parameters
+   if ((op_code = CALL_X) or (op_code = CALL_R)) and (stopAtSP = High(Word)) and (t=-2) then
+      stopAtSP := StackPointer
+   else if ((t<0) and (stopAtSP = High(Word))) then begin
+     stopAtSP := High(Word);
+     suspend;
+     continue;
+   end else if (t>0) then
+     Sleep(t);
   end;
+end;
+
+function TCPUThread.getException():String;
+begin
+  result:=FException;
 end;
 
 destructor TCPUThread.destroy();

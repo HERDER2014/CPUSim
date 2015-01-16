@@ -22,6 +22,8 @@ type
     MOV_R_ADDR_X = 3,
     // MOV [R], R
     MOV_ADDR_R_R = 4,
+    //MOV [R], X
+    MOV_ADDR_R_X = 65,
     // MOV [X], R
     MOV_ADDR_X_R = 5,
     // MOV R, R

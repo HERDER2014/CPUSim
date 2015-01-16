@@ -5,22 +5,13 @@ unit uCompiler;
 interface
 
 uses
-  Classes, fgl, SysUtils, strutils, Dialogs, uRAM, uAdvancedRecords,
-  uTypen, uOPCodes;
+  Classes, SysUtils, uRAM;
 
-{ Ist nur da, um den JEDI-Codeformatierer am Leben zu halten. Der wird alles
-    zwischen "$IFNDEF JCF" und "$ENDIF" ignorieren. So die Theorie.
-  Das ist notwendig, weil er keine Generics kennt und daher bei den spitzen
-    Klammern ansonsten aufhört zu parsen.
-  Irgendwie funktioniert das aber auch nicht richtig, weil er dann teilweise
-    alles ignoriert. /ff
-}
-{$IFNDEF JEDI}
-{$WARNING Jedi wird nicht funktionieren; bitte in den Einstellungen bei
-  PreProcessor das Symbol "JEDI" eintragen. }
-type
-  TLabelMap = specialize TFPGMap<string, Word>;
+type TCompiler = class
+  public constructor Create(var r : TRAM);
 
+<<<<<<< HEAD
+=======
 type
   TCommandLineList = specialize TFPGList<TCodeLineNr>;
 
@@ -54,6 +45,7 @@ type
 
   public
     constructor Create(var r: TRAM);
+>>>>>>> Compiler
 
    {
    Vor.: -
@@ -61,7 +53,7 @@ type
    Erg.: -
    Ausnahmen: Fehlermeldungen (TCompilerException).
    }
-    procedure Compile(input: string);
+  procedure Compile(input : String);
 
 
    {
@@ -69,6 +61,19 @@ type
    Eff.: -
    Erg.: Liefert die Position in der Eingabe, die an Adresse addr kompiliert wurde.
    }
+<<<<<<< HEAD
+  function GetCodePosition(addr : Cardinal) : Cardinal;
+end;
+
+implementation
+  constructor TCompiler.Create(var r : TRAM);
+  begin
+
+  end;
+
+  procedure TCompiler.Compile(input : String);
+  begin
+=======
     function GetCodePosition(addr: cardinal): cardinal;
 
   {
@@ -1631,11 +1636,14 @@ begin
     if zeile <> EmptyStr then
       // Zeile ist nicht leer
       commandLines.Add(CrTCodeLineNr(UpperCase(zeile), zNr));
+>>>>>>> Compiler
 
-    cpos += zlen + 2; // wegen \r\n
-    Inc(zNr);
   end;
 
+<<<<<<< HEAD
+  function TCompiler.GetCodePosition(addr : Cardinal) : Cardinal;
+  begin
+=======
   bytepos := 0;
   rwritten := 0;
   i := 0;
@@ -1691,11 +1699,12 @@ begin
         exit;
       end;
     end;
+>>>>>>> Compiler
 
-    bytepos += rwritten;
-    Inc(i);
   end;
 
+<<<<<<< HEAD
+=======
   {
    Routinen zum Überprüfen und Ausgeben der Resultate.
   }
@@ -1714,4 +1723,6 @@ begin
   Result := 0;
 end;
 
+>>>>>>> Compiler
 end.
+

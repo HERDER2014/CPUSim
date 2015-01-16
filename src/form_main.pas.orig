@@ -5,7 +5,6 @@ unit form_main;
 interface
 
 uses
-<<<<<<< HEAD
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
   ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler;
@@ -14,6 +13,7 @@ type
 
   { TmainFrm }
 
+<<<<<<< HEAD
   TmainFrm = class(TForm)
     ActionList: TActionList;
     FileExit1: TFileExit;
@@ -44,6 +44,9 @@ type
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
     MainFrm_Menu_Play: TMenuItem;
+    MainFrm_Menu_Misc: TMenuItem;
+    MainFrm_menu_Misc_updateRAM: TMenuItem;
+    compile: TMenuItem;
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
     ReplaceDialog1: TReplaceDialog;
@@ -55,6 +58,7 @@ type
     InputSynEdit: TSynEdit;
     RegistersValueList: TValueListEditor;
     RAMValueList: TValueListEditor;
+    procedure compileClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
@@ -67,9 +71,20 @@ type
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
-    procedure Compile;
+    procedure CompileBLA;
+    procedure MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
     procedure MainFrm_Menu_PlayClick(Sender: TObject);
     procedure ShowExitDlg;
+=======
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    Memo1: TMemo;
+    radioDecimal: TRadioButton;
+    RadioButton2: TRadioButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+>>>>>>> Compiler
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
@@ -82,44 +97,6 @@ type
     procedure delete;
   private
     { private declarations }
-=======
-  Classes, SysUtils, process, FileUtil, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ExtCtrls, uCPU, uRAM, uTypen, uCPUThread;
-
-type
-
-  { TForm1 }
-
-  TForm1 = class(TForm)
-    Button1: TButton;
-    Button2: TButton;
-    Button3: TButton;
-    Button4: TButton;
-    Button5: TButton;
-    Edit1: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
-    RefreshTimer: TTimer;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure RefreshTimerTimer(Sender: TObject);
-    procedure OnCPUTerminate(Sender: TObject);
-  private
-    simulator : TCPU;
-    ram : TRAM;
-    cpuThread : TCPUThread;
->>>>>>> CPU
   public
     { public declarations }
   end;
@@ -183,7 +160,6 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
 begin
-<<<<<<< HEAD
   ShowExitDlg;
 //TODO use TAction
 //  ActionList.;
@@ -200,6 +176,11 @@ begin
   Saved:=False;
 end;
 
+procedure TmainFrm.compileClick(Sender: TObject);
+begin
+  MainFrm.CompileBLA;
+end;
+
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
 begin
   InputSynEdit.CutToClipboard;
@@ -213,65 +194,6 @@ end;
 procedure TmainFrm.MainFrm_Menu_Edit_PasteClick(Sender: TObject);
 begin
   InputSynEdit.PasteFromClipboard;
-=======
-  ram := TRAM.Create(0);         // \ sollte auch bei Start (Button1Click) sein
-  simulator := TCPU.Create(ram); // / Hier nicht notwendig, da kein Compiler
-end;
-
-procedure TForm1.RefreshTimerTimer(Sender: TObject);
-begin
-  Label1.Caption := format('AX : %x',[simulator.ReadRegister(AX)]);
-  Label2.Caption := format('BX : %x',[simulator.ReadRegister(BX)]);
-  Label3.Caption := format('CX : %x',[simulator.ReadRegister(CX)]);
-  Label4.Caption := format('DX : %x',[simulator.ReadRegister(DX)]);
-
-  Label5.Caption := format('IP : %x',[simulator.ReadRegister(IP)]);
-  Label6.Caption := format('SP : %x',[simulator.ReadRegister(SP)]);
-  Label7.Caption := format('BP : %x',[simulator.ReadRegister(BP)]);
-  Label8.Caption := format('FLAGS : %x',[simulator.ReadRegister(FLAGS)]);
-
-
-end;
-
-procedure TForm1.OnCPUTerminate(Sender: TObject);
-begin
-  if (cpuThread.getException() = '') then
-     Label9.Caption:='Program ended Successfully'
-  else
-     Label9.Caption:= cpuThread.getException();
-  cpuThread.free;
-end;
-
-procedure TForm1.Button1Click(Sender: TObject); //Start (also sets vel)
-begin
-  Label9.Caption:='';
-  simulator.free;
-  simulator := TCPU.Create(ram);
-  cpuThread := TCPUThread.Create(simulator);
-  Button5Click(nil);
-  cpuThread.OnTerminate := @OnCPUTerminate;
-  cpuThread.Start;
-end;
-
-procedure TForm1.Button2Click(Sender: TObject); //Resume
-begin
-    cpuThread.Resume;
-end;
-
-procedure TForm1.Button3Click(Sender: TObject); //Suspent / Pause
-begin
-    cpuThread.Suspend;
-end;
-
-procedure TForm1.Button4Click(Sender: TObject); //Terminate / Stop
-begin
-    cpuThread.Terminate;
-end;
-
-procedure TForm1.Button5Click(Sender: TObject); //SetVel
-begin
-     cpuThread.setVel(StrToInt64(Edit1.Text));
->>>>>>> CPU
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_RedoClick(Sender: TObject);
@@ -296,6 +218,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
 var
+<<<<<<< HEAD
   path: String;
 begin
   SaveDlg.Execute;
@@ -345,7 +268,7 @@ begin
   result:=Code;
 end;
 
-procedure TmainFrm.Compile;
+procedure TmainFrm.CompileBLA;
 var
   CPU : TCPU;
   Comp : TCompiler;
@@ -355,19 +278,42 @@ begin
   //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
   if RunStatus=0 then
   begin
-      RAM:=TRAM.Create((65536));            //TODO use size instead
+      RAM:=TRAM.Create(256);            //TODO use size instead
   // init RAM viewer:
   for i:=0 to 255 do //TODO use size instead
+=======
+  ram: TRAM;
+begin
+  ram := TRAM.Create(2 shl 16); // 2^16 bytes (2B-Adressen)
+  comp := TCompiler.Create(ram);
+  if radioDecimal.Checked then
+  begin
+    comp.NumberInputMode:=TNumberInputMode.Decimal;
+  end
+  else
+    comp.NumberInputMode:=TNumberInputMode.Hexadecimal;
+
+  try
+    comp.Compile(Memo1.Text);
+  except
+    on CE: TCompilerException do
+>>>>>>> Compiler
     begin
       RAMValueList.Row := i;
       RAMValueList.InsertRow(FloatToStr(i),'0000000000000000',true);
     end;
+<<<<<<< HEAD
     Comp:=TCompiler.Create(RAM);
     Comp.Compile(mainFrm.ListToStr);
-    CPU:=CPU.Create(RAM);
+    CPU:=TCPU.Create(RAM);
     Thread:=TCPUThread.Create(CPU);
     RunStatus:=1;
   end; //TODO else at Messegebox: not possible when old thread isn't closed
+end;
+
+procedure TmainFrm.MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
+begin
+  updateRAM;
 end;
 
 procedure TmainFrm.MainFrm_Menu_PlayClick(Sender: TObject);
@@ -397,8 +343,8 @@ procedure TmainFrm.Play(v: int64); //v für Geschwindigkeit, es wird die Pausenz
 begin
   if RunStatus=1 then
   begin
-    //Thread.setVel(v) // if v set
-    //Thread.resume;
+    Thread.setVel(v); // if v set
+    Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and Code isn't compiled
 end;
@@ -419,6 +365,13 @@ begin
    // Thread.Stop();
     RunStatus:=1;
   end; //TODO else at Messagebox: not possible when thread isn't running
+=======
+  end;
+  Button2.Enabled := True;
+  ShowMessage('Compilation successful.'#13'Binary image size: '+IntToStr(comp.LastSize)+' bytes');
+  //comp.Destroy;
+  ram.Destroy;
+>>>>>>> Compiler
 end;
 
 procedure TmainFrm.Delete;

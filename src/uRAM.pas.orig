@@ -6,6 +6,15 @@ interface
 
 
 uses
+<<<<<<< HEAD
+  Classes, SysUtils, Dialogs;
+
+type TRAM = class
+  var
+    bla : Cardinal;
+
+  constructor Create(size : Cardinal);
+=======
   Classes, SysUtils, LazLogger, Dialogs;
 
 type
@@ -15,6 +24,7 @@ type
     log : TFileStream;
 
     constructor Create(size: cardinal);
+>>>>>>> Compiler
 
     destructor Destroy; override;
 
@@ -23,24 +33,55 @@ type
     Ergebnis: Liefert das Byte an Adresse addr.
   }
 
-    function ReadByte(addr: cardinal): byte;
+  function ReadByte(addr : Cardinal) : Byte;
 
   { Vor.: addr < size
     Effekt: -
     Ergebnis: Setzt das Byte an Adresse addr auf b.
   }
-    procedure WriteByte(addr: cardinal; b: byte);
+  procedure WriteByte(addr : Cardinal; b : Byte);
 
   { Vor.: addr < size-1
     Effekt: -
     Ergebnis: Liefert das Wort ab Adresse addr.
   }
-    function ReadWord(addr: cardinal): word;
+  function ReadWord(addr : Cardinal) : Word;
 
   { Vor.: addr < size-1
     Effekt: -
     Ergebnis: Setzt das Wort ab Adresse addr auf w.
   }
+<<<<<<< HEAD
+  procedure WriteWord(addr : Cardinal; w : Word);
+
+end;
+
+implementation
+   constructor TRAM.Create(size : Cardinal);
+   begin
+     bla := 125;
+   end;
+   function TRAM.ReadByte(addr : Cardinal) : Byte;
+   var value : String ;
+   begin
+    // InputQuery('RAM TEST', format('Gelesen wird Byte an Adresse %x', [addr]), value);
+     result := Random(17) ;//StrToInt64('$'+value);
+   end;
+   procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
+   begin
+  //   ShowMessage(format('Geschrieben wird an Adresse %x das Byte %x',[addr,b]));
+   end;
+   function TRAM.ReadWord(addr : Cardinal) : Word;
+   var value : String ;
+   begin
+ //    InputQuery('RAM TEST', format('Gelesen wird Word an Adresse %x', [addr]), value);
+     result := Random(17) ;//StrToInt64('$'+value);
+   end;
+   procedure TRAM.WriteWord(addr : Cardinal; w : Word);
+   begin
+ //    ShowMessage(format('Geschrieben wird an Adresse %x das Word %x',[addr,w]));
+   end;
+=======
     procedure WriteWord(addr: cardinal; w: word);
 
   end;
@@ -92,5 +133,7 @@ begin
   log.Seek(addr, soBeginning);
   log.WriteWord(w);
 end;
+>>>>>>> Compiler
 
 end.
+

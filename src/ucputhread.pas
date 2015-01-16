@@ -60,7 +60,7 @@ constructor TCPUThread.create(sim: TCPU);
 begin
   cpu := sim;
   InitCriticalSection(cs);
-  inherited Create(true);
+//  inherited Create(true);
 end;
 
 procedure TCPUThread.setVel(v :int64);

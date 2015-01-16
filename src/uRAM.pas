@@ -9,6 +9,9 @@ uses
   Classes, SysUtils, Dialogs;
 
 type TRAM = class
+  var
+    bla : Cardinal;
+
   constructor Create(size : Cardinal);
 
   { Vor.: addr < size
@@ -41,7 +44,7 @@ end;
 implementation
    constructor TRAM.Create(size : Cardinal);
    begin
-
+     bla := 125;
    end;
    function TRAM.ReadByte(addr : Cardinal) : Byte;
    var value : String ;

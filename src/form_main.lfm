@@ -631,8 +631,8 @@ object mainFrm: TmainFrm
     )
   end
   object MainFrm_Menu: TMainMenu
-    left = 192
-    top = 56
+    left = 96
+    top = 120
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
       object MainFrm_Menu_File_New: TMenuItem
@@ -723,29 +723,40 @@ object mainFrm: TmainFrm
       Caption = 'Play'
       OnClick = MainFrm_Menu_PlayClick
     end
+    object MainFrm_Menu_Misc: TMenuItem
+      Caption = 'Misc'
+      object MainFrm_menu_Misc_updateRAM: TMenuItem
+        Caption = 'updateRAM'
+        OnClick = MainFrm_menu_Misc_updateRAMClick
+      end
+      object compile: TMenuItem
+        Caption = 'compile'
+        OnClick = compileClick
+      end
+    end
   end
   object OpenDlg: TOpenDialog
     FileName = '/home/leonard'
     InitialDir = '/home/'
-    left = 152
+    left = 160
     top = 56
   end
   object SaveDlg: TSaveDialog
-    left = 120
+    left = 96
     top = 56
   end
   object FindDlg: TFindDialog
-    left = 232
+    left = 224
     top = 56
   end
   object ReplaceDialog1: TReplaceDialog
     Options = [frDown, frReplace, frReplaceAll, frHidePromptOnReplace]
-    left = 264
-    top = 56
+    left = 304
+    top = 64
   end
   object ActionList: TActionList
-    left = 256
-    top = 150
+    left = 200
+    top = 128
     object FileExit1: TFileExit
       Category = 'File'
       Caption = 'E&xit'

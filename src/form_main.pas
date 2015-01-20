@@ -78,6 +78,8 @@ type
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
+
+    procedure OnCPUTerminate(Sender: TObject);
     function ListToStr: string;
     procedure updateRAM;
     procedure Play;
@@ -96,6 +98,7 @@ var
   Saved: Boolean;
   Thread: TCPUThread;
   RAM: TRAM;
+  CPU: TCPU;
   RunStatus: integer;
   // 0, wenn nicht bereit für Play/Step -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/Step -- 2, wenn play aktiv, bereit für Stop
@@ -130,6 +133,8 @@ begin
   RAMSize:=256; //TODO: getRAMSize
   MessagesMemo.Text:='Hit "Run" to test your program!';
   Saved:=True; // Don't ask for save when program just started
+  RAM:=TRAM.Create(RAMSize);
+  CPU:=TCPU.Create(RAM);
 end;
 
 
@@ -162,8 +167,14 @@ begin
     updateRAM;
     Comp:=TCompiler.Create(RAM);
     Comp.Compile(mainFrm.ListToStr);
-    CPU:=TCPU.Create(RAM);
-    Thread:=TCPUThread.Create(CPU);
+    //CPU:=TCPU.Create(RAM);
+    //Thread:=TCPUThread.Create(CPU);
+    CPU.free;
+    CPU := TCPU.Create(RAM);
+    Thread := TCPUThread.Create(CPU);
+    //Button5Click(nil);
+    Thread.OnTerminate := @OnCPUTerminate;
+    Thread.Start;
     RunStatus:=1;
   end; //TODO else at Messegebox: not possible when old thread isn't closed
 end;
@@ -190,6 +201,23 @@ begin
     Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and code isn't compiled
+  CPU.free;
+  CPU := TCPU.Create(RAM);
+  Thread := TCPUThread.Create(CPU);
+  Thread.OnTerminate := @OnCPUTerminate;
+  Thread.Start;
+
+
+
+end;
+
+procedure TmainFrm.OnCPUTerminate(Sender: TObject);
+begin
+  if (Thread.getException() = '') then
+     //Label9.Caption:='Program ended Successfully'
+  else
+     //Label9.Caption:= cpuThread.getException();
+  Thread.free;
 end;
 
 procedure TmainFrm.Step;

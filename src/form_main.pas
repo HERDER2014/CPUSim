@@ -167,8 +167,6 @@ begin
     updateRAM;
     Comp:=TCompiler.Create(RAM);
     Comp.Compile(mainFrm.ListToStr);
-    //CPU:=TCPU.Create(RAM);
-    //Thread:=TCPUThread.Create(CPU);
     CPU.free;
     CPU := TCPU.Create(RAM);
     Thread := TCPUThread.Create(CPU);

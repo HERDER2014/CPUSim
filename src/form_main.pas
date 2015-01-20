@@ -191,11 +191,6 @@ begin
     Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and code isn't compiled
-  CPU.free;
-  CPU := TCPU.Create(RAM);
-  Thread := TCPUThread.Create(CPU);
-  Thread.OnTerminate := @OnCPUTerminate;
-  Thread.Start;
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);
@@ -211,9 +206,9 @@ procedure TmainFrm.Step;
 begin
   if RunStatus=1 then
   begin
-    Thread.SetVel();
+    Thread.SetVel(-1);
     Thread.Resume;
-    mainFrm.Update;
+    UpdateRAM;
   end; //TODO else at Messagebox: same as in TmainFrm.Play
 end;
 

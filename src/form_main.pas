@@ -151,9 +151,7 @@ end;
 
 procedure TmainFrm.DoCompile;
 var
-  CPU : TCPU;
   Comp : TCompiler;
-  Thread : TCPUThread;
   i : Cardinal;
 begin
   //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
@@ -183,8 +181,8 @@ var
 begin
   for i:=0 to RAMSize-1 do
   begin
-    RAMValueList.Cells[1,i]:=IntToStr(RAM.ReadByte(i));
-    RAMValueList.Cells[0,i]:=IntToStr(i);
+    RAMValueList.Cells[1,i+1]:=IntToStr(RAM.ReadByte(i));
+    RAMValueList.Cells[0,i+1]:=IntToStr(i);
   end;
 end;
 
@@ -204,9 +202,6 @@ begin
   Thread := TCPUThread.Create(CPU);
   Thread.OnTerminate := @OnCPUTerminate;
   Thread.Start;
-
-
-
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);

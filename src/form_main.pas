@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler, form_options;
+  ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler, form_options, uTypen;
 
 type
 
@@ -46,6 +46,7 @@ type
     MainFrm_Menu_Misc: TMenuItem;
     MainFrm_menu_Misc_updateRAM: TMenuItem;
     compile: TMenuItem;
+    MainFrm_Menu_Misc_UpdReg: TMenuItem;
     Options: TMenuItem;
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
@@ -73,6 +74,7 @@ type
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
     procedure DoCompile;
     procedure MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
+    procedure MainFrm_Menu_Misc_UpdRegClick(Sender: TObject);
     procedure MainFrm_Menu_PlayClick(Sender: TObject);
     procedure OptionsClick(Sender: TObject);
     procedure ShowExitDlg;
@@ -102,8 +104,9 @@ var
   RAM: TRAM;
   CPU: TCPU;
   RunStatus: integer;
-  // 0, wenn nicht bereit für Play/Step -- 1, wenn kompiliert und initialisiert,
-  // bereit für Play/Step -- 2, wenn play aktiv, bereit für Stop
+  // 0: not ready for play/step
+  // 1: compiled and initialised => ready
+  // 2: play is active => ready for stop
   RAMSize: Cardinal;
   v: int64;
 
@@ -187,8 +190,8 @@ procedure TmainFrm.Play;
 begin
   if RunStatus=1 then
   begin
-    Thread.Start;
-    //Thread.resume;
+    //Thread.Start;
+    Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and code isn't compiled
 end;
@@ -357,6 +360,28 @@ end;
 procedure TmainFrm.MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
 begin
   updateRAM;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Misc_UpdRegClick(Sender: TObject);
+begin
+
+  RegistersValueList.Cells[1,1]:=IntToStr(CPU.ReadRegister(AX));
+  RegistersValueList.Cells[1,2]:=IntToStr(CPU.ReadRegister(BX));
+  RegistersValueList.Cells[1,3]:=IntToStr(CPU.ReadRegister(CX));
+  RegistersValueList.Cells[1,4]:=IntToStr(CPU.ReadRegister(DX));
+  RegistersValueList.Cells[1,5]:=IntToStr(CPU.ReadRegister(BP));
+  RegistersValueList.Cells[1,6]:=IntToStr(CPU.ReadRegister(IP));
+  RegistersValueList.Cells[1,7]:=IntToStr(CPU.ReadRegister(SP));
+  RegistersValueList.Cells[1,8]:=IntToStr(CPU.ReadRegister(FLAGS));
+  RegistersValueList.Cells[0,1]:='AX';
+  RegistersValueList.Cells[0,2]:='BX';
+  RegistersValueList.Cells[0,3]:='CX';
+  RegistersValueList.Cells[0,4]:='DX';
+  RegistersValueList.Cells[0,5]:='BP';
+  RegistersValueList.Cells[0,6]:='IP';
+  RegistersValueList.Cells[0,7]:='SP';
+  RegistersValueList.Cells[0,8]:='FLAGS';
+
 end;
 
 procedure TmainFrm.MainFrm_Menu_PlayClick(Sender: TObject);

@@ -1,5 +1,5 @@
 object mainFrm: TmainFrm
-  Left = 432
+  Left = 433
   Height = 442
   Top = 143
   Width = 848
@@ -732,6 +732,10 @@ object mainFrm: TmainFrm
       object compile: TMenuItem
         Caption = 'compile'
         OnClick = compileClick
+      end
+      object MainFrm_Menu_Misc_UpdReg: TMenuItem
+        Caption = 'Update Register'
+        OnClick = MainFrm_Menu_Misc_UpdRegClick
       end
     end
     object Options: TMenuItem

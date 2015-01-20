@@ -5,7 +5,7 @@ unit uCPU;
 interface
 
 uses
-  Classes, SysUtils, uRAM, UTypen, uOPCodes;
+  Classes, SysUtils, uRAM, uTypen, uOPCodes;
 
 type TCPU = class
 

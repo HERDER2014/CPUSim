@@ -105,6 +105,7 @@ var
   // 0, wenn nicht bereit für Play/Step -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/Step -- 2, wenn play aktiv, bereit für Stop
   RAMSize: Cardinal;
+  v: int64;
 
 implementation
 
@@ -132,23 +133,19 @@ begin
   RegistersValueList.Row := 7;
   RegistersValueList.InsertRow('FLAGS','0000000000000000',true);
   InputSynEdit.ClearAll;
-  RAMSize:=256; //TODO: getRAMSize
+  RAMSize:=256;
   MessagesMemo.Text:='Hit "Run" to test your program!';
   Saved:=True; // Don't ask for save when program just started
   RAM:=TRAM.Create(RAMSize);
   CPU:=TCPU.Create(RAM);
+  v:=0;
 end;
 
 
 
 function TmainFrm.ListToStr: string;
-//var
-//  i : Cardinal;
 begin
-  //for i:=0 to InputSynEdit.Lines.Count do
-    //Code += InputSynEdit.Text[i] + #13#10;
   result := InputSynEdit.Text;
-  //result:=Code;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -156,7 +153,6 @@ var
   Comp : TCompiler;
   i : Cardinal;
 begin
-  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
   if RunStatus=0 then
   begin
     RAM:=TRAM.Create(RAMSize);
@@ -170,7 +166,6 @@ begin
     CPU.free;
     CPU := TCPU.Create(RAM);
     Thread := TCPUThread.Create(CPU);
-    //Button5Click(nil);
     Thread.OnTerminate := @OnCPUTerminate;
     Thread.Start;
     RunStatus:=1;
@@ -189,10 +184,7 @@ begin
 end;
 
 procedure TmainFrm.Play;
-var
-  v: int64;              //v step velocity in ms
 begin
-  v := 0;                //TODO get from settings
   if RunStatus=1 then
   begin
     Thread.setVel(v);

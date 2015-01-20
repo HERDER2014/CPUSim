@@ -12,6 +12,7 @@ type
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
+    Label1: TLabel;
     OptionsFrm_ApplyBtn: TButton;
     OptionsFrm_RAMSizeEdt: TEdit;
     procedure FormCreate(Sender: TObject);

@@ -1,7 +1,7 @@
 object OptionsFrm: TOptionsFrm
-  Left = 440
+  Left = 535
   Height = 240
-  Top = 117
+  Top = 193
   Width = 320
   Caption = 'Options'
   ClientHeight = 240
@@ -9,20 +9,28 @@ object OptionsFrm: TOptionsFrm
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object OptionsFrm_RAMSizeEdt: TEdit
-    Left = 56
+    Left = 216
     Height = 25
-    Top = 42
+    Top = 24
     Width = 80
     TabOrder = 0
-    Text = 'OptionsFrm_RAMSizeEdt'
+    Text = '256'
   end
   object OptionsFrm_ApplyBtn: TButton
-    Left = 62
+    Left = 232
     Height = 25
-    Top = 130
+    Top = 200
     Width = 75
     Caption = 'Apply'
     OnClick = OptionsFrm_ApplyBtnClick
     TabOrder = 1
+  end
+  object Label1: TLabel
+    Left = 144
+    Height = 19
+    Top = 27
+    Width = 63
+    Caption = 'RAM Size:'
+    ParentColor = False
   end
 end

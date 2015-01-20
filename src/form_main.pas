@@ -181,8 +181,8 @@ var
 begin
   for i:=0 to RAMSize-1 do
   begin
-    RAMValueList.Cells[1,i]:=IntToStr(RAM.ReadByte(i));
-    RAMValueList.Cells[0,i]:=IntToStr(i);
+    RAMValueList.Cells[1,i+1]:=IntToStr(RAM.ReadByte(i));
+    RAMValueList.Cells[0,i+1]:=IntToStr(i);
   end;
 end;
 

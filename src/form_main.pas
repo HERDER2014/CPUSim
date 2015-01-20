@@ -151,9 +151,7 @@ end;
 
 procedure TmainFrm.DoCompile;
 var
-  CPU : TCPU;
   Comp : TCompiler;
-  Thread : TCPUThread;
   i : Cardinal;
 begin
   //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
@@ -204,9 +202,6 @@ begin
   Thread := TCPUThread.Create(CPU);
   Thread.OnTerminate := @OnCPUTerminate;
   Thread.Start;
-
-
-
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);

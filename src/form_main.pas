@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler, form_options, uTypen;
+  ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler;
 
 type
 
@@ -15,8 +15,17 @@ type
 
   TmainFrm = class(TForm)
     ActionList: TActionList;
+    Assemble: TButton;
+    resetCPU: TButton;
+    ContinueBtn: TButton;
+    Run_slow: TButton;
+    speed: TSpinEdit;
+    StopBtn: TButton;
+    StepBtn: TButton;
+    Run: TButton;
     FileExit1: TFileExit;
     FindDlg: TFindDialog;
+    HSplitterTop: TSplitter;
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
     MainFrm_Menu_File_New: TMenuItem;
@@ -46,18 +55,18 @@ type
     MainFrm_Menu_Misc: TMenuItem;
     MainFrm_menu_Misc_updateRAM: TMenuItem;
     compile: TMenuItem;
-    MainFrm_Menu_Misc_UpdReg: TMenuItem;
-    Options: TMenuItem;
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
+    ActionBox: TPanel;
+    RegistersValueList2: TValueListEditor;
     ReplaceDialog1: TReplaceDialog;
     SaveDlg: TSaveDialog;
     BottomVSplitter: TSplitter;
     StatusBar1: TStatusBar;
     TopVSplitter: TSplitter;
-    HSplitter: TSplitter;
+    HSplitterBot: TSplitter;
     InputSynEdit: TSynEdit;
-    RegistersValueList: TValueListEditor;
+    RegistersValueList1: TValueListEditor;
     RAMValueList: TValueListEditor;
     procedure compileClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
@@ -74,9 +83,7 @@ type
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
     procedure DoCompile;
     procedure MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
-    procedure MainFrm_Menu_Misc_UpdRegClick(Sender: TObject);
     procedure MainFrm_Menu_PlayClick(Sender: TObject);
-    procedure OptionsClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -87,8 +94,8 @@ type
     function ListToStr: string;
     procedure updateRAM;
     procedure Play;
-    procedure step;
-    procedure stop;
+    procedure Step;
+    procedure Stop;
     procedure delete;
   private
     { private declarations }
@@ -104,11 +111,9 @@ var
   RAM: TRAM;
   CPU: TCPU;
   RunStatus: integer;
-  // 0: not ready for play/step
-  // 1: compiled and initialised => ready
-  // 2: play is active => ready for stop
+  // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
+  // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: Cardinal;
-  v: int64;
 
 implementation
 
@@ -119,36 +124,40 @@ implementation
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
   // init:
-  RegistersValueList.Row := 0;
-  RegistersValueList.InsertRow('AX','0000000000000000',true);
-  RegistersValueList.Row := 1;
-  RegistersValueList.InsertRow('BX','0000000000000000',true);
-  RegistersValueList.Row := 2;
-  RegistersValueList.InsertRow('CX','0000000000000000',true);
-  RegistersValueList.Row := 3;
-  RegistersValueList.InsertRow('DX','0000000000000000',true);
-  RegistersValueList.Row := 4;
-  RegistersValueList.InsertRow('BP','0000000000000000',true); // BasePointer
-  RegistersValueList.Row := 5;
-  RegistersValueList.InsertRow('IP','0000000000000000',true); // InstructionPointer
-  RegistersValueList.Row := 6;
-  RegistersValueList.InsertRow('SP','0000000000000000',true); // StackPointer
-  RegistersValueList.Row := 7;
-  RegistersValueList.InsertRow('FLAGS','0000000000000000',true);
+  RegistersValueList1.Row := 0;
+  RegistersValueList1.InsertRow('AX','0000000000000000',true);
+  RegistersValueList1.Row := 1;
+  RegistersValueList1.InsertRow('BX','0000000000000000',true);
+  RegistersValueList1.Row := 2;
+  RegistersValueList1.InsertRow('CX','0000000000000000',true);
+  RegistersValueList1.Row := 3;
+  RegistersValueList1.InsertRow('DX','0000000000000000',true);
+  RegistersValueList1.Row := 0;
+  RegistersValueList2.InsertRow('BP','0000000000000000',true); // BasePointer
+  RegistersValueList2.Row := 1;
+  RegistersValueList2.InsertRow('IP','0000000000000000',true); // InstructionPointer
+  RegistersValueList2.Row := 2;
+  RegistersValueList2.InsertRow('SP','0000000000000000',true); // StackPointer
+  RegistersValueList2.Row := 3;
+  RegistersValueList2.InsertRow('FLAGS','0000000000000000',true);
   InputSynEdit.ClearAll;
-  RAMSize:=256;
+  RAMSize:=512; //TODO: getRAMSize
   MessagesMemo.Text:='Hit "Run" to test your program!';
   Saved:=True; // Don't ask for save when program just started
   RAM:=TRAM.Create(RAMSize);
   CPU:=TCPU.Create(RAM);
-  v:=0;
 end;
 
 
 
 function TmainFrm.ListToStr: string;
+var
+  i : Cardinal;
 begin
+  //for i:=0 to InputSynEdit.Lines.Count do
+    //Code += InputSynEdit.Text[i] + #13#10;
   result := InputSynEdit.Text;
+  //result:=Code;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -156,6 +165,7 @@ var
   Comp : TCompiler;
   i : Cardinal;
 begin
+  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
   if RunStatus=0 then
   begin
     RAM:=TRAM.Create(RAMSize);
@@ -169,10 +179,11 @@ begin
     CPU.free;
     CPU := TCPU.Create(RAM);
     Thread := TCPUThread.Create(CPU);
-    Thread.setVel(v);
+    //Button5Click(nil);
     Thread.OnTerminate := @OnCPUTerminate;
+    Thread.Start;
     RunStatus:=1;
-  end; //TODO else at Messagebox: not possible when old thread isn't closed
+  end; //TODO else at Messegebox: not possible when old thread isn't closed
 end;
 
 procedure TmainFrm.updateRAM;
@@ -187,13 +198,21 @@ begin
 end;
 
 procedure TmainFrm.Play;
+var
+  v: int64;              //v StepBtn velocity in ms
 begin
+  v := 0;                //TODO get from settings
   if RunStatus=1 then
   begin
-    //Thread.Start;
+    Thread.setVel(v);
     Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and code isn't compiled
+  CPU.free;
+  CPU := TCPU.Create(RAM);
+  Thread := TCPUThread.Create(CPU);
+  Thread.OnTerminate := @OnCPUTerminate;
+  Thread.Start;
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);
@@ -209,9 +228,7 @@ procedure TmainFrm.Step;
 begin
   if RunStatus=1 then
   begin
-    Thread.SetVel(-1);
-    Thread.Resume;
-    UpdateRAM;
+    mainFrm.Update;
   end; //TODO else at Messagebox: same as in TmainFrm.Play
 end;
 
@@ -219,7 +236,6 @@ procedure TmainFrm.Stop;
 begin
   if RunStatus=2 then
   begin
-    Thread.Terminate;
     RunStatus:=1;
   end; //TODO else at Messagebox: not possible when thread isn't running
 end;
@@ -362,37 +378,9 @@ begin
   updateRAM;
 end;
 
-procedure TmainFrm.MainFrm_Menu_Misc_UpdRegClick(Sender: TObject);
-begin
-
-  RegistersValueList.Cells[1,1]:=IntToStr(CPU.ReadRegister(AX));
-  RegistersValueList.Cells[1,2]:=IntToStr(CPU.ReadRegister(BX));
-  RegistersValueList.Cells[1,3]:=IntToStr(CPU.ReadRegister(CX));
-  RegistersValueList.Cells[1,4]:=IntToStr(CPU.ReadRegister(DX));
-  RegistersValueList.Cells[1,5]:=IntToStr(CPU.ReadRegister(BP));
-  RegistersValueList.Cells[1,6]:=IntToStr(CPU.ReadRegister(IP));
-  RegistersValueList.Cells[1,7]:=IntToStr(CPU.ReadRegister(SP));
-  RegistersValueList.Cells[1,8]:=IntToStr(CPU.ReadRegister(FLAGS));
-  RegistersValueList.Cells[0,1]:='AX';
-  RegistersValueList.Cells[0,2]:='BX';
-  RegistersValueList.Cells[0,3]:='CX';
-  RegistersValueList.Cells[0,4]:='DX';
-  RegistersValueList.Cells[0,5]:='BP';
-  RegistersValueList.Cells[0,6]:='IP';
-  RegistersValueList.Cells[0,7]:='SP';
-  RegistersValueList.Cells[0,8]:='FLAGS';
-
-end;
-
 procedure TmainFrm.MainFrm_Menu_PlayClick(Sender: TObject);
 begin
   Play;
-end;
-
-procedure TmainFrm.OptionsClick(Sender: TObject);
-begin
-  OptionsFrm.ShowModal;
-  RAMSize:=form_options.rsize;
 end;
 
 

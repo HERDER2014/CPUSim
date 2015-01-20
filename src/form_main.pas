@@ -70,7 +70,7 @@ type
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
-    procedure CompileBLA;
+    procedure DoCompile;
     procedure MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
     procedure MainFrm_Menu_PlayClick(Sender: TObject);
     procedure ShowExitDlg;
@@ -80,7 +80,7 @@ type
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
     function ListToStr: string;
     procedure updateRAM;
-    procedure play (v : int64);
+    procedure Play;
     procedure step;
     procedure stop;
     procedure delete;
@@ -97,7 +97,9 @@ var
   Thread: TCPUThread;
   RAM: TRAM;
   RunStatus: integer;
-  // 0, wenn nicht bereit für Play/Step -- 1, wenn kompiliert und initialisiert, bereit für Play/Step -- 2, wenn play aktiv, bereit für Stop
+  // 0, wenn nicht bereit für Play/Step -- 1, wenn kompiliert und initialisiert,
+  // bereit für Play/Step -- 2, wenn play aktiv, bereit für Stop
+  RAMSize: Cardinal;
 
 implementation
 
@@ -125,9 +127,101 @@ begin
   RegistersValueList.Row := 7;
   RegistersValueList.InsertRow('FLAGS','0000000000000000',true);
   InputSynEdit.ClearAll;
+  RAMSize:=256; //TODO: getRAMSize
   MessagesMemo.Text:='Hit "Run" to test your program!';
   Saved:=True; // Don't ask for save when program just started
 end;
+
+
+
+function TmainFrm.ListToStr: string;
+var
+  i : Cardinal;
+begin
+  //for i:=0 to InputSynEdit.Lines.Count do
+    //Code += InputSynEdit.Text[i] + #13#10;
+  result := InputSynEdit.Text;
+  //result:=Code;
+end;
+
+procedure TmainFrm.DoCompile;
+var
+  CPU : TCPU;
+  Comp : TCompiler;
+  Thread : TCPUThread;
+  i : Cardinal;
+begin
+  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
+  if RunStatus=0 then
+  begin
+    RAM:=TRAM.Create(RAMSize);
+    for i:=0 to RAMSize-1 do
+    begin
+      RAM.WriteByte(i,0);
+    end;
+    updateRAM;
+    Comp:=TCompiler.Create(RAM);
+    Comp.Compile(mainFrm.ListToStr);
+    CPU:=TCPU.Create(RAM);
+    Thread:=TCPUThread.Create(CPU);
+    RunStatus:=1;
+  end; //TODO else at Messegebox: not possible when old thread isn't closed
+end;
+
+procedure TmainFrm.updateRAM;
+var
+  i : Cardinal;
+begin
+  for i:=0 to RAMSize-1 do
+  begin
+    RAMValueList.Cells[1,i]:=IntToStr(RAM.ReadByte(i));
+    RAMValueList.Cells[0,i]:=IntToStr(i);
+  end;
+end;
+
+procedure TmainFrm.Play;
+var
+  v: int64;              //v step velocity in ms
+begin
+  v := 0;                //TODO get from settings
+  if RunStatus=1 then
+  begin
+    Thread.setVel(v);
+    Thread.resume;
+    RunStatus:=2;
+  end; //TODO else at Messagebox: not possible when thread isn't initialized and code isn't compiled
+end;
+
+procedure TmainFrm.Step;
+begin
+  if RunStatus=1 then
+  begin
+    mainFrm.Update;
+  end; //TODO else at Messagebox: same as in TmainFrm.Play
+end;
+
+procedure TmainFrm.Stop;
+begin
+  if RunStatus=2 then
+  begin
+    RunStatus:=1;
+  end; //TODO else at Messagebox: not possible when thread isn't running
+end;
+
+procedure TmainFrm.Delete;
+begin
+  if RunStatus=1 then
+  begin
+    Thread.Destroy();
+    RunStatus:=0;
+  end else if RunStatus=2 then
+  begin
+    mainFrm.Stop;
+    mainFrm.Delete;
+  end; //TODO else at Messagebox: not possible when there is no initialized thread
+end;
+
+// standard actions:------------------------------------------------------------
 
 procedure TmainFrm.ShowExitDlg;
 var
@@ -153,46 +247,6 @@ begin
 //TODO use TAction
 //  ActionList.;
 //  TFileExit.ActionList.;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_CopyClick(Sender: TObject);
-begin
-  InputSynEdit.CopyToClipboard;
-end;
-
-procedure TmainFrm.InputSynEditChange(Sender: TObject);
-begin
-  Saved:=False;
-end;
-
-procedure TmainFrm.compileClick(Sender: TObject);
-begin
-  MainFrm.CompileBLA;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
-begin
-  InputSynEdit.CutToClipboard;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_FindClick(Sender: TObject);
-begin
-  FindDlg.Execute;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_PasteClick(Sender: TObject);
-begin
-  InputSynEdit.PasteFromClipboard;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_RedoClick(Sender: TObject);
-begin
-  InputSynEdit.Redo;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_UndoClick(Sender: TObject);
-begin
-  InputSynEdit.Undo;
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
@@ -246,39 +300,45 @@ begin
   end else InputSynEdit.Lines.SaveToFile(SavePath);
 end;
 
-function TmainFrm.ListToStr: string;
-var
-  Code: String;
-  i : Cardinal;
+
+procedure TmainFrm.MainFrm_Menu_Edit_CopyClick(Sender: TObject);
 begin
-  for i:=0 to InputSynEdit.Lines.Count do
-    Code += InputSynEdit.Text[i];
-  result:=Code;
+  InputSynEdit.CopyToClipboard;
 end;
 
-procedure TmainFrm.CompileBLA;
-var
-  CPU : TCPU;
-  Comp : TCompiler;
-  Thread : TCPUThread;
-  i : Cardinal;
+procedure TmainFrm.InputSynEditChange(Sender: TObject);
 begin
-  //Compiler wird erstellt, RAM als Rückgabe, CPU wird mit RAM erstellt, Thread wird mit CPU erstellt
-  if RunStatus=0 then
-  begin
-      RAM:=TRAM.Create(256);            //TODO use size instead
-  // init RAM viewer:
-  for i:=0 to 255 do //TODO use size instead
-    begin
-      RAMValueList.Row := i;
-      RAMValueList.InsertRow(FloatToStr(i),'0000000000000000',true);
-    end;
-    Comp:=TCompiler.Create(RAM);
-    Comp.Compile(mainFrm.ListToStr);
-    CPU:=TCPU.Create(RAM);
-    Thread:=TCPUThread.Create(CPU);
-    RunStatus:=1;
-  end; //TODO else at Messegebox: not possible when old thread isn't closed
+  Saved:=False;
+end;
+
+procedure TmainFrm.compileClick(Sender: TObject);
+begin
+  MainFrm.DoCompile;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
+begin
+  InputSynEdit.CutToClipboard;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_FindClick(Sender: TObject);
+begin
+  FindDlg.Execute;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_PasteClick(Sender: TObject);
+begin
+  InputSynEdit.PasteFromClipboard;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_RedoClick(Sender: TObject);
+begin
+  InputSynEdit.Redo;
+end;
+
+procedure TmainFrm.MainFrm_Menu_Edit_UndoClick(Sender: TObject);
+begin
+  InputSynEdit.Undo;
 end;
 
 procedure TmainFrm.MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
@@ -288,66 +348,8 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_PlayClick(Sender: TObject);
 begin
-  Play(0);
+  Play;
 end;
 
-procedure TmainFrm.updateRAM;
-var
-  size : Cardinal;
-  i : Cardinal;
-  RAM : TRAM;
-  b : Byte;
-  c : Char;
-begin
-  size:=65536; //TODO get size
-  for i:=0 to size-1 do
-    begin
-      RAMValueList.Row := i;
-      b := RAM.ReadByte(i);
-      c := chr(b);
-      RAMValueList.InsertRow(FloatToStr(i),c,true);
-    end;
-end;
-
-procedure TmainFrm.Play(v: int64); //v für Geschwindigkeit, es wird die Pausenzeit zwischen zwei Schritten in ms übergeben
-begin
-  if RunStatus=1 then
-  begin
-    Thread.setVel(v); // if v set
-    Thread.resume;
-    RunStatus:=2;
-  end; //TODO else at Messagebox: not possible when thread isn't initialized and Code isn't compiled
-end;
-
-procedure TmainFrm.Step;
-begin
-  if RunStatus=1 then
-  begin
-   // Thread.Step();
-    mainFrm.Update;
-  end; //TODO else at Messagebox: same as in TmainFrm.Play (look up)
-end;
-
-procedure TmainFrm.Stop;
-begin
-  if RunStatus=2 then
-  begin
-   // Thread.Stop();
-    RunStatus:=1;
-  end; //TODO else at Messagebox: not possible when thread isn't running
-end;
-
-procedure TmainFrm.Delete;
-begin
-  if RunStatus=1 then
-  begin
-    Thread.Destroy();
-    RunStatus:=0;
-  end else if RunStatus=2 then
-      begin
-        mainFrm.Stop;
-        mainFrm.Delete;
-      end; //TODO else at Messagebox: not possible when there is no initialized thread
-end;
 
 end.

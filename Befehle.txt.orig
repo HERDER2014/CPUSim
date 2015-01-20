@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿1 mov R,x
 2 mov R,[R]
 3 mov R,[x]
@@ -65,17 +66,70 @@
 
 org x 	(wird nicht im RAM gespeichert)
 <<<<<<< HEAD
-<<<<<<< HEAD
 57 jno R
 58 jno X
 =======
+=======
+mov R,x
+mov R,[R]
+mov R,[x]
+mov [R],R
+mov [x],R
+mov R,R
+mov R,[R+x]	()
+mov [R+x],R
+add R,x
+add R,[R]
+add R,[x]
+add R,R
+sub R,x
+sub R,[X]
+sub R,[R]
+sub R,R
+mul R,x
+mul R,[X]
+mul R,[R]
+mul R,R
+div R,x
+div R,[X]
+div R,[R]
+div R,R
+mod R,x		()
+mod R,[X]	()
+mod R,[R]	()
+mod R,R		()
+cmp R,x
+>>>>>>> RAM
 lbl:		(wird nicht im RAM gespeichert)
+jmp [R]
+jmp [X]
+jmp lbl
+js lbl
+js [R]
+js [X]
+jz lbl
+jz [X]
+jz [R]
+je lbl
+je [X]
+je [R]
+call [X]
+call [R]
+call lbl
+ret
+push R
+push x
+pop			(in kein Register)
+pop R
+not R		(binär)
+and R,x
+and R,R
+or R,x
+or R,R
+xor R,x
+xor R,R
 
 >>>>>>> origin/master
-=======
-lbl:		(wird nicht im RAM gespeichert)
-
->>>>>>> Compiler
 
 x: Zahlen
 R: Register

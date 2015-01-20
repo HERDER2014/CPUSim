@@ -15,7 +15,7 @@ begin
   Application.Title:='CPU Simulator Herder14';
   RequireDerivedFormResource := True;
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TmainFrm, mainFrm);
   Application.Run;
 end.
 

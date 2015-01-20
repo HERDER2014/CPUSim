@@ -12,7 +12,7 @@ uses
 {$R *.res}
 
 begin
-  Application.Title:='CPU Simulator Herder14';
+  Application.Title:='CPU Simulator Herder 14';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TmainFrm, mainFrm);

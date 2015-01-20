@@ -166,10 +166,10 @@ begin
     CPU.free;
     CPU := TCPU.Create(RAM);
     Thread := TCPUThread.Create(CPU);
+    Thread.setVel(v);
     Thread.OnTerminate := @OnCPUTerminate;
-    Thread.Start;
     RunStatus:=1;
-  end; //TODO else at Messegebox: not possible when old thread isn't closed
+  end; //TODO else at Messagebox: not possible when old thread isn't closed
 end;
 
 procedure TmainFrm.updateRAM;
@@ -187,15 +187,10 @@ procedure TmainFrm.Play;
 begin
   if RunStatus=1 then
   begin
-    Thread.setVel(v);
-    Thread.resume;
+    Thread.Start;
+    //Thread.resume;
     RunStatus:=2;
   end; //TODO else at Messagebox: not possible when thread isn't initialized and code isn't compiled
-  CPU.free;
-  CPU := TCPU.Create(RAM);
-  Thread := TCPUThread.Create(CPU);
-  Thread.OnTerminate := @OnCPUTerminate;
-  Thread.Start;
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);

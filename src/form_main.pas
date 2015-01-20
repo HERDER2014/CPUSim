@@ -206,7 +206,9 @@ procedure TmainFrm.Step;
 begin
   if RunStatus=1 then
   begin
-    mainFrm.Update;
+    Thread.SetVel(-1);
+    Thread.Resume;
+    UpdateRAM;
   end; //TODO else at Messagebox: same as in TmainFrm.Play
 end;
 
@@ -214,6 +216,7 @@ procedure TmainFrm.Stop;
 begin
   if RunStatus=2 then
   begin
+    Thread.Terminate;
     RunStatus:=1;
   end; //TODO else at Messagebox: not possible when thread isn't running
 end;

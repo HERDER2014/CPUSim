@@ -41,7 +41,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -85,6 +85,13 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uCPUThread"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="form_options.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OptionsFrm"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="form_options"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

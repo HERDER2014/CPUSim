@@ -734,6 +734,10 @@ object mainFrm: TmainFrm
         OnClick = compileClick
       end
     end
+    object Options: TMenuItem
+      Caption = 'Options'
+      OnClick = OptionsClick
+    end
   end
   object OpenDlg: TOpenDialog
     FileName = '/home/leonard'

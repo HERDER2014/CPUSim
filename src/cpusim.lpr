@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, form_main, uRAM, uCompiler, uTypen;
+  Forms, form_main, uRAM, uCompiler, uTypen, form_options;
 
 {$R *.res}
 
@@ -16,6 +16,7 @@ begin
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TmainFrm, mainFrm);
+  Application.CreateForm(TOptionsFrm, OptionsFrm);
   Application.Run;
 end.
 

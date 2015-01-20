@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler;
+  ComCtrls, ActnList, StdActns, uRAM, uCPU, uCPUThread, uCompiler, form_options;
 
 type
 
@@ -46,6 +46,7 @@ type
     MainFrm_Menu_Misc: TMenuItem;
     MainFrm_menu_Misc_updateRAM: TMenuItem;
     compile: TMenuItem;
+    Options: TMenuItem;
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
     ReplaceDialog1: TReplaceDialog;
@@ -73,6 +74,7 @@ type
     procedure DoCompile;
     procedure MainFrm_menu_Misc_updateRAMClick(Sender: TObject);
     procedure MainFrm_Menu_PlayClick(Sender: TObject);
+    procedure OptionsClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
@@ -140,8 +142,8 @@ end;
 
 
 function TmainFrm.ListToStr: string;
-var
-  i : Cardinal;
+//var
+//  i : Cardinal;
 begin
   //for i:=0 to InputSynEdit.Lines.Count do
     //Code += InputSynEdit.Text[i] + #13#10;
@@ -370,6 +372,12 @@ end;
 procedure TmainFrm.MainFrm_Menu_PlayClick(Sender: TObject);
 begin
   Play;
+end;
+
+procedure TmainFrm.OptionsClick(Sender: TObject);
+begin
+  OptionsFrm.ShowModal;
+  RAMSize:=form_options.rsize;
 end;
 
 

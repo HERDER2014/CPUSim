@@ -1,27 +1,28 @@
 object OptionsFrm: TOptionsFrm
-  Left = 422
+  Left = 440
   Height = 240
-  Top = 176
+  Top = 117
   Width = 320
   Caption = 'Options'
   ClientHeight = 240
   ClientWidth = 320
+  OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object OptionsFrm_RAMSizeEdt: TEdit
-    Left = 16
+    Left = 56
     Height = 25
-    Top = 16
+    Top = 42
     Width = 80
     TabOrder = 0
     Text = 'OptionsFrm_RAMSizeEdt'
   end
-  object OptionsFrm_SaveBtn: TButton
-    Left = 216
+  object OptionsFrm_ApplyBtn: TButton
+    Left = 62
     Height = 25
-    Top = 195
+    Top = 130
     Width = 75
-    Caption = 'OptionsFrm_SaveBtn'
-    OnClick = OptionsFrm_SaveBtnClick
+    Caption = 'Apply'
+    OnClick = OptionsFrm_ApplyBtnClick
     TabOrder = 1
   end
 end

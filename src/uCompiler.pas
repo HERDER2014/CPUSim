@@ -1561,6 +1561,19 @@ begin
   i := o;
 end;
 
+function IndexOfLabelName(var labelMap : TLabelMap; labelName : string) : Integer;
+var i : Integer;
+begin
+  for i := 0 to (labelMap.Count - 1) do
+  begin
+    if labelMap.Keys[i] = labelName then
+    begin
+      exit(i);
+    end;
+  end;
+  exit(-1);
+end;
+
 procedure TCompiler.Compile(input: string);
 var
   cpos, len, zlen, zNr, commentpos: cardinal;
@@ -1596,7 +1609,8 @@ var
     while i < cardinal(labelResolveList.Count) do
     begin
       item := labelResolveList[i];
-      if not labelTable.Find(item.labelName, index) then
+      index := IndexOfLabelName(labelTable, item.labelName);
+      if index = -1 then
       begin
         // Label nicht gefunden
         ReportError('Label "' + item.labelName + '" not found.', item.line);

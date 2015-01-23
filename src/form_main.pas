@@ -41,7 +41,7 @@ begin
   rahm.WriteByte(1,3);
   rahm.WriteByte(2,232);
   rahm.ReadByte(5);
-  Button1.caption := IntToStr(rahm.ReadWord(1));
+  Button1.caption := IntToStr(rahm.ReadByte(1));
 end;
 
 end.

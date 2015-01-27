@@ -755,7 +755,7 @@ object mainFrm: TmainFrm
       Width = 75
       BorderSpacing.Left = 20
       BorderSpacing.Top = 10
-      Caption = 'StepBtn'
+      Caption = 'Step'
       OnClick = StepBtnClick
       ParentShowHint = False
       ShowHint = True
@@ -773,7 +773,7 @@ object mainFrm: TmainFrm
       Width = 75
       BorderSpacing.Left = 30
       BorderSpacing.Top = 10
-      Caption = 'StopBtn'
+      Caption = 'Stop'
       OnClick = StopBtnClick
       ParentShowHint = False
       ShowHint = True
@@ -802,7 +802,7 @@ object mainFrm: TmainFrm
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = ActionBox
       Left = 646
-      Height = 21
+      Height = 23
       Hint = 'The pause between every step when running "Run slow"'
       Top = 11
       Width = 75
@@ -833,7 +833,7 @@ object mainFrm: TmainFrm
     end
     object Label1: TLabel
       Left = 15
-      Height = 16
+      Height = 17
       Top = 16
       Width = 16
       Caption = 'AX'
@@ -843,7 +843,7 @@ object mainFrm: TmainFrm
     end
     object A1: TEdit
       Left = 40
-      Height = 21
+      Height = 23
       Top = 11
       Width = 112
       ReadOnly = True
@@ -852,7 +852,7 @@ object mainFrm: TmainFrm
     end
     object A2: TEdit
       Left = 152
-      Height = 21
+      Height = 23
       Top = 11
       Width = 40
       ReadOnly = True
@@ -861,7 +861,7 @@ object mainFrm: TmainFrm
     end
     object Label2: TLabel
       Left = 16
-      Height = 16
+      Height = 17
       Top = 40
       Width = 15
       Caption = 'BX'
@@ -871,7 +871,7 @@ object mainFrm: TmainFrm
     end
     object Label3: TLabel
       Left = 16
-      Height = 16
+      Height = 17
       Top = 64
       Width = 16
       Caption = 'CX'
@@ -881,9 +881,9 @@ object mainFrm: TmainFrm
     end
     object Label4: TLabel
       Left = 16
-      Height = 16
+      Height = 17
       Top = 88
-      Width = 16
+      Width = 17
       Caption = 'DX'
       Font.Height = -13
       ParentColor = False
@@ -891,7 +891,7 @@ object mainFrm: TmainFrm
     end
     object Edit9: TEdit
       Left = 40
-      Height = 21
+      Height = 23
       Top = 83
       Width = 104
       Enabled = False
@@ -900,7 +900,7 @@ object mainFrm: TmainFrm
     end
     object Edit10: TEdit
       Left = 152
-      Height = 21
+      Height = 23
       Top = 83
       Width = 40
       Enabled = False
@@ -909,7 +909,7 @@ object mainFrm: TmainFrm
     end
     object Edit11: TEdit
       Left = 152
-      Height = 21
+      Height = 23
       Top = 35
       Width = 40
       Enabled = False
@@ -918,7 +918,7 @@ object mainFrm: TmainFrm
     end
     object Edit12: TEdit
       Left = 152
-      Height = 21
+      Height = 23
       Top = 59
       Width = 40
       Enabled = False
@@ -927,7 +927,7 @@ object mainFrm: TmainFrm
     end
     object B1: TEdit
       Left = 40
-      Height = 21
+      Height = 23
       Top = 35
       Width = 112
       ReadOnly = True
@@ -936,9 +936,9 @@ object mainFrm: TmainFrm
     end
     object Label5: TLabel
       Left = 220
-      Height = 16
+      Height = 17
       Top = 15
-      Width = 11
+      Width = 10
       Caption = 'IP'
       Font.Height = -13
       ParentColor = False
@@ -946,9 +946,9 @@ object mainFrm: TmainFrm
     end
     object Label6: TLabel
       Left = 220
-      Height = 16
+      Height = 17
       Top = 40
-      Width = 15
+      Width = 14
       Caption = 'SP'
       Font.Height = -13
       ParentColor = False
@@ -956,9 +956,9 @@ object mainFrm: TmainFrm
     end
     object Label7: TLabel
       Left = 220
-      Height = 16
+      Height = 17
       Top = 88
-      Width = 37
+      Width = 36
       Caption = 'FLAGS'
       Font.Height = -13
       ParentColor = False
@@ -966,7 +966,7 @@ object mainFrm: TmainFrm
     end
     object Label8: TLabel
       Left = 220
-      Height = 16
+      Height = 17
       Top = 64
       Width = 14
       Caption = 'BP'
@@ -990,7 +990,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 152
-    Height = 21
+    Height = 23
     Top = 35
     Width = 40
     ReadOnly = True
@@ -999,7 +999,7 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 35
     Width = 112
     ReadOnly = True
@@ -1008,7 +1008,7 @@ object mainFrm: TmainFrm
   end
   object C2: TEdit
     Left = 152
-    Height = 21
+    Height = 23
     Top = 59
     Width = 40
     ReadOnly = True
@@ -1017,7 +1017,7 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 40
-    Height = 21
+    Height = 23
     Top = 59
     Width = 112
     ReadOnly = True
@@ -1026,7 +1026,7 @@ object mainFrm: TmainFrm
   end
   object D2: TEdit
     Left = 152
-    Height = 21
+    Height = 23
     Top = 83
     Width = 40
     ReadOnly = True
@@ -1035,7 +1035,7 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 40
-    Height = 21
+    Height = 23
     Top = 83
     Width = 112
     ReadOnly = True
@@ -1044,7 +1044,7 @@ object mainFrm: TmainFrm
   end
   object IP1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 11
     Width = 112
     ReadOnly = True
@@ -1053,7 +1053,7 @@ object mainFrm: TmainFrm
   end
   object BP1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 59
     Width = 112
     ReadOnly = True
@@ -1062,7 +1062,7 @@ object mainFrm: TmainFrm
   end
   object F1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 83
     Width = 112
     ReadOnly = True
@@ -1071,7 +1071,7 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 35
     Width = 40
     ReadOnly = True
@@ -1080,7 +1080,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 59
     Width = 40
     ReadOnly = True
@@ -1089,7 +1089,7 @@ object mainFrm: TmainFrm
   end
   object F2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 83
     Width = 40
     ReadOnly = True
@@ -1098,7 +1098,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 11
     Width = 40
     ReadOnly = True

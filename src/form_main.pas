@@ -140,7 +140,7 @@ var
   mainFrm: TmainFrm;
   SavePath: string;
   Saved: boolean;
-  runStatus: boolean;
+  assembled: boolean;
   Thread: TCPUThread;
   RAM: TRAM;
   CPU: TCPU;
@@ -162,7 +162,8 @@ begin
   Saved := True; // Don't ask for save when program just started
   RAM := TRAM.Create(RAMSize);
   CPU := TCPU.Create(RAM);
-  runStatus := False;
+  assembled := False;
+  InputSynEdit.Enabled:= true;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -177,7 +178,8 @@ begin
   CPU := TCPU.Create(RAM);
   Thread := TCPUThread.Create(CPU);
   Thread.OnTerminate := @OnCPUTerminate;
-  runStatus := True;
+  assembled := True;
+  InputSynEdit.Enabled:= false;
   updateRAM;
 end;
 
@@ -197,10 +199,6 @@ begin
     else if (aCol-1) + ((aRow-1) shl 4) = CPU.ReadRegister(SP) then
     begin
       Canvas.Brush.Color := clGreen;
-    end
-    else
-    begin
-      //Canvas.Brush.Color := clWhite;
     end;
     Canvas.FillRect(aRect);
     Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
@@ -267,12 +265,13 @@ begin
   end;
 
   Thread.Destroy;
-  runStatus := False;
+  assembled := False;
+  InputSynEdit.Enabled:= true;
 end;
 
 procedure TmainFrm.speedChange(Sender: TObject);
 begin
-  if runStatus then
+  if assembled then
     Thread.setVel(speed.Value);
 end;
 
@@ -307,7 +306,8 @@ end;
 procedure TmainFrm.Stop;
 begin
   Thread.terminate;
-  runStatus := False;
+  assembled := False;
+  InputSynEdit.Enabled:= true;
 end;
 
 // standard actions:------------------------------------------------------------
@@ -408,7 +408,7 @@ end;
 procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
   Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
-  if  (runStatus) and (Line=comp.GetCodePosition(CPU.ReadRegister(IP))) then
+  if  (assembled) and (Line=comp.GetCodePosition(CPU.ReadRegister(IP))) then
   begin
     BG:= clYellow;
   end;

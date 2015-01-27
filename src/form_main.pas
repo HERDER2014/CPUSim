@@ -408,7 +408,7 @@ end;
 procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
   Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
-  if Line=comp.GetCodePosition(CPU.ReadRegister(IP)) then
+  if  (runStatus) and (Line=comp.GetCodePosition(CPU.ReadRegister(IP))) then
   begin
     BG:= clYellow;
   end;

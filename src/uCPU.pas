@@ -235,10 +235,10 @@ begin
         Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1)),RR(Ram.ReadByte(Reg.IP+2)));
         Reg.IP += 3;
       end; // MOV [R],R
-      MOV_ADDR_R_X: begin
+      {MOV_ADDR_R_X: begin
         Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1)),Ram.ReadWord(Reg.IP+2));
         Reg.IP += 3;
-      end; // MOV [R],X
+      end; // MOV [R],X  }
       MOV_ADDR_X_R: begin
         Ram.WriteWord(Ram.ReadWord(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+3)));
         Reg.IP += 4;

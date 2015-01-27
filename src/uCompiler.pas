@@ -27,6 +27,9 @@ type
 type
   TLabelResolveList = specialize TFPGList<TLabelUse>;
 
+type
+  TCodePositionMap = specialize TFPGMap<Word, Cardinal>;
+
 {$ENDIF}
 
 type
@@ -47,6 +50,7 @@ type
   private
   var
     Ram: TRAM;
+    CodePosMap : TCodePositionMap;
 
   public
   var
@@ -67,9 +71,9 @@ type
    {
    Vor.: Compile wurde ausgeführt.
    Eff.: -
-   Erg.: Liefert die Position in der Eingabe, die an Adresse addr kompiliert wurde.
+   Erg.: Liefert die Position in der Eingabe, die an Adresse addr kompiliert wurde. Wenn diese ungültig ist, wird -1 zurückgegeben.
    }
-    function GetCodePosition(addr: cardinal): cardinal;
+    function GetCodePosition(addr: Word): cardinal;
 
   {
    Schreibt die Instruktion mit ihren Operanden in den RAM.
@@ -100,6 +104,7 @@ constructor TCompiler.Create(var r: TRAM);
 begin
   Ram := r;
   NumberInputMode:=TNumberInputMode.Decimal;
+  CodePosMap := TCodePositionMap.Create;
 end;
 
 {
@@ -1507,6 +1512,78 @@ begin
       end;
     end;
 
+    'IN':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          Ram.WriteByte(offset, Ord(OPCode.IN_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'INC':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          Ram.WriteByte(offset, Ord(OPCode.INC_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'DEC':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          Ram.WriteByte(offset, Ord(OPCode.DEC_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
     'ORG': // Pseudo instruction
     begin
       if (operands.Count = 1) then
@@ -1556,6 +1633,19 @@ begin
   i := o;
 end;
 
+function IndexOfLabelName(var labelMap : TLabelMap; labelName : string) : Integer;
+var i : Integer;
+begin
+  for i := 0 to (labelMap.Count - 1) do
+  begin
+    if labelMap.Keys[i] = labelName then
+    begin
+      exit(i);
+    end;
+  end;
+  exit(-1);
+end;
+
 procedure TCompiler.Compile(input: string);
 var
   cpos, len, zlen, zNr, commentpos: cardinal;
@@ -1591,7 +1681,8 @@ var
     while i < cardinal(labelResolveList.Count) do
     begin
       item := labelResolveList[i];
-      if not labelTable.Find(item.labelName, index) then
+      index := IndexOfLabelName(labelTable, item.labelName);
+      if index = -1 then
       begin
         // Label nicht gefunden
         ReportError('Label "' + item.labelName + '" not found.', item.line);
@@ -1610,13 +1701,15 @@ begin
   labelTable := TLabelMap.Create;
   labelResolveList := TLabelResolveList.Create;
 
+  CodePosMap.Clear;
+
   cpos := 0;
   zNr := 1;    // Zeilennummer
   len := Length(input);
   while cpos < len do
   begin
     // VORSICHT! Kein Mensch weiß warum, aber Delphi indiziert Strings ab 1, nicht 0!
-    zlen := PosEx(#13#10, input, 1 + cpos);
+    zlen := PosEx(#10, input, 1 + cpos);
     if zlen = 0 then
       // kein Zeilenumbruch gefunden
       zlen := len - cpos
@@ -1632,7 +1725,7 @@ begin
       // Zeile ist nicht leer
       commandLines.Add(CrTCodeLineNr(UpperCase(zeile), zNr));
 
-    cpos += zlen + 2; // wegen \r\n
+    cpos += zlen + 1; // wegen \n
     Inc(zNr);
   end;
 
@@ -1683,6 +1776,7 @@ begin
     end
     else
     begin
+      CodePosMap.Add(bytepos, commandLines[i].nr);
       // kein Label, Befehl in RAM schreiben.
       if not WriteInstrucitonLineToRAM(inst, opString, bytepos,
         commandLines[i].nr, labelResolveList, rwritten, errString) then
@@ -1708,10 +1802,18 @@ begin
   LastSize := bytepos;
 end;
 
-function TCompiler.GetCodePosition(addr: cardinal): cardinal;
+function TCompiler.GetCodePosition(addr: Word): cardinal;
+var
+  i : Integer;
 begin
-  raise EInvalidOperation.Create('GetCodePosition: noch nicht implementiert.');
-  Result := 0;
+  if CodePosMap.Find(addr, i) then
+  begin
+    exit(CodePosMap.Data[i]);
+  end
+  else
+  begin
+    Result := -1;
+  end;
 end;
 
 end.

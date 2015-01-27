@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
   ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler,
-  strutils, uTypen, SynEditMarkupSpecialLine, SynEditMiscClasses;
+  strutils, uTypen;
 
 type
 
@@ -166,8 +166,6 @@ begin
 end;
 
 procedure TmainFrm.DoCompile;
-var
-  i: cardinal;
 begin
   RAM := TRAM.Create(RAMSize);
   comp := TCompiler.Create(RAM);

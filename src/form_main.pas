@@ -91,6 +91,7 @@ type
     procedure ActionBoxClick(Sender: TObject);
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure RunPauseBtnClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure InputSynEditChange(Sender: TObject);
@@ -386,6 +387,7 @@ begin
   OpenDlg.Execute;
   path := OpenDlg.FileName;
   InputSynEdit.Lines.LoadFromFile(path);
+  SavePath:= path;
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
@@ -422,6 +424,18 @@ end;
 procedure TmainFrm.compileClick(Sender: TObject);
 begin
   MainFrm.DoCompile;
+end;
+
+procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  //strg + s to save
+  if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
+     MainFrm_Menu_File_SaveClick(nil);
+  //strg + o to open
+  if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
+     MainFrm_Menu_File_OpenClick(nil);
+
 end;
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);

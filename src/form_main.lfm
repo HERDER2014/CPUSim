@@ -6,9 +6,11 @@ object mainFrm: TmainFrm
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 772
   ClientWidth = 1229
+  KeyPreview = True
   Menu = MainFrm_Menu
   OnClose = FormClose
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
   inline InputSynEdit: TSynEdit
@@ -453,6 +455,9 @@ object mainFrm: TmainFrm
       item
         Command = ecColSelEditorBottom
         ShortCut = 57379
+      end    
+      item
+        Command = ecNone
       end>
     MouseActions = <>
     MouseTextActions = <>

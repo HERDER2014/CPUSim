@@ -268,6 +268,7 @@ begin
 
   RunPauseBtn.Enabled:= false;
   StepBtn.Enabled:= false;
+  RunPauseBtn.Caption:= 'Run';
 end;
 
 procedure TmainFrm.speedEdtChange(Sender: TObject);
@@ -279,6 +280,7 @@ end;
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
   Step;
+  RunPauseBtn.Caption:= 'Run';
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);

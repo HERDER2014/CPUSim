@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
   ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler,
-  strutils, uTypen, SynEditMarkupSpecialLine;
+  strutils, uTypen, SynEditMarkupSpecialLine, SynEditMiscClasses;
 
 type
 
@@ -162,7 +162,7 @@ begin
   RAM := TRAM.Create(RAMSize);
   CPU := TCPU.Create(RAM);
   assembled := False;
-  InputSynEdit.Enabled:= true;
+  InputSynEdit.ReadOnly:= false;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -178,7 +178,7 @@ begin
   Thread := TCPUThread.Create(CPU);
   Thread.OnTerminate := @OnCPUTerminate;
   assembled := True;
-  InputSynEdit.Enabled:= false;
+  InputSynEdit.ReadOnly:= true;
   updateRAM;
 end;
 
@@ -265,7 +265,7 @@ begin
 
   Thread.Destroy;
   assembled := False;
-  InputSynEdit.Enabled:= true;
+  InputSynEdit.ReadOnly:= false;
 
   RunPauseBtn.Enabled:= false;
   StepBtn.Enabled:= false;
@@ -313,7 +313,7 @@ procedure TmainFrm.Stop;
 begin
   Thread.terminate;
   assembled := False;
-  InputSynEdit.Enabled:= true;
+  InputSynEdit.ReadOnly:= false;
 end;
 
 // standard actions:------------------------------------------------------------
@@ -415,7 +415,7 @@ end;
 procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
   Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
-  if  (assembled) and (Line=comp.GetCodePosition(CPU.ReadRegister(IP))) then
+  if  (assembled) and (Line=comp.GetCodePosition(Hex2Dec(IP2.Text))) then
   begin
     Special:=true;
     BG:= clYellow;
@@ -438,6 +438,7 @@ begin
      MainFrm_Menu_File_OpenClick(nil);
 
 end;
+
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin

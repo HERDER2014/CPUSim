@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 410
+  Left = 18
   Height = 792
-  Top = 149
+  Top = 118
   Width = 1229
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 772
@@ -18,7 +18,7 @@ object mainFrm: TmainFrm
     Left = 0
     Height = 540
     Top = 116
-    Width = 640
+    Width = 800
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -15
@@ -529,12 +529,12 @@ object mainFrm: TmainFrm
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = HSplitterBot
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = BottomVSplitter
+    AnchorSideRight.Control = TopVSplitter
     AnchorSideBottom.Control = StatusBar1
     Left = 0
     Height = 91
     Top = 658
-    Width = 640
+    Width = 800
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Enabled = False
@@ -543,24 +543,13 @@ object mainFrm: TmainFrm
     )
     TabOrder = 1
   end
-  object BottomVSplitter: TSplitter
-    AnchorSideTop.Control = HSplitterBot
-    AnchorSideTop.Side = asrBottom
-    AnchorSideBottom.Control = StatusBar1
-    Left = 640
-    Height = 91
-    Top = 658
-    Width = 7
-    Align = alNone
-    Anchors = [akTop, akBottom]
-  end
   object TopVSplitter: TSplitter
     AnchorSideTop.Control = Owner
-    AnchorSideBottom.Control = HSplitterBot
-    Left = 640
-    Height = 656
+    AnchorSideBottom.Control = StatusBar1
+    Left = 800
+    Height = 749
     Top = 0
-    Width = 7
+    Width = 8
     Align = alNone
     Anchors = [akTop, akBottom]
   end
@@ -584,28 +573,95 @@ object mainFrm: TmainFrm
     Width = 1229
     Panels = <>
   end
-  object RAMValueList: TValueListEditor
+  object RAMGrid: TStringGrid
     AnchorSideLeft.Control = TopVSplitter
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = HSplitterTop
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
-    Left = 647
-    Height = 633
-    Top = 116
-    Width = 582
+    Left = 808
+    Height = 631
+    Top = 118
+    Width = 421
     Anchors = [akTop, akLeft, akRight, akBottom]
-    Enabled = False
-    FixedCols = 0
-    RowCount = 2
-    TabOrder = 6
-    Strings.Strings = (
-      ''
-    )
+    ColCount = 17
+    Columns = <    
+      item
+        Title.Caption = '0'
+      end    
+      item
+        Title.Caption = '1'
+      end    
+      item
+        Title.Caption = '2'
+      end    
+      item
+        Title.Caption = '3'
+      end    
+      item
+        Title.Caption = '4'
+      end    
+      item
+        Title.Caption = '5'
+      end    
+      item
+        Title.Caption = '6'
+      end    
+      item
+        Title.Caption = '7'
+      end    
+      item
+        Title.Caption = '8'
+      end    
+      item
+        Title.Caption = '9'
+      end    
+      item
+        Title.Caption = 'A'
+      end    
+      item
+        Title.Caption = 'B'
+      end    
+      item
+        Title.Caption = 'C'
+      end    
+      item
+        Title.Caption = 'D'
+      end    
+      item
+        Title.Caption = 'E'
+      end    
+      item
+        Title.Caption = 'F'
+      end>
+    DefaultColWidth = 24
+    TabOrder = 5
     ColWidths = (
-      64
-      514
+      32
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+      24
+    )
+    Cells = (
+      1
+      1
+      0
+      'ot7fg'
     )
   end
   object ActionBox: TPanel
@@ -621,7 +677,8 @@ object mainFrm: TmainFrm
     Anchors = [akTop, akLeft, akRight, akBottom]
     ClientHeight = 116
     ClientWidth = 1229
-    TabOrder = 7
+    TabOrder = 6
+    OnClick = ActionBoxClick
     object RegistersValueList1: TValueListEditor
       AnchorSideLeft.Control = ActionBox
       AnchorSideTop.Control = ActionBox
@@ -684,26 +741,10 @@ object mainFrm: TmainFrm
       BorderSpacing.Left = 20
       BorderSpacing.Top = 10
       Caption = 'Assemble'
+      OnClick = AssembleClick
       ParentShowHint = False
       ShowHint = True
       TabOrder = 2
-    end
-    object Run: TButton
-      AnchorSideLeft.Control = RegistersValueList2
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = StepBtn
-      AnchorSideTop.Side = asrBottom
-      Left = 541
-      Height = 25
-      Hint = 'Runs the program as fast as possible'
-      Top = 81
-      Width = 75
-      BorderSpacing.Left = 20
-      BorderSpacing.Top = 10
-      Caption = 'Run'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 3
     end
     object StepBtn: TButton
       AnchorSideLeft.Control = RegistersValueList2
@@ -718,14 +759,15 @@ object mainFrm: TmainFrm
       BorderSpacing.Left = 20
       BorderSpacing.Top = 10
       Caption = 'StepBtn'
+      OnClick = StepBtnClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
+      TabOrder = 3
     end
     object StopBtn: TButton
       AnchorSideLeft.Control = Assemble
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Run_slow
+      AnchorSideTop.Control = Run
       AnchorSideTop.Side = asrBottom
       Left = 646
       Height = 25
@@ -735,11 +777,12 @@ object mainFrm: TmainFrm
       BorderSpacing.Left = 30
       BorderSpacing.Top = 10
       Caption = 'StopBtn'
+      OnClick = StopBtnClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 5
+      TabOrder = 4
     end
-    object Run_slow: TButton
+    object Run: TButton
       AnchorSideLeft.Control = Assemble
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Assemble
@@ -751,26 +794,28 @@ object mainFrm: TmainFrm
       Width = 75
       BorderSpacing.Left = 30
       BorderSpacing.Top = 10
-      Caption = 'Run slow'
+      Caption = 'Run'
+      OnClick = RunClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 6
+      TabOrder = 5
     end
     object speed: TSpinEdit
       AnchorSideLeft.Control = Assemble
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = ActionBox
       Left = 646
-      Height = 23
+      Height = 21
       Hint = 'The pause between every step when running "Run slow"'
       Top = 11
       Width = 75
       BorderSpacing.Left = 30
       BorderSpacing.Top = 10
       MaxValue = 10000
+      OnChange = speedChange
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 7
+      TabOrder = 6
       Value = 10
     end
     object ContinueBtn: TButton
@@ -784,25 +829,10 @@ object mainFrm: TmainFrm
       Width = 75
       BorderSpacing.Left = 30
       Caption = 'Continue'
+      OnClick = ContinueBtnClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 8
-    end
-    object resetCPU: TButton
-      AnchorSideLeft.Control = StopBtn
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = ActionBox
-      Left = 751
-      Height = 25
-      Hint = 'resets the CPU and the RAM'
-      Top = 11
-      Width = 75
-      BorderSpacing.Left = 30
-      BorderSpacing.Top = 10
-      Caption = 'Reset CPU'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 9
+      TabOrder = 7
     end
   end
   object HSplitterTop: TSplitter
@@ -907,21 +937,6 @@ object mainFrm: TmainFrm
         OnClick = MainFrm_Menu_Help_AboutClick
       end
     end
-    object MainFrm_Menu_Play: TMenuItem
-      Caption = 'Play'
-      OnClick = MainFrm_Menu_PlayClick
-    end
-    object MainFrm_Menu_Misc: TMenuItem
-      Caption = 'Misc'
-      object MainFrm_menu_Misc_updateRAM: TMenuItem
-        Caption = 'updateRAM'
-        OnClick = MainFrm_menu_Misc_updateRAMClick
-      end
-      object compile: TMenuItem
-        Caption = 'compile'
-        OnClick = compileClick
-      end
-    end
   end
   object OpenDlg: TOpenDialog
     FileName = '/home/leonard'
@@ -950,5 +965,11 @@ object mainFrm: TmainFrm
       Caption = 'E&xit'
       Hint = 'Exit'
     end
+  end
+  object Timer1: TTimer
+    Interval = 10
+    OnTimer = Timer1Timer
+    left = 648
+    top = 576
   end
 end

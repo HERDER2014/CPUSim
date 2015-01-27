@@ -1,0 +1,11 @@
+mov dx, 05
+
+mov ax, 00
+begin:
+cmp dx, 00
+jz ende
+add ax, dx
+sub dx, 01
+jmp begin
+ende:
+end

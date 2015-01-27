@@ -17,4 +17,4 @@ Should have:
 
 Nice to have:
 - Dokumentation
-- String Operationen
+- String Operationen (kp mehr was das sein soll)

@@ -16,7 +16,7 @@ type
 
   TmainFrm = class(TForm)
     ActionList: TActionList;
-    Assemble: TButton;
+    AssembleBtn: TButton;
     A1: TEdit;
     Edit10: TEdit;
     Edit11: TEdit;
@@ -46,10 +46,8 @@ type
     Label7: TLabel;
     Label8: TLabel;
     RAMGrid: TStringGrid;
-    ContinueBtn: TButton;
-    Run: TButton;
-    speed: TSpinEdit;
-    StopBtn: TButton;
+    RunPauseBtn: TButton;
+    speedEdt: TSpinEdit;
     StepBtn: TButton;
     FileExit1: TFileExit;
     FindDlg: TFindDialog;
@@ -91,9 +89,9 @@ type
     InputSynEdit: TSynEdit;
     RAMValueList: TValueListEditor;
     procedure ActionBoxClick(Sender: TObject);
-    procedure AssembleClick(Sender: TObject);
+    procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
-    procedure ContinueBtnClick(Sender: TObject);
+    procedure RunPauseBtnClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -120,7 +118,7 @@ type
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
 
     procedure OnCPUTerminate(Sender: TObject);
-    procedure speedChange(Sender: TObject);
+    procedure speedEdtChange(Sender: TObject);
     procedure StepBtnClick(Sender: TObject);
     procedure StopBtnClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -248,7 +246,7 @@ end;
 
 procedure TmainFrm.resume;
 begin
-  Thread.setVel(speed.Value);
+  Thread.setVel(speedEdt.Value);
   Thread.resume;
 end;
 
@@ -267,12 +265,15 @@ begin
   Thread.Destroy;
   assembled := False;
   InputSynEdit.Enabled:= true;
+
+  RunPauseBtn.Enabled:= false;
+  StepBtn.Enabled:= false;
 end;
 
-procedure TmainFrm.speedChange(Sender: TObject);
+procedure TmainFrm.speedEdtChange(Sender: TObject);
 begin
   if assembled then
-    Thread.setVel(speed.Value);
+    Thread.setVel(speedEdt.Value);
 end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
@@ -420,9 +421,18 @@ begin
   MainFrm.DoCompile;
 end;
 
-procedure TmainFrm.ContinueBtnClick(Sender: TObject);
+procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin
-
+  if RunPauseBtn.Caption='Run' then
+  begin
+    resume;
+    RunPauseBtn.Caption:='Pause';
+  end
+  else
+  begin
+    Step;
+    RunPauseBtn.Caption:='Run';
+  end;
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -430,9 +440,22 @@ begin
   ShowExitDlg;
 end;
 
-procedure TmainFrm.AssembleClick(Sender: TObject);
+procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
-  DoCompile;
+  if AssembleBtn.Caption='Assemble' then
+  begin
+    DoCompile;
+    AssembleBtn.Caption:='Stop';
+    RunPauseBtn.Enabled:= true;
+    StepBtn.Enabled:= true;
+  end
+  else
+  begin
+    Stop;
+    AssembleBtn.Caption:='Assemble';
+    RunPauseBtn.Enabled:= false;
+    StepBtn.Enabled:= false;
+  end;
 end;
 
 procedure TmainFrm.ActionBoxClick(Sender: TObject);

@@ -728,7 +728,7 @@ object mainFrm: TmainFrm
     ClientWidth = 1229
     TabOrder = 6
     OnClick = ActionBoxClick
-    object Assemble: TButton
+    object AssembleBtn: TButton
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = ActionBox
       Left = 541
@@ -739,66 +739,31 @@ object mainFrm: TmainFrm
       BorderSpacing.Left = 20
       BorderSpacing.Top = 10
       Caption = 'Assemble'
-      OnClick = AssembleClick
+      OnClick = AssembleBtnClick
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
     end
     object StepBtn: TButton
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Assemble
+      AnchorSideTop.Control = AssembleBtn
       AnchorSideTop.Side = asrBottom
       Left = 541
       Height = 25
       Hint = 'moves one step forward in RAM. The code needs to be assembled'
-      Top = 46
+      Top = 66
       Width = 75
       BorderSpacing.Left = 20
-      BorderSpacing.Top = 10
+      BorderSpacing.Top = 30
       Caption = 'Step'
+      Enabled = False
       OnClick = StepBtnClick
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
     end
-    object StopBtn: TButton
-      AnchorSideLeft.Control = Assemble
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Run
-      AnchorSideTop.Side = asrBottom
-      Left = 646
-      Height = 25
-      Hint = 'stops the program'
-      Top = 81
-      Width = 75
-      BorderSpacing.Left = 30
-      BorderSpacing.Top = 10
-      Caption = 'Stop'
-      OnClick = StopBtnClick
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 2
-    end
-    object Run: TButton
-      AnchorSideLeft.Control = Assemble
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Assemble
-      AnchorSideTop.Side = asrBottom
-      Left = 646
-      Height = 25
-      Hint = 'Runs the assembled code with the time given above in ms between each step'
-      Top = 46
-      Width = 75
-      BorderSpacing.Left = 30
-      BorderSpacing.Top = 10
-      Caption = 'Run'
-      OnClick = RunClick
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 3
-    end
-    object speed: TSpinEdit
-      AnchorSideLeft.Control = Assemble
+    object speedEdt: TSpinEdit
+      AnchorSideLeft.Control = AssembleBtn
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = ActionBox
       Left = 646
@@ -809,27 +774,27 @@ object mainFrm: TmainFrm
       BorderSpacing.Left = 30
       BorderSpacing.Top = 10
       MaxValue = 10000
-      OnChange = speedChange
+      OnChange = speedEdtChange
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
+      TabOrder = 2
       Value = 10
     end
-    object ContinueBtn: TButton
-      AnchorSideLeft.Control = StopBtn
+    object RunPauseBtn: TButton
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = StopBtn
-      Left = 751
+      Left = 646
       Height = 25
       Hint = 'After stopping the program it may continued by clikcing this button.'
-      Top = 81
+      Top = 66
       Width = 75
+      Anchors = [akLeft]
       BorderSpacing.Left = 30
-      Caption = 'Continue'
-      OnClick = ContinueBtnClick
+      Caption = 'Run'
+      Enabled = False
+      OnClick = RunPauseBtnClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 5
+      TabOrder = 3
     end
     object Label1: TLabel
       Left = 15
@@ -847,7 +812,7 @@ object mainFrm: TmainFrm
       Top = 11
       Width = 112
       ReadOnly = True
-      TabOrder = 6
+      TabOrder = 4
       Text = '0000000000000000'
     end
     object A2: TEdit
@@ -856,7 +821,7 @@ object mainFrm: TmainFrm
       Top = 11
       Width = 40
       ReadOnly = True
-      TabOrder = 7
+      TabOrder = 5
       Text = '0000'
     end
     object Label2: TLabel
@@ -895,7 +860,7 @@ object mainFrm: TmainFrm
       Top = 83
       Width = 104
       Enabled = False
-      TabOrder = 8
+      TabOrder = 6
       Text = '0000000000000000'
     end
     object Edit10: TEdit
@@ -904,7 +869,7 @@ object mainFrm: TmainFrm
       Top = 83
       Width = 40
       Enabled = False
-      TabOrder = 9
+      TabOrder = 7
       Text = '0000'
     end
     object Edit11: TEdit
@@ -913,7 +878,7 @@ object mainFrm: TmainFrm
       Top = 35
       Width = 40
       Enabled = False
-      TabOrder = 10
+      TabOrder = 8
       Text = '0000'
     end
     object Edit12: TEdit
@@ -922,7 +887,7 @@ object mainFrm: TmainFrm
       Top = 59
       Width = 40
       Enabled = False
-      TabOrder = 11
+      TabOrder = 9
       Text = '0000'
     end
     object B1: TEdit
@@ -931,7 +896,7 @@ object mainFrm: TmainFrm
       Top = 35
       Width = 112
       ReadOnly = True
-      TabOrder = 12
+      TabOrder = 10
       Text = '0000000000000000'
     end
     object Label5: TLabel

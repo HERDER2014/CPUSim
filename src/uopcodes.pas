@@ -22,8 +22,6 @@ type
     MOV_R_ADDR_X = 3,
     // MOV [R], R
     MOV_ADDR_R_R = 4,
-    //MOV [R], X
-    MOV_ADDR_R_X = 65,
     // MOV [X], R
     MOV_ADDR_X_R = 5,
     // MOV R, R
@@ -156,9 +154,17 @@ type
     // XOR R, [X]
     XOR_R_ADDR_X = 63,
     // XOR R, [R]
-    XOR_R_ADDR_R = 64
+    XOR_R_ADDR_R = 64,
 
-  );
+    // IN R
+    IN_R = 65,
+
+    // INC R
+    INC_R = 66,
+    // DEC R
+    DEC_R = 67
+
+    );
 
 implementation
 

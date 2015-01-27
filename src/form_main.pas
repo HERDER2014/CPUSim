@@ -294,6 +294,7 @@ procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
   updateREG;
   updateRAM;
+  InputSynEdit.Invalidate;
 end;
 
 procedure TmainFrm.Step;

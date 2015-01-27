@@ -1512,6 +1512,78 @@ begin
       end;
     end;
 
+    'IN':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          Ram.WriteByte(offset, Ord(OPCode.IN_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'INC':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          Ram.WriteByte(offset, Ord(OPCode.INC_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'DEC':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          Ram.WriteByte(offset, Ord(OPCode.DEC_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
     'ORG': // Pseudo instruction
     begin
       if (operands.Count = 1) then

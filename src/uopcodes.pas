@@ -154,7 +154,15 @@ type
     // XOR R, [X]
     XOR_R_ADDR_X = 63,
     // XOR R, [R]
-    XOR_R_ADDR_R = 64
+    XOR_R_ADDR_R = 64,
+
+    // IN R
+    IN_R = 65,
+
+    // INC R
+    INC_R = 66,
+    // DEC R
+    DEC_R = 67
 
     );
 

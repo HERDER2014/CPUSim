@@ -268,7 +268,7 @@ begin
 
   RunPauseBtn.Enabled:= false;
   StepBtn.Enabled:= false;
-  RunPauseBtn.Caption:= 'Run';
+  AssembleBtn.Caption:= 'Assemble';
 end;
 
 procedure TmainFrm.speedEdtChange(Sender: TObject);

@@ -1,12 +1,13 @@
 object mainFrm: TmainFrm
-  Left = 18
+  Left = 15
   Height = 792
-  Top = 118
+  Top = 125
   Width = 1229
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 772
   ClientWidth = 1229
   Menu = MainFrm_Menu
+  OnClose = FormClose
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
@@ -18,7 +19,7 @@ object mainFrm: TmainFrm
     Left = 0
     Height = 540
     Top = 116
-    Width = 800
+    Width = 776
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -15
@@ -486,6 +487,7 @@ object mainFrm: TmainFrm
     LineHighlightColor.Foreground = clNone
     LineHighlightColor.FrameEdges = sfeAround
     OnChange = InputSynEditChange
+    OnSpecialLineColors = InputSynEditSpecialLineColors
     inline SynLeftGutterPartList1: TSynGutterPartList
       object SynGutterMarks1: TSynGutterMarks
         Width = 24
@@ -534,7 +536,7 @@ object mainFrm: TmainFrm
     Left = 0
     Height = 91
     Top = 658
-    Width = 800
+    Width = 776
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Enabled = False
@@ -546,10 +548,10 @@ object mainFrm: TmainFrm
   object TopVSplitter: TSplitter
     AnchorSideTop.Control = Owner
     AnchorSideBottom.Control = StatusBar1
-    Left = 800
+    Left = 776
     Height = 749
     Top = 0
-    Width = 8
+    Width = 5
     Align = alNone
     Anchors = [akTop, akBottom]
   end
@@ -581,10 +583,10 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
-    Left = 808
+    Left = 781
     Height = 631
     Top = 118
-    Width = 421
+    Width = 448
     Anchors = [akTop, akLeft, akRight, akBottom]
     ColCount = 17
     Columns = <    
@@ -593,6 +595,7 @@ object mainFrm: TmainFrm
       end    
       item
         Title.Caption = '1'
+        Width = 23
       end    
       item
         Title.Caption = '2'
@@ -638,10 +641,11 @@ object mainFrm: TmainFrm
       end>
     DefaultColWidth = 24
     TabOrder = 5
+    OnDrawCell = RAMGridDrawCell
     ColWidths = (
       32
       24
-      24
+      23
       24
       24
       24
@@ -658,10 +662,55 @@ object mainFrm: TmainFrm
       24
     )
     Cells = (
-      1
+      16
       1
       0
-      'ot7fg'
+      '0'
+      2
+      0
+      '1'
+      3
+      0
+      '2'
+      4
+      0
+      '3'
+      5
+      0
+      '4'
+      6
+      0
+      '5'
+      7
+      0
+      '6'
+      8
+      0
+      '7'
+      9
+      0
+      '8'
+      10
+      0
+      '9'
+      11
+      0
+      'A'
+      12
+      0
+      'B'
+      13
+      0
+      'C'
+      14
+      0
+      'D'
+      15
+      0
+      'E'
+      16
+      0
+      'F'
     )
   end
   object ActionBox: TPanel
@@ -679,58 +728,7 @@ object mainFrm: TmainFrm
     ClientWidth = 1229
     TabOrder = 6
     OnClick = ActionBoxClick
-    object RegistersValueList1: TValueListEditor
-      AnchorSideLeft.Control = ActionBox
-      AnchorSideTop.Control = ActionBox
-      AnchorSideRight.Control = RegistersValueList2
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = ActionBox
-      AnchorSideBottom.Side = asrBottom
-      Left = 1
-      Height = 114
-      Top = 1
-      Width = 260
-      Anchors = [akTop, akLeft, akBottom]
-      Enabled = False
-      ExtendedSelect = False
-      FixedCols = 0
-      RowCount = 2
-      TabOrder = 0
-      Strings.Strings = (
-        ''
-      )
-      ColWidths = (
-        64
-        192
-      )
-    end
-    object RegistersValueList2: TValueListEditor
-      AnchorSideLeft.Control = RegistersValueList1
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = ActionBox
-      AnchorSideRight.Control = Owner
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = ActionBox
-      AnchorSideBottom.Side = asrBottom
-      Left = 261
-      Height = 114
-      Top = 1
-      Width = 260
-      Anchors = [akTop, akLeft, akBottom]
-      Enabled = False
-      FixedCols = 0
-      RowCount = 2
-      TabOrder = 1
-      Strings.Strings = (
-        ''
-      )
-      ColWidths = (
-        64
-        192
-      )
-    end
     object Assemble: TButton
-      AnchorSideLeft.Control = RegistersValueList2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = ActionBox
       Left = 541
@@ -744,10 +742,9 @@ object mainFrm: TmainFrm
       OnClick = AssembleClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 2
+      TabOrder = 0
     end
     object StepBtn: TButton
-      AnchorSideLeft.Control = RegistersValueList2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Assemble
       AnchorSideTop.Side = asrBottom
@@ -762,7 +759,7 @@ object mainFrm: TmainFrm
       OnClick = StepBtnClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 1
     end
     object StopBtn: TButton
       AnchorSideLeft.Control = Assemble
@@ -780,7 +777,7 @@ object mainFrm: TmainFrm
       OnClick = StopBtnClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
+      TabOrder = 2
     end
     object Run: TButton
       AnchorSideLeft.Control = Assemble
@@ -798,7 +795,7 @@ object mainFrm: TmainFrm
       OnClick = RunClick
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 5
+      TabOrder = 3
     end
     object speed: TSpinEdit
       AnchorSideLeft.Control = Assemble
@@ -815,7 +812,7 @@ object mainFrm: TmainFrm
       OnChange = speedChange
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 6
+      TabOrder = 4
       Value = 10
     end
     object ContinueBtn: TButton
@@ -832,7 +829,150 @@ object mainFrm: TmainFrm
       OnClick = ContinueBtnClick
       ParentShowHint = False
       ShowHint = True
+      TabOrder = 5
+    end
+    object Label1: TLabel
+      Left = 15
+      Height = 16
+      Top = 16
+      Width = 16
+      Caption = 'AX'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object A1: TEdit
+      Left = 40
+      Height = 21
+      Top = 11
+      Width = 112
+      ReadOnly = True
+      TabOrder = 6
+      Text = '0000000000000000'
+    end
+    object A2: TEdit
+      Left = 152
+      Height = 21
+      Top = 11
+      Width = 40
+      ReadOnly = True
       TabOrder = 7
+      Text = '0000'
+    end
+    object Label2: TLabel
+      Left = 16
+      Height = 16
+      Top = 40
+      Width = 15
+      Caption = 'BX'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label3: TLabel
+      Left = 16
+      Height = 16
+      Top = 64
+      Width = 16
+      Caption = 'CX'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label4: TLabel
+      Left = 16
+      Height = 16
+      Top = 88
+      Width = 16
+      Caption = 'DX'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object Edit9: TEdit
+      Left = 40
+      Height = 21
+      Top = 83
+      Width = 104
+      Enabled = False
+      TabOrder = 8
+      Text = '0000000000000000'
+    end
+    object Edit10: TEdit
+      Left = 152
+      Height = 21
+      Top = 83
+      Width = 40
+      Enabled = False
+      TabOrder = 9
+      Text = '0000'
+    end
+    object Edit11: TEdit
+      Left = 152
+      Height = 21
+      Top = 35
+      Width = 40
+      Enabled = False
+      TabOrder = 10
+      Text = '0000'
+    end
+    object Edit12: TEdit
+      Left = 152
+      Height = 21
+      Top = 59
+      Width = 40
+      Enabled = False
+      TabOrder = 11
+      Text = '0000'
+    end
+    object B1: TEdit
+      Left = 40
+      Height = 21
+      Top = 35
+      Width = 112
+      ReadOnly = True
+      TabOrder = 12
+      Text = '0000000000000000'
+    end
+    object Label5: TLabel
+      Left = 220
+      Height = 16
+      Top = 15
+      Width = 11
+      Caption = 'IP'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label6: TLabel
+      Left = 220
+      Height = 16
+      Top = 40
+      Width = 15
+      Caption = 'SP'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label7: TLabel
+      Left = 220
+      Height = 16
+      Top = 88
+      Width = 37
+      Caption = 'FLAGS'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label8: TLabel
+      Left = 220
+      Height = 16
+      Top = 64
+      Width = 14
+      Caption = 'BP'
+      Font.Height = -13
+      ParentColor = False
+      ParentFont = False
     end
   end
   object HSplitterTop: TSplitter
@@ -848,9 +988,126 @@ object mainFrm: TmainFrm
     Anchors = [akLeft, akRight]
     ResizeAnchor = akBottom
   end
+  object B2: TEdit
+    Left = 152
+    Height = 21
+    Top = 35
+    Width = 40
+    ReadOnly = True
+    TabOrder = 8
+    Text = '0000'
+  end
+  object SP1: TEdit
+    Left = 264
+    Height = 21
+    Top = 35
+    Width = 112
+    ReadOnly = True
+    TabOrder = 9
+    Text = '0000000000000000'
+  end
+  object C2: TEdit
+    Left = 152
+    Height = 21
+    Top = 59
+    Width = 40
+    ReadOnly = True
+    TabOrder = 10
+    Text = '0000'
+  end
+  object C1: TEdit
+    Left = 40
+    Height = 21
+    Top = 59
+    Width = 112
+    ReadOnly = True
+    TabOrder = 11
+    Text = '0000000000000000'
+  end
+  object D2: TEdit
+    Left = 152
+    Height = 21
+    Top = 83
+    Width = 40
+    ReadOnly = True
+    TabOrder = 12
+    Text = '0000'
+  end
+  object D1: TEdit
+    Left = 40
+    Height = 21
+    Top = 83
+    Width = 112
+    ReadOnly = True
+    TabOrder = 13
+    Text = '0000000000000000'
+  end
+  object IP1: TEdit
+    Left = 264
+    Height = 21
+    Top = 11
+    Width = 112
+    ReadOnly = True
+    TabOrder = 14
+    Text = '0000000000000000'
+  end
+  object BP1: TEdit
+    Left = 264
+    Height = 21
+    Top = 59
+    Width = 112
+    ReadOnly = True
+    TabOrder = 15
+    Text = '0000000000000000'
+  end
+  object F1: TEdit
+    Left = 264
+    Height = 21
+    Top = 83
+    Width = 112
+    ReadOnly = True
+    TabOrder = 16
+    Text = '0000000000000000'
+  end
+  object SP2: TEdit
+    Left = 376
+    Height = 21
+    Top = 35
+    Width = 40
+    ReadOnly = True
+    TabOrder = 17
+    Text = '0000'
+  end
+  object BP2: TEdit
+    Left = 376
+    Height = 21
+    Top = 59
+    Width = 40
+    ReadOnly = True
+    TabOrder = 18
+    Text = '0000'
+  end
+  object F2: TEdit
+    Left = 376
+    Height = 21
+    Top = 83
+    Width = 40
+    ReadOnly = True
+    TabOrder = 19
+    Text = '0000'
+  end
+  object IP2: TEdit
+    Left = 376
+    Height = 21
+    Top = 11
+    Width = 40
+    ReadOnly = True
+    TabOrder = 20
+    Text = '0000'
+  end
   object MainFrm_Menu: TMainMenu
-    left = 672
-    top = 648
+    left = 752
+    top = 696
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
       object MainFrm_Menu_File_New: TMenuItem
@@ -941,15 +1198,15 @@ object mainFrm: TmainFrm
   object OpenDlg: TOpenDialog
     FileName = '/home/leonard'
     InitialDir = '/home/'
-    left = 712
-    top = 584
+    left = 752
+    top = 608
   end
   object SaveDlg: TSaveDialog
-    left = 672
-    top = 504
+    left = 752
+    top = 408
   end
   object FindDlg: TFindDialog
-    left = 736
+    left = 752
     top = 552
   end
   object ReplaceDialog1: TReplaceDialog
@@ -969,7 +1226,7 @@ object mainFrm: TmainFrm
   object Timer1: TTimer
     Interval = 10
     OnTimer = Timer1Timer
-    left = 648
-    top = 576
+    left = 752
+    top = 448
   end
 end

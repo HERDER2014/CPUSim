@@ -65,8 +65,8 @@ begin
    Ram := r;
    InitCriticalSection(cs);
    Reg.IP:=0;
-   Reg.SP:=2045;
-   Reg.BP:=2045;
+   Reg.SP:=r.GetSize-1;
+   Reg.BP:=r.GetSize-1;
    Reg.FLAGS:=0;
    Reg.AX:=0;
    Reg.BX:=0;

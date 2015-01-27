@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler;
+  ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler,
+  strutils, uTypen, SynEditMarkupSpecialLine;
 
 type
 
@@ -16,6 +17,34 @@ type
   TmainFrm = class(TForm)
     ActionList: TActionList;
     Assemble: TButton;
+    A1: TEdit;
+    Edit10: TEdit;
+    Edit11: TEdit;
+    Edit12: TEdit;
+    IP2: TEdit;
+    B1: TEdit;
+    IP1: TEdit;
+    BP1: TEdit;
+    F1: TEdit;
+    A2: TEdit;
+    SP2: TEdit;
+    BP2: TEdit;
+    F2: TEdit;
+    B2: TEdit;
+    SP1: TEdit;
+    C2: TEdit;
+    C1: TEdit;
+    D2: TEdit;
+    D1: TEdit;
+    Edit9: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
     RAMGrid: TStringGrid;
     ContinueBtn: TButton;
     Run: TButton;
@@ -53,7 +82,6 @@ type
     MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
     ActionBox: TPanel;
-    RegistersValueList2: TValueListEditor;
     ReplaceDialog1: TReplaceDialog;
     SaveDlg: TSaveDialog;
     StatusBar1: TStatusBar;
@@ -61,13 +89,15 @@ type
     TopVSplitter: TSplitter;
     HSplitterBot: TSplitter;
     InputSynEdit: TSynEdit;
-    RegistersValueList1: TValueListEditor;
     RAMValueList: TValueListEditor;
     procedure ActionBoxClick(Sender: TObject);
     procedure AssembleClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure ContinueBtnClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure InputSynEditChange(Sender: TObject);
+    procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
+      var Special: boolean; var FG, BG: TColor);
     procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_FindClick(Sender: TObject);
@@ -80,6 +110,8 @@ type
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
     procedure DoCompile;
+    procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
+      aRect: TRect; aState: TGridDrawState);
     procedure RunClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
@@ -93,6 +125,7 @@ type
     procedure StopBtnClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure updateRAM;
+    procedure updateREG;
     procedure resume;
     procedure Step;
     procedure StepOver;
@@ -103,6 +136,7 @@ type
   end;
 
 var
+  comp: TCompiler;
   mainFrm: TmainFrm;
   SavePath: string;
   Saved: boolean;
@@ -122,23 +156,6 @@ implementation
 
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
-  // init:
-  RegistersValueList1.Row := 0;
-  RegistersValueList1.InsertRow('AX', '0000000000000000', True);
-  RegistersValueList1.Row := 1;
-  RegistersValueList1.InsertRow('BX', '0000000000000000', True);
-  RegistersValueList1.Row := 2;
-  RegistersValueList1.InsertRow('CX', '0000000000000000', True);
-  RegistersValueList1.Row := 3;
-  RegistersValueList1.InsertRow('DX', '0000000000000000', True);
-  RegistersValueList1.Row := 0;
-  RegistersValueList2.InsertRow('BP', '0000000000000000', True); // BasePointer
-  RegistersValueList2.Row := 1;
-  RegistersValueList2.InsertRow('IP', '0000000000000000', True); // InstructionPointer
-  RegistersValueList2.Row := 2;
-  RegistersValueList2.InsertRow('SP', '0000000000000000', True); // StackPointer
-  RegistersValueList2.Row := 3;
-  RegistersValueList2.InsertRow('FLAGS', '0000000000000000', True);
   InputSynEdit.ClearAll;
   RAMSize := 512; //TODO: getRAMSize
   MessagesMemo.Text := 'Hit "Run" to test your program!';
@@ -150,11 +167,11 @@ end;
 
 procedure TmainFrm.DoCompile;
 var
-  comp: TCompiler;
   i: cardinal;
 begin
   RAM := TRAM.Create(RAMSize);
   comp := TCompiler.Create(RAM);
+  comp.NumberInputMode := TNumberInputMode.Hexadecimal;
   comp.Compile(InputSynEdit.Text);
   CPU.Destroy;
   CPU := TCPU.Create(RAM);
@@ -164,25 +181,71 @@ begin
   updateRAM;
 end;
 
+procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
+  aRect: TRect; aState: TGridDrawState);
+begin
+  with TStringGrid(Sender) do
+  begin
+    if (aCol-1) + ((aRow-1) shl 4) = CPU.ReadRegister(IP) then
+    begin
+      Canvas.Brush.Color := clYellow;
+    end
+    else if (aCol-1) + ((aRow-1) shl 4) = CPU.ReadRegister(BP) then
+    begin
+      Canvas.Brush.Color := $FF8888;
+    end
+    else if (aCol-1) + ((aRow-1) shl 4) = CPU.ReadRegister(SP) then
+    begin
+      Canvas.Brush.Color := clGreen;
+    end
+    else
+    begin
+      //Canvas.Brush.Color := clWhite;
+    end;
+    Canvas.FillRect(aRect);
+    Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
+  end;
+end;
+
 procedure TmainFrm.RunClick(Sender: TObject);
 begin
   DoCompile;
   resume;
 end;
 
-procedure TmainFrm.UpdateRAM;
+procedure TmainFrm.updateRAM;
 var
   i: cardinal;
 begin
-  RAMGrid.RowCount:= (RAMSize-1) div 16 + 2;
+  RAMGrid.RowCount := (RAMSize - 1) div 16 + 2;
   for i := 0 to RAMSize - 1 do
   begin
     RAMGrid.Cells[i and 15 + 1, i shr 4 + 1] := IntToHex(Ram.ReadByte(i), 2);
   end;
-  for i:= 1 to RAMGrid.RowCount-1 do
+  for i := 1 to RAMGrid.RowCount - 1 do
   begin
-    RAMGrid.Cells[0, i]:= IntToHex((i-1) shl 4, 4);
+    RAMGrid.Cells[0, i] := IntToHex((i - 1) shl 4, 4);
   end;
+end;
+
+procedure TmainFrm.updateREG;
+begin
+  A1.Text := IntTOBin(CPU.ReadRegister(AX), 16, 8);
+  A2.Text := IntToHex(CPU.ReadRegister(AX), 4);
+  B1.Text := IntTOBin(CPU.ReadRegister(BX), 16, 8);
+  B2.Text := IntToHex(CPU.ReadRegister(BX), 4);
+  C1.Text := IntTOBin(CPU.ReadRegister(CX), 16, 8);
+  C2.Text := IntToHex(CPU.ReadRegister(CX), 4);
+  D1.Text := IntTOBin(CPU.ReadRegister(DX), 16, 8);
+  D2.Text := IntToHex(CPU.ReadRegister(DX), 4);
+  IP1.Text := IntTOBin(CPU.ReadRegister(IP), 16, 8);
+  IP2.Text := IntToHex(CPU.ReadRegister(IP), 4);
+  SP1.Text := IntTOBin(CPU.ReadRegister(SP), 16, 8);
+  SP2.Text := IntToHex(CPU.ReadRegister(SP), 4);
+  BP1.Text := IntTOBin(CPU.ReadRegister(BP), 16, 8);
+  BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
+  F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
+  F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
 end;
 
 procedure TmainFrm.resume;
@@ -204,27 +267,28 @@ begin
   end;
 
   Thread.Destroy;
+  runStatus := False;
 end;
 
 procedure TmainFrm.speedChange(Sender: TObject);
 begin
   if runStatus then
-     Thread.setVel(speed.Value);
+    Thread.setVel(speed.Value);
 end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
-   Step;
+  Step;
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
-   Stop;
+  Stop;
 end;
 
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
-  //Update register todo
+  updateREG;
   updateRAM;
 end;
 
@@ -341,6 +405,15 @@ begin
   Saved := False;
 end;
 
+procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
+  Line: integer; var Special: boolean; var FG, BG: TColor);
+begin
+  if Line=comp.GetCodePosition(CPU.ReadRegister(IP)) then
+  begin
+    BG:= clYellow;
+  end;
+end;
+
 procedure TmainFrm.compileClick(Sender: TObject);
 begin
   MainFrm.DoCompile;
@@ -349,6 +422,11 @@ end;
 procedure TmainFrm.ContinueBtnClick(Sender: TObject);
 begin
 
+end;
+
+procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  ShowExitDlg;
 end;
 
 procedure TmainFrm.AssembleClick(Sender: TObject);

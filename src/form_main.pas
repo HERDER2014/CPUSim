@@ -410,6 +410,7 @@ procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
 begin
   if  (assembled) and (Line=comp.GetCodePosition(CPU.ReadRegister(IP))) then
   begin
+    Special:=true;
     BG:= clYellow;
   end;
 end;

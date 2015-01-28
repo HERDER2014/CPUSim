@@ -88,7 +88,6 @@ type
     HSplitterBot: TSplitter;
     InputSynEdit: TSynEdit;
     RAMValueList: TValueListEditor;
-    procedure ActionBoxClick(Sender: TObject);
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -286,6 +285,7 @@ procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
   Step;
   RunPauseBtn.Caption:= 'Run';
+  Timer1Timer(nil);
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
@@ -447,6 +447,7 @@ procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin
   if RunPauseBtn.Caption='Run' then
   begin
+    Timer1.Enabled:=true;
     resume;
     RunPauseBtn.Caption:='Pause';
   end
@@ -454,6 +455,7 @@ begin
   begin
     Step;
     RunPauseBtn.Caption:='Run';
+    Timer1.Enabled:=false;
   end;
 end;
 
@@ -466,6 +468,8 @@ procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
   if AssembleBtn.Caption='Assemble' then
   begin
+    RAM.Destroy;
+    RAM:= TRAM.Create(RAMSize);
     DoCompile;
     AssembleBtn.Caption:='Stop';
     RunPauseBtn.Enabled:= true;
@@ -477,12 +481,8 @@ begin
     AssembleBtn.Caption:='Assemble';
     RunPauseBtn.Enabled:= false;
     StepBtn.Enabled:= false;
+    Timer1.Enabled:= false;
   end;
-end;
-
-procedure TmainFrm.ActionBoxClick(Sender: TObject);
-begin
-
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);

@@ -50,8 +50,12 @@ var ram : ARRAY OF Byte;
 var size_RAM : Cardinal;
 
    constructor TRAM.Create(size : Cardinal);
+   var
+     i: Integer;
    begin
      SetLength(ram, size);
+     for i:= 0 to size-1 do
+         ram[i]:= 0;
      size_RAM := size;
    end;
 

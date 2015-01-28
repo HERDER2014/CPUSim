@@ -430,9 +430,23 @@ begin
   //strg + s to save
   if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
      MainFrm_Menu_File_SaveClick(nil);
+  //strg + shift + s to save
+  if (Key=LCLType.VK_S) and (ssCtrl in Shift) and (ssShift in Shift) then
+     MainFrm_Menu_File_SaveAsClick(nil);
   //strg + o to open
   if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
      MainFrm_Menu_File_OpenClick(nil);
+  //f5 and f9 to assemble
+  if (Key=LCLType.VK_F5) or (Key=LCLType.VK_F9) then
+  begin
+    if assembled then
+        RunPauseBtnClick(nil)
+    else
+        AssembleBtnClick(nil);
+  end;
+  //f4 zum step
+  if (key=LCLType.VK_F4) and (Assembled) then
+     StepBtnClick(nil);
 
 end;
 

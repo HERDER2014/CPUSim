@@ -1,11 +1,11 @@
 object mainFrm: TmainFrm
-  Left = -4
-  Height = 633
-  Top = -4
-  Width = 929
+  Left = 325
+  Height = 756
+  Top = 109
+  Width = 1281
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 614
-  ClientWidth = 929
+  ClientHeight = 736
+  ClientWidth = 1281
   Constraints.MinHeight = 343
   Constraints.MinWidth = 600
   KeyPreview = True
@@ -15,13 +15,14 @@ object mainFrm: TmainFrm
   OnKeyDown = FormKeyDown
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
+  WindowState = wsMaximized
   inline InputSynEdit: TSynEdit
     AnchorSideLeft.Control = Owner
     AnchorSideBottom.Control = Splitter1
     Left = 0
-    Height = 407
+    Height = 529
     Top = 120
-    Width = 505
+    Width = 857
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -15
@@ -538,8 +539,8 @@ object mainFrm: TmainFrm
     AnchorSideTop.Side = asrBottom
     Left = 0
     Height = 84
-    Top = 533
-    Width = 505
+    Top = 655
+    Width = 857
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Enabled = False
@@ -553,8 +554,8 @@ object mainFrm: TmainFrm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    Left = 505
-    Height = 495
+    Left = 857
+    Height = 617
     Top = 120
     Width = 424
     Anchors = [akTop, akRight, akBottom]
@@ -685,7 +686,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 21
+    Height = 23
     Top = 35
     Width = 40
     ReadOnly = True
@@ -694,16 +695,16 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 35
     Width = 112
     ReadOnly = True
     TabOrder = 4
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object C2: TEdit
     Left = 161
-    Height = 21
+    Height = 23
     Top = 59
     Width = 40
     ReadOnly = True
@@ -712,16 +713,16 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 21
+    Height = 23
     Top = 59
     Width = 112
     ReadOnly = True
     TabOrder = 6
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object D2: TEdit
     Left = 161
-    Height = 21
+    Height = 23
     Top = 83
     Width = 40
     ReadOnly = True
@@ -730,43 +731,43 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 21
+    Height = 23
     Top = 83
     Width = 112
     ReadOnly = True
     TabOrder = 8
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object IP1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 11
     Width = 112
     ReadOnly = True
     TabOrder = 9
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object BP1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 59
     Width = 112
     ReadOnly = True
     TabOrder = 10
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object F1: TEdit
     Left = 264
-    Height = 21
+    Height = 23
     Top = 83
     Width = 112
     ReadOnly = True
     TabOrder = 11
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object SP2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 35
     Width = 40
     ReadOnly = True
@@ -775,7 +776,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 59
     Width = 40
     ReadOnly = True
@@ -784,7 +785,7 @@ object mainFrm: TmainFrm
   end
   object F2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 83
     Width = 40
     ReadOnly = True
@@ -793,7 +794,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 21
+    Height = 23
     Top = 11
     Width = 40
     ReadOnly = True
@@ -849,7 +850,7 @@ object mainFrm: TmainFrm
   end
   object Label1: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Top = 16
     Width = 16
     Caption = 'AX'
@@ -859,16 +860,16 @@ object mainFrm: TmainFrm
   end
   object A1: TEdit
     Left = 49
-    Height = 21
+    Height = 23
     Top = 11
     Width = 112
     ReadOnly = True
     TabOrder = 19
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object A2: TEdit
     Left = 161
-    Height = 21
+    Height = 23
     Top = 11
     Width = 40
     ReadOnly = True
@@ -877,7 +878,7 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Top = 40
     Width = 15
     Caption = 'BX'
@@ -887,7 +888,7 @@ object mainFrm: TmainFrm
   end
   object Label3: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Top = 64
     Width = 16
     Caption = 'CX'
@@ -897,9 +898,9 @@ object mainFrm: TmainFrm
   end
   object Label4: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Top = 88
-    Width = 16
+    Width = 17
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -907,18 +908,18 @@ object mainFrm: TmainFrm
   end
   object B1: TEdit
     Left = 49
-    Height = 21
+    Height = 23
     Top = 35
     Width = 112
     ReadOnly = True
     TabOrder = 21
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object Label5: TLabel
     Left = 242
-    Height = 16
+    Height = 17
     Top = 16
-    Width = 11
+    Width = 10
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
@@ -926,9 +927,9 @@ object mainFrm: TmainFrm
   end
   object Label6: TLabel
     Left = 239
-    Height = 16
+    Height = 17
     Top = 40
-    Width = 15
+    Width = 14
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
@@ -936,9 +937,9 @@ object mainFrm: TmainFrm
   end
   object Label7: TLabel
     Left = 216
-    Height = 16
+    Height = 17
     Top = 88
-    Width = 37
+    Width = 36
     Caption = 'FLAGS'
     Font.Height = -13
     ParentColor = False
@@ -946,7 +947,7 @@ object mainFrm: TmainFrm
   end
   object Label8: TLabel
     Left = 240
-    Height = 16
+    Height = 17
     Top = 64
     Width = 14
     Caption = 'BP'
@@ -956,15 +957,11 @@ object mainFrm: TmainFrm
   end
   object speedEdt: TSpinEdit
     Left = 447
-    Height = 25
-    Top = 44
+    Height = 23
+    Top = 45
     Width = 50
-    AutoSize = False
-    Enabled = False
-    Font.Height = 18
     MaxValue = 10000
     OnChange = speedEdtChange
-    ParentFont = False
     TabOrder = 22
   end
   object Splitter1: TSplitter
@@ -972,8 +969,8 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 0
     Height = 6
-    Top = 527
-    Width = 505
+    Top = 649
+    Width = 857
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
     ResizeAnchor = akBottom

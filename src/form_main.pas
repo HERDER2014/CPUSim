@@ -285,6 +285,7 @@ procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
   Step;
   RunPauseBtn.Caption:= 'Run';
+  Sleep(100);
   Timer1Timer(nil);
 end;
 

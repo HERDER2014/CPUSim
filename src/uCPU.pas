@@ -256,6 +256,15 @@ begin
         Reg.IP += 5;
       end; //mov [R+x],R
 
+      INC_R: begin
+        WR(Ram.ReadByte(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+1)) + 1,true);
+        Reg.IP += 2;
+      end;//inc R
+
+      DEC_R: begin
+        WR(Ram.ReadByte(Reg.IP+1),RR(Ram.ReadByte(Reg.IP+1)) - 1,true);
+        Reg.IP += 2;
+      end;//dec R
 
       ADD_R_X: begin
         WR(Ram.ReadByte(Reg.IP+1),Ram.ReadWord(Reg.IP+2) + RR(Ram.ReadByte(Reg.IP+1)),true);

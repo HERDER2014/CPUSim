@@ -162,7 +162,10 @@ type
     // INC R
     INC_R = 66,
     // DEC R
-    DEC_R = 67
+    DEC_R = 67,
+
+    //MOV [R], X
+    MOV_ADDR_R_X = 68
 
     );
 

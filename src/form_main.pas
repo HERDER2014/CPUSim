@@ -152,7 +152,7 @@ begin
   hlt := TAsmHighlighter.Create(self);
   InputSynEdit.Highlighter := hlt;
 
-  RAMSize := 512; //TODO: getRAMSize
+  RAMSize := 512;
   MessagesMemo.Text := 'Hit "Run" to test your program!';
   Saved := True; // Don't ask for save when program just started
   RAM := TRAM.Create(RAMSize);
@@ -361,6 +361,7 @@ begin
   path := SaveDlg.FileName;
   InputSynEdit.Lines.SaveToFile(path);
   SavePath := path;
+  Saved := true;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -396,6 +397,7 @@ begin
   end
   else
     InputSynEdit.Lines.SaveToFile(SavePath);
+  saved:= true;
 end;
 
 
@@ -436,13 +438,21 @@ begin
   //strg + o to open
   if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
      MainFrm_Menu_File_OpenClick(nil);
-  //f5 and f9 to assemble
-  if (Key=LCLType.VK_F5) or (Key=LCLType.VK_F9) then
+  //f5 to assemble or run, depending on what is done
+  if (Key=LCLType.VK_F5) then
   begin
     if assembled then
         RunPauseBtnClick(nil)
     else
         AssembleBtnClick(nil);
+  end;
+  //f9 to assemble and then run
+  if (Key=LCLType.VK_F9) then
+  begin
+    if not assembled then
+        AssembleBtnClick(nil);
+    if assembled then
+       RunPauseBtnClick(nil);
   end;
   //f4 zum step
   if (key=LCLType.VK_F4) and (Assembled) then

@@ -5,10 +5,10 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
-  ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler,
-  strutils, uTypen, asmHighlighter;
+  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo,
+  Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
+  ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
+  uCPUThread, uCompiler, strutils, uTypen, asmHighlighter, eventlog, types;
 
 type
 
@@ -32,6 +32,7 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    Log_lb: TListBox;
     RunPauseBtn: TButton;
     SP2: TEdit;
     BP2: TEdit;
@@ -70,7 +71,6 @@ type
     MainFrm_Menu_File_SaveAs: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
-    MessagesMemo: TMemo;
     OpenDlg: TOpenDialog;
     ReplaceDialog1: TReplaceDialog;
     SaveDlg: TSaveDialog;
@@ -84,6 +84,7 @@ type
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
     procedure RunPauseBtnClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure InputSynEditChange(Sender: TObject);
@@ -133,6 +134,7 @@ var
   SavePath: string;
   Saved: boolean;
   assembled: boolean;
+  drawCodeIPHighlighting: boolean;
   Thread: TCPUThread;
   hlt : TAsmHighlighter;
   RAM: TRAM;
@@ -155,7 +157,6 @@ begin
   InputSynEdit.Highlighter := hlt;
 
   RAMSize := 512;
-  MessagesMemo.Text := 'Hit "Run" to test your program!';
   Saved := True; // Don't ask for save when program just started
   RAM := TRAM.Create(RAMSize);
   CPU := TCPU.Create(RAM);
@@ -168,14 +169,23 @@ begin
   RAM := TRAM.Create(RAMSize);
   comp := TCompiler.Create(RAM);
   comp.NumberInputMode := TNumberInputMode.Hexadecimal;
-  comp.Compile(InputSynEdit.Text);
-  CPU.Destroy;
-  CPU := TCPU.Create(RAM);
-  Thread := TCPUThread.Create(CPU);
-  Thread.OnTerminate := @OnCPUTerminate;
-  assembled := True;
-  InputSynEdit.ReadOnly:= true;
-  updateRAM;
+  try
+    comp.Compile(InputSynEdit.Text);
+    Log_lb.Items.Insert(0,'[success] compilation completed');
+    CPU.Destroy;
+    CPU := TCPU.Create(RAM);
+    Thread := TCPUThread.Create(CPU);
+    Thread.OnTerminate := @OnCPUTerminate;
+    assembled := True;
+    drawCodeIPHighlighting:= true;
+    InputSynEdit.ReadOnly:= true;
+    updateRAM;
+  except
+    on e: Exception do
+      Log_lb.Items.Insert(0,'[error] compilation failed: ' + e.Message);
+  end;
+
+
 end;
 
 procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
@@ -252,11 +262,11 @@ begin
   //TODO
   if (Thread.getException() = '') then
   begin
-
+    Log_lb.Items.Insert(0,'[success] simulation ended');
   end
   else
   begin
-
+    Log_lb.Items.Insert(0,'[error] simulation failed on line ' + IntToStr(comp.GetCodePosition(cpu.ReadRegister(IP))) + ' (Adress ' + IntToHex(cpu.ReadRegister(IP),4) + '): ' + Thread.getException());
   end;
 
   Thread.Destroy;
@@ -420,12 +430,13 @@ end;
 procedure TmainFrm.InputSynEditChange(Sender: TObject);
 begin
   Saved := False;
+  drawCodeIPHighlighting:=false;
 end;
 
 procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
   Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
-  if  (assembled) and (Line=comp.GetCodePosition(Hex2Dec(IP2.Text))) then
+  if  (drawCodeIPHighlighting) and (Line=comp.GetCodePosition(Hex2Dec(IP2.Text))) then
   begin
     Special:=true;
     BG:= clYellow;
@@ -512,11 +523,13 @@ begin
     RAM.Destroy;
     RAM:= TRAM.Create(RAMSize);
     DoCompile;
-    AssembleBtn.Caption:='Stop';
-    RunPauseBtn.Enabled:= true;
-    speedEdt.Enabled:= true;
-    StepBtn.Enabled:= true;
-    StepOverBtn.Enabled:= true;
+    if assembled then begin
+      AssembleBtn.Caption:='Stop';
+      RunPauseBtn.Enabled:= true;
+      speedEdt.Enabled:= true;
+      StepBtn.Enabled:= true;
+      StepOverBtn.Enabled:= true;
+    end;
   end
   else
   begin
@@ -526,6 +539,7 @@ begin
     StepBtn.Enabled:= false;
     StepOverBtn.Enabled:= false;
     speedEdt.Enabled:= false;
+    assembled:=false;
     Timer1.Enabled:= false;
   end;
 end;

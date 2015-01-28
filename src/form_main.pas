@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, Forms, Controls,
   Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls, ValEdit, Grids,
   ComCtrls, ActnList, StdActns, Spin, uRAM, uCPU, uCPUThread, uCompiler,
-  strutils, uTypen;
+  strutils, uTypen, asmHighlighter;
 
 type
 
@@ -141,6 +141,7 @@ var
   Saved: boolean;
   assembled: boolean;
   Thread: TCPUThread;
+  hlt : TAsmHighlighter;
   RAM: TRAM;
   CPU: TCPU;
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
@@ -156,6 +157,10 @@ implementation
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
   InputSynEdit.ClearAll;
+
+  hlt := TAsmHighlighter.Create(self);
+  InputSynEdit.Highlighter := hlt;
+
   RAMSize := 512; //TODO: getRAMSize
   MessagesMemo.Text := 'Hit "Run" to test your program!';
   Saved := True; // Don't ask for save when program just started

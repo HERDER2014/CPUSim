@@ -41,7 +41,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="9">
+    <Units Count="10">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -93,6 +93,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="form_options"/>
       </Unit8>
+      <Unit9>
+        <Filename Value="asmHighlighter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="asmHighlighter"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

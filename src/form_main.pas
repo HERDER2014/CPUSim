@@ -440,7 +440,7 @@ end;
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-   //strg + s to save
+  //strg + s to save
   if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
      MainFrm_Menu_File_SaveClick(nil);
   //strg + shift + s to save
@@ -465,18 +465,10 @@ begin
     if assembled then
        RunPauseBtnClick(nil);
   end;
-  //f8 zum stepOver
-  if (key=LCLType.VK_F8) then
-    if not assembled then
-        AssembleBtnClick(nil);
-    if assembled then
-        StepOverBtnClick(nil);
-  //f7 zum step
-  if (key=LCLType.VK_F7) then
-    if not assembled then
-        AssembleBtnClick(nil);
-    if assembled then
-        StepBtnClick(nil);
+  //f4 zum step
+  if (key=LCLType.VK_F4) and (Assembled) then
+     StepBtnClick(nil);
+
 end;
 
 

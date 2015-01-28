@@ -484,11 +484,11 @@ begin
 
       PUSH_R: begin
         push(RR(Ram.ReadByte(Reg.IP+1)));
-        Reg.IP+=1;
+        Reg.IP+=2;
       end;// push R
       PUSH_X: begin
         push(Ram.ReadWord(Reg.IP+1));
-        Reg.IP+=2;
+        Reg.IP+=3;
       end;// push x
       OPCode.POP: begin
         pop();

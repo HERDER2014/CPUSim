@@ -465,10 +465,18 @@ begin
     if assembled then
        RunPauseBtnClick(nil);
   end;
-  //f4 zum step
-  if (key=LCLType.VK_F4) and (Assembled) then
-     StepBtnClick(nil);
-
+  //f8 zum stepOver
+  if (key=LCLType.VK_F8) then
+    if not assembled then
+        AssembleBtnClick(nil);
+    if assembled then
+        StepOverBtnClick(nil);
+  //f7 zum step
+  if (key=LCLType.VK_F7) then
+    if not assembled then
+        AssembleBtnClick(nil);
+    if assembled then
+        StepBtnClick(nil);
 end;
 
 

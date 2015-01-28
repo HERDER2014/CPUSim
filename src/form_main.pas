@@ -77,6 +77,7 @@ type
     speedEdt: TSpinEdit;
     Splitter1: TSplitter;
     StepBtn: TButton;
+    StepOverBtn: TButton;
     Timer1: TTimer;
     InputSynEdit: TSynEdit;
     RAMValueList: TValueListEditor;
@@ -112,6 +113,7 @@ type
     procedure OnCPUTerminate(Sender: TObject);
     procedure speedEdtChange(Sender: TObject);
     procedure StepBtnClick(Sender: TObject);
+    procedure StepOverBtnClick(Sender: TObject);
     procedure StopBtnClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure updateRAM;
@@ -264,6 +266,7 @@ begin
   RunPauseBtn.Enabled:= false;
   speedEdt.Enabled:= false;
   StepBtn.Enabled:= false;
+  StepOverBtn.Enabled:= false;
   AssembleBtn.Caption:= 'Assemble';
   RunPauseBtn.Caption:= 'Run';
 end;
@@ -277,6 +280,14 @@ end;
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
   Step;
+  RunPauseBtn.Caption:= 'Run';
+  Sleep(100);
+  Timer1Timer(nil);
+end;
+
+procedure TmainFrm.StepOverBtnClick(Sender: TObject);
+begin
+  StepOver;
   RunPauseBtn.Caption:= 'Run';
   Sleep(100);
   Timer1Timer(nil);
@@ -493,6 +504,7 @@ begin
     RunPauseBtn.Enabled:= true;
     speedEdt.Enabled:= true;
     StepBtn.Enabled:= true;
+    StepOverBtn.Enabled:= true;
   end
   else
   begin
@@ -500,6 +512,7 @@ begin
     AssembleBtn.Caption:='Assemble';
     RunPauseBtn.Enabled:= false;
     StepBtn.Enabled:= false;
+    StepOverBtn.Enabled:= false;
     speedEdt.Enabled:= false;
     Timer1.Enabled:= false;
   end;

@@ -262,6 +262,7 @@ begin
   InputSynEdit.ReadOnly:= false;
 
   RunPauseBtn.Enabled:= false;
+  speedEdt.Enabled:= false;
   StepBtn.Enabled:= false;
   AssembleBtn.Caption:= 'Assemble';
   RunPauseBtn.Caption:= 'Run';
@@ -466,6 +467,7 @@ begin
     DoCompile;
     AssembleBtn.Caption:='Stop';
     RunPauseBtn.Enabled:= true;
+    speedEdt.Enabled:= true;
     StepBtn.Enabled:= true;
   end
   else
@@ -474,6 +476,7 @@ begin
     AssembleBtn.Caption:='Assemble';
     RunPauseBtn.Enabled:= false;
     StepBtn.Enabled:= false;
+    speedEdt.Enabled:= false;
     Timer1.Enabled:= false;
   end;
 end;

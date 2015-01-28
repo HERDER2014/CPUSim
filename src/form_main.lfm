@@ -956,11 +956,15 @@ object mainFrm: TmainFrm
   end
   object speedEdt: TSpinEdit
     Left = 447
-    Height = 21
-    Top = 48
+    Height = 25
+    Top = 44
     Width = 50
+    AutoSize = False
+    Enabled = False
+    Font.Height = 18
     MaxValue = 10000
     OnChange = speedEdtChange
+    ParentFont = False
     TabOrder = 22
   end
   object Splitter1: TSplitter

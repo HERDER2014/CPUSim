@@ -467,16 +467,20 @@ begin
   end;
   //f8 zum stepOver
   if (key=LCLType.VK_F8) then
+  begin
     if not assembled then
         AssembleBtnClick(nil);
     if assembled then
         StepOverBtnClick(nil);
+  end;
   //f7 zum step
   if (key=LCLType.VK_F7) then
+  begin
     if not assembled then
         AssembleBtnClick(nil);
     if assembled then
         StepBtnClick(nil);
+  end;
 end;
 
 

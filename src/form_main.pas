@@ -92,7 +92,7 @@ type
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
-    function FileSave_ExitActExecute(Sender: TObject):Boolean;
+    function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -468,7 +468,7 @@ begin
   Saved := true;
 end;
 
-function TmainFrm.FileSave_ExitActExecute(Sender: TObject):Boolean;
+function TmainFrm.FileSave_ExitActExecute(Sender: TObject) : Boolean;
 var
   answer: longint;
 begin
@@ -485,17 +485,19 @@ begin
       if SavePath='' then
       begin
         Result:=FileSaveAsAct.Execute;
-        Result:=Result;
       end else
       begin
         InputSynEdit.Lines.SaveToFile(SavePath);
         Saved := true;
-        Result:=true;
+        Result:=False;
       end
     end else if answer = mrNo then
     begin
       Result:=true;
       //Application.Terminate;
+    end else
+    begin
+      Result:=False;
     end;
   end;
 end;
@@ -507,7 +509,13 @@ end;
 
 procedure TmainFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  if FileSave_ExitAct.Execute then CanClose:=true else CanClose:=false;
+  if FileSave_ExitActExecute(mainFrm) then
+  begin
+    CanClose:=true
+  end else
+  begin
+    CanClose:=false;
+  end;
 end;
 
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);

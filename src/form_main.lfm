@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 0
+  Left = 222
   Height = 633
-  Top = 252
+  Top = 108
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 607
@@ -10,6 +10,8 @@ object mainFrm: TmainFrm
   Constraints.MinWidth = 600
   KeyPreview = True
   Menu = MainFrm_Menu
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   Position = poScreenCenter
@@ -1084,10 +1086,6 @@ object mainFrm: TmainFrm
     left = 736
     top = 24
   end
-  object SaveDlg: TSaveDialog
-    left = 656
-    top = 32
-  end
   object FindDlg: TFindDialog
     left = 696
     top = 80
@@ -1148,6 +1146,8 @@ object mainFrm: TmainFrm
       Dialog.FileName = 'asm'
       Dialog.Filter = 'Assembly source code|*.asm|All files|*'
       Hint = 'Save As'
+      ShortCut = 24659
+      OnAccept = FileSaveAsActAccept
     end
     object FileSave_ExitAct: TAction
       Category = 'File'

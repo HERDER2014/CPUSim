@@ -82,7 +82,6 @@ type
     MainFrm_Menu_File_Exit: TMenuItem;
     OpenDlg: TOpenDialog;
     ReplaceDialog1: TReplaceDialog;
-    SaveDlg: TSaveDialog;
     speedEdt: TSpinEdit;
     Splitter1: TSplitter;
     StepBtn: TButton;
@@ -92,10 +91,12 @@ type
     RAMValueList: TValueListEditor;
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
-    procedure FileSave_ExitActExecute(Sender: TObject);
+    procedure FileSaveAsActAccept(Sender: TObject);
+    function FileSave_ExitActExecute(Sender: TObject):Boolean;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure RunPauseBtnClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
       var Special: boolean; var FG, BG: TColor);
@@ -385,14 +386,15 @@ begin
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
-var
-  path: string;
+//var
+//  path: string;
 begin
-  SaveDlg.Execute;
-  path := SaveDlg.FileName;
-  InputSynEdit.Lines.SaveToFile(path);
-  SavePath := path;
-  Saved := true;
+  //SaveDlg.Execute;
+  FileSaveAsAct.Execute;
+  //path := FileSaveAsAct.Dialog.FileName;
+  //InputSynEdit.Lines.SaveToFile(path);
+  //SavePath := path;
+  //Saved := true;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -459,34 +461,63 @@ begin
   MainFrm.DoCompile;
 end;
 
-procedure TmainFrm.FileSave_ExitActExecute(Sender: TObject);
+procedure TmainFrm.FileSaveAsActAccept(Sender: TObject);
+begin
+  SavePath := FileSaveAsAct.Dialog.FileName;
+  InputSynEdit.Lines.SaveToFile(SavePath);
+  Saved := true;
+end;
+
+function TmainFrm.FileSave_ExitActExecute(Sender: TObject):Boolean;
 var
   answer: longint;
 begin
   if saved then
   begin
-    Application.Terminate;
-  end
-  else
+    //Application.Terminate;
+    Result:=true;
+  end else
   begin
     answer := MessageDlg('Do you want to save changes?',
       mtConfirmation, mbYesNoCancel, 0);
     if answer = mrYes then
-      SaveDlg.Execute
-    else if answer = mrNo then
-      Application.Terminate
+    begin
+      if SavePath='' then
+      begin
+        Result:=FileSaveAsAct.Execute;
+        Result:=Result;
+      end else
+      begin
+        InputSynEdit.Lines.SaveToFile(SavePath);
+        Saved := true;
+        Result:=true;
+      end
+    end else if answer = mrNo then
+    begin
+      Result:=true;
+      //Application.Terminate;
+    end;
   end;
 end;
 
-procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  CloseAction:=caFree;
+end;
+
+procedure TmainFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+begin
+  if FileSave_ExitAct.Execute then CanClose:=true else CanClose:=false;
+end;
+
+procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
   //strg + s to save
-  if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
-     MainFrm_Menu_File_SaveClick(nil);
+  //if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
+  //   MainFrm_Menu_File_SaveClick(nil);
   //strg + shift + s to save
-  if (Key=LCLType.VK_S) and (ssCtrl in Shift) and (ssShift in Shift) then
-     MainFrm_Menu_File_SaveAsClick(nil);
+  //if (Key=LCLType.VK_S) and (ssCtrl in Shift) and (ssShift in Shift) then
+  //   MainFrm_Menu_File_SaveAsClick(nil);
   //strg + o to open
   if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
      MainFrm_Menu_File_OpenClick(nil);
@@ -541,10 +572,6 @@ begin
   end;
 end;
 
-procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
-begin
-  FileSave_ExitAct.Execute;
-end;
 
 procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin

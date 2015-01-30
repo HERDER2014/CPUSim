@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 222
+  Left = 281
   Height = 633
-  Top = 108
+  Top = 31
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 607
@@ -1094,6 +1094,7 @@ object mainFrm: TmainFrm
     object SearchFindAct: TSearchFind
       Category = 'Edit'
       Caption = '&Find ...'
+      Dialog.OnFind = TFindDialogFind
       ShortCut = 16454
     end
     object EditCutAct: TEditCut

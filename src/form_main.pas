@@ -115,10 +115,13 @@ type
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
     procedure OnCPUTerminate(Sender: TObject);
+    //procedure SearchFindActAccept(Sender: TObject);
+    //procedure SearchFindActBeforeExecute(Sender: TObject);
     procedure speedEdtChange(Sender: TObject);
     procedure StepBtnClick(Sender: TObject);
     procedure StepOverBtnClick(Sender: TObject);
     procedure StopBtnClick(Sender: TObject);
+    procedure TFindDialogFind(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure updateRAM;
     procedure updateREG;
@@ -282,6 +285,15 @@ begin
   RunPauseBtn.Caption:= 'Run';
 end;
 
+//procedure TmainFrm.SearchFindActAccept(Sender: TObject);
+//begin
+//
+//end;
+
+//procedure TmainFrm.SearchFindActBeforeExecute(Sender: TObject);
+//begin
+//end;
+
 procedure TmainFrm.speedEdtChange(Sender: TObject);
 begin
   if assembled then
@@ -307,6 +319,14 @@ end;
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
   Stop;
+end;
+
+procedure TmainFrm.TFindDialogFind(Sender: TObject);
+var
+  findtext: String;
+begin
+  SearchFindAct.Dialog.FindText:=findtext;
+  InputSynEdit.SearchReplace(findtext, '', []);
 end;
 
 procedure TmainFrm.Timer1Timer(Sender: TObject);

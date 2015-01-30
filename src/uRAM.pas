@@ -48,6 +48,7 @@ type
 implementation
 var ram : ARRAY OF Byte;
 var size_RAM : Cardinal;
+var cs : Trtlcriticalsection;
 
    constructor TRAM.Create(size : Cardinal);
    var
@@ -57,6 +58,7 @@ var size_RAM : Cardinal;
      for i:= 0 to size-1 do
          ram[i]:= 0;
      size_RAM := size;
+     initcriticalsection(cs);
    end;
 
    function TRAM.ReadByte(addr : Cardinal) : Byte;
@@ -67,8 +69,13 @@ var size_RAM : Cardinal;
 
    procedure TRAM.WriteByte(addr : Cardinal; b : Byte);
    begin
-     if addr < size_RAM then ram[addr] := b
-     else raise TCompilerException.Create('Error: invalid RAM address');
+     entercriticalsection(cs);
+     try
+       if addr < size_RAM then ram[addr] := b
+       else raise TCompilerException.Create('Error: invalid RAM address');
+     finally
+       leavecriticalsection(cs);
+     end;
    end;
 
    function TRAM.ReadWord(addr : Cardinal) : Word;
@@ -80,15 +87,20 @@ var size_RAM : Cardinal;
    procedure TRAM.WriteWord(addr : Cardinal; w : Word);
    var x, sum : Cardinal;
    begin
-     x := 0;
-     if addr < (size_RAM - 1) then
-     begin
-       sum := (w mod 256);
-       x := ((w-sum) div 256);
-       ram[addr] := x;
-       ram[addr+1] := sum;
-     end
-     else raise TCompilerException.Create('Error: invalid RAM address');
+     entercriticalsection(cs);
+     try
+       x := 0;
+       if addr < (size_RAM - 1) then
+       begin
+         sum := (w mod 256);
+         x := ((w-sum) div 256);
+         ram[addr] := x;
+         ram[addr+1] := sum;
+       end
+       else raise TCompilerException.Create('Error: invalid RAM address');
+     finally
+       leavecriticalsection(cs);
+     end;
    end;
 
    function TRAM.GetSize : Cardinal;

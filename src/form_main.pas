@@ -329,6 +329,7 @@ end;
 
 procedure TmainFrm.Stop;
 begin
+  Step;
   Thread.terminate;
   assembled := False;
   InputSynEdit.ReadOnly:= false;

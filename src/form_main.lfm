@@ -18,7 +18,7 @@ object mainFrm: TmainFrm
   inline InputSynEdit: TSynEdit
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = RAMGrid
-    AnchorSideBottom.Control = Splitter1
+    AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
     Height = 400
     Top = 120
@@ -937,7 +937,7 @@ object mainFrm: TmainFrm
     ParentColor = False
     ParentFont = False
   end
-  object speedEdt: TSpinEdit
+  object SpeedEdt: TSpinEdit
     Left = 447
     Height = 25
     Top = 44
@@ -946,11 +946,11 @@ object mainFrm: TmainFrm
     Enabled = False
     Font.Height = 18
     MaxValue = 10000
-    OnChange = speedEdtChange
+    OnChange = SpeedEdtChange
     ParentFont = False
     TabOrder = 21
   end
-  object Splitter1: TSplitter
+  object H_Menu_CodeSplitter: TSplitter
     AnchorSideRight.Control = RAMGrid
     Cursor = crVSplit
     Left = 3
@@ -979,7 +979,7 @@ object mainFrm: TmainFrm
     TabOrder = 23
   end
   object Log_lb: TListBox
-    AnchorSideTop.Control = Splitter1
+    AnchorSideTop.Control = H_Menu_CodeSplitter
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Side = asrBottom

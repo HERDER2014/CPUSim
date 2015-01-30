@@ -277,7 +277,6 @@ begin
     Log_lb.Items.Insert(0,'[error] simulation failed on line ' + IntToStr(comp.GetCodePosition(cpu.ReadRegister(IP))) + ' (Adress ' + IntToHex(cpu.ReadRegister(IP),4) + '): ' + Thread.getException());
   end;
 
-  Thread.Destroy;
   assembled := False;
   InputSynEdit.ReadOnly:= false;
 
@@ -337,10 +336,17 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  Step;
   Thread.terminate;
+
   assembled := False;
   InputSynEdit.ReadOnly:= false;
+
+  RunPauseBtn.Enabled:= false;
+  speedEdt.Enabled:= false;
+  StepBtn.Enabled:= false;
+  StepOverBtn.Enabled:= false;
+  AssembleBtn.Caption:= 'Assemble';
+  RunPauseBtn.Caption:= 'Run';
 end;
 
 // standard actions:------------------------------------------------------------
@@ -534,6 +540,7 @@ begin
     RAM:= TRAM.Create(RAMSize);
     DoCompile;
     if assembled then begin
+      Timer1Timer(nil); // update ram and register once
       AssembleBtn.Caption:='Stop';
       RunPauseBtn.Enabled:= true;
       speedEdt.Enabled:= true;
@@ -544,13 +551,7 @@ begin
   else
   begin
     Stop;
-    AssembleBtn.Caption:='Assemble';
-    RunPauseBtn.Enabled:= false;
-    StepBtn.Enabled:= false;
-    StepOverBtn.Enabled:= false;
-    speedEdt.Enabled:= false;
-    assembled:=false;
-    Timer1.Enabled:= false;
+    Log_lb.Items.Insert(0,'Simulation canceled by User');
   end;
 end;
 

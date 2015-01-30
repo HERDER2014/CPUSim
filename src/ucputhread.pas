@@ -59,6 +59,7 @@ implementation
 constructor TCPUThread.create(sim: TCPU);
 begin
   cpu := sim;
+  FreeOnTerminate := True;
   InitCriticalSection(cs);
   inherited Create(true);
 end;

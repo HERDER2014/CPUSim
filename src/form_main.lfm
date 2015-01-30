@@ -1,10 +1,10 @@
 object mainFrm: TmainFrm
-  Left = -82
+  Left = 11
   Height = 633
-  Top = 8
+  Top = 106
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 607
+  ClientHeight = 614
   ClientWidth = 980
   Constraints.MinHeight = 343
   Constraints.MinWidth = 600
@@ -19,7 +19,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 400
+    Height = 407
     Top = 120
     Width = 545
     Align = alCustom
@@ -535,7 +535,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 545
-    Height = 488
+    Height = 495
     Top = 120
     Width = 435
     Anchors = [akTop, akRight, akBottom]
@@ -667,7 +667,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 25
+    Height = 20
     Top = 35
     Width = 40
     ReadOnly = True
@@ -676,7 +676,7 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 25
+    Height = 20
     Top = 35
     Width = 112
     ReadOnly = True
@@ -685,7 +685,7 @@ object mainFrm: TmainFrm
   end
   object C2: TEdit
     Left = 161
-    Height = 25
+    Height = 20
     Top = 59
     Width = 40
     ReadOnly = True
@@ -694,7 +694,7 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 25
+    Height = 20
     Top = 59
     Width = 112
     ReadOnly = True
@@ -703,7 +703,7 @@ object mainFrm: TmainFrm
   end
   object D2: TEdit
     Left = 161
-    Height = 25
+    Height = 20
     Top = 83
     Width = 40
     ReadOnly = True
@@ -712,7 +712,7 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 25
+    Height = 20
     Top = 83
     Width = 112
     ReadOnly = True
@@ -721,7 +721,7 @@ object mainFrm: TmainFrm
   end
   object IP1: TEdit
     Left = 264
-    Height = 25
+    Height = 20
     Top = 11
     Width = 112
     ReadOnly = True
@@ -730,7 +730,7 @@ object mainFrm: TmainFrm
   end
   object BP1: TEdit
     Left = 264
-    Height = 25
+    Height = 20
     Top = 59
     Width = 112
     ReadOnly = True
@@ -739,7 +739,7 @@ object mainFrm: TmainFrm
   end
   object F1: TEdit
     Left = 264
-    Height = 25
+    Height = 20
     Top = 83
     Width = 112
     ReadOnly = True
@@ -748,7 +748,7 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 25
+    Height = 20
     Top = 35
     Width = 40
     ReadOnly = True
@@ -757,7 +757,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 25
+    Height = 20
     Top = 59
     Width = 40
     ReadOnly = True
@@ -766,7 +766,7 @@ object mainFrm: TmainFrm
   end
   object F2: TEdit
     Left = 376
-    Height = 25
+    Height = 20
     Top = 83
     Width = 40
     ReadOnly = True
@@ -775,7 +775,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 25
+    Height = 20
     Top = 11
     Width = 40
     ReadOnly = True
@@ -831,9 +831,9 @@ object mainFrm: TmainFrm
   end
   object Label1: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Top = 16
-    Width = 18
+    Width = 19
     Caption = 'AX'
     Font.Height = -13
     ParentColor = False
@@ -841,7 +841,7 @@ object mainFrm: TmainFrm
   end
   object A1: TEdit
     Left = 49
-    Height = 25
+    Height = 20
     Top = 11
     Width = 112
     ReadOnly = True
@@ -850,7 +850,7 @@ object mainFrm: TmainFrm
   end
   object A2: TEdit
     Left = 161
-    Height = 25
+    Height = 20
     Top = 11
     Width = 40
     ReadOnly = True
@@ -859,9 +859,9 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Top = 40
-    Width = 18
+    Width = 19
     Caption = 'BX'
     Font.Height = -13
     ParentColor = False
@@ -869,9 +869,9 @@ object mainFrm: TmainFrm
   end
   object Label3: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Top = 64
-    Width = 18
+    Width = 19
     Caption = 'CX'
     Font.Height = -13
     ParentColor = False
@@ -879,9 +879,9 @@ object mainFrm: TmainFrm
   end
   object Label4: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Top = 88
-    Width = 19
+    Width = 20
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -889,7 +889,7 @@ object mainFrm: TmainFrm
   end
   object B1: TEdit
     Left = 49
-    Height = 25
+    Height = 20
     Top = 35
     Width = 112
     ReadOnly = True
@@ -898,9 +898,9 @@ object mainFrm: TmainFrm
   end
   object Label5: TLabel
     Left = 242
-    Height = 17
+    Height = 15
     Top = 16
-    Width = 14
+    Width = 11
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
@@ -908,9 +908,9 @@ object mainFrm: TmainFrm
   end
   object Label6: TLabel
     Left = 239
-    Height = 17
+    Height = 15
     Top = 40
-    Width = 16
+    Width = 17
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
@@ -918,9 +918,9 @@ object mainFrm: TmainFrm
   end
   object Label7: TLabel
     Left = 216
-    Height = 17
+    Height = 15
     Top = 88
-    Width = 40
+    Width = 42
     Caption = 'FLAGS'
     Font.Height = -13
     ParentColor = False
@@ -928,9 +928,9 @@ object mainFrm: TmainFrm
   end
   object Label8: TLabel
     Left = 240
-    Height = 17
+    Height = 15
     Top = 64
-    Width = 18
+    Width = 17
     Caption = 'BP'
     Font.Height = -13
     ParentColor = False
@@ -954,7 +954,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 520
+    Top = 527
     Width = 542
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -984,13 +984,13 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 526
+    Top = 533
     Width = 545
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'
     )
-    ItemHeight = 19
+    ItemHeight = 14
     MultiSelect = True
     TabOrder = 24
   end

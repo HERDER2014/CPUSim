@@ -54,7 +54,6 @@ type
     D1: TEdit;
     RAMGrid: TStringGrid;
     FileExitAct: TFileExit;
-    FindDlg: TFindDialog;
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
     MainFrm_Menu_File_New: TMenuItem;
@@ -80,7 +79,6 @@ type
     MainFrm_Menu_File_SaveAs: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;
     MainFrm_Menu_File_Exit: TMenuItem;
-    OpenDlg: TOpenDialog;
     ReplaceDialog1: TReplaceDialog;
     speedEdt: TSpinEdit;
     Splitter1: TSplitter;
@@ -103,7 +101,6 @@ type
       var Special: boolean; var FG, BG: TColor);
     procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
-    procedure MainFrm_Menu_Edit_FindClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_PasteClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_RedoClick(Sender: TObject);
     procedure MainFrm_Menu_Edit_UndoClick(Sender: TObject);
@@ -113,22 +110,16 @@ type
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
     procedure DoCompile;
-    procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
-      aRect: TRect; aState: TGridDrawState);
+    procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     procedure RunClick(Sender: TObject);
-    //procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
-    ////procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
-    //procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
-
     procedure OnCPUTerminate(Sender: TObject);
     procedure speedEdtChange(Sender: TObject);
     procedure StepBtnClick(Sender: TObject);
     procedure StepOverBtnClick(Sender: TObject);
     procedure StopBtnClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    //procedure TOpenDialogClose(Sender: TObject);
     procedure updateRAM;
     procedure updateREG;
     procedure resume;
@@ -355,27 +346,6 @@ end;
 
 // standard actions:------------------------------------------------------------
 
-//procedure TmainFrm.ShowExitDlg;
-//var
-//  answer: longint;
-//begin
-//  if saved then
-//  begin
-//    Application.Terminate;
-//  end
-//  else
-//  begin
-//    answer := MessageDlg('Unsaved Changes! Do you really want to quit?',
-//      mtConfirmation, mbYesNoCancel, 0);
-//    if answer = mrYes then
-//      Application.Terminate
-//    else
-//    if answer = mrNo then
-//      SaveDlg.Execute;
-//  end;
-//end;
-
-
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
 begin
   //TODO
@@ -387,15 +357,8 @@ begin
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
-//var
-//  path: string;
 begin
-  //SaveDlg.Execute;
-  FileSaveAsAct.Execute;
-  //path := FileSaveAsAct.Dialog.FileName;
-  //InputSynEdit.Lines.SaveToFile(path);
-  //SavePath := path;
-  //Saved := true;
+  FileSaveAsAct.Execute;;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -523,20 +486,6 @@ end;
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
 
-  //obsolete:
-
-  //strg + s to save
-  //if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
-  //   MainFrm_Menu_File_SaveClick(nil);
-  //strg + shift + s to save
-  //if (Key=LCLType.VK_S) and (ssCtrl in Shift) and (ssShift in Shift) then
-  //   MainFrm_Menu_File_SaveAsClick(nil);
-  //strg + o to open
-  //if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
-     //MainFrm_Menu_File_OpenClick(nil);
-
-
-
   //f5 to assemble or run, depending on what is done
   if (Key=LCLType.VK_F5) then
   begin
@@ -615,11 +564,6 @@ end;
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
 begin
   InputSynEdit.CutToClipboard;
-end;
-
-procedure TmainFrm.MainFrm_Menu_Edit_FindClick(Sender: TObject);
-begin
-  FindDlg.Execute;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_PasteClick(Sender: TObject);

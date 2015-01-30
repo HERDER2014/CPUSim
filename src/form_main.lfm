@@ -1055,7 +1055,6 @@ object mainFrm: TmainFrm
       end
       object MainFrm_Menu_Edit_Find: TMenuItem
         Action = SearchFindAct
-        OnClick = MainFrm_Menu_Edit_FindClick
       end
       object MainFrm_Menu_Edit_FindNext: TMenuItem
         Caption = 'Find Next'
@@ -1078,17 +1077,6 @@ object mainFrm: TmainFrm
         OnClick = MainFrm_Menu_Help_AboutClick
       end
     end
-  end
-  object OpenDlg: TOpenDialog
-    DefaultExt = '.asm'
-    FileName = '/home/leonard'
-    InitialDir = '/home/'
-    left = 736
-    top = 24
-  end
-  object FindDlg: TFindDialog
-    left = 696
-    top = 80
   end
   object ReplaceDialog1: TReplaceDialog
     Options = [frDown, frReplace, frReplaceAll, frHidePromptOnReplace]

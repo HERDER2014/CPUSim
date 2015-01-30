@@ -17,6 +17,7 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
+    FileSave_ExitAct: TAction;
     ActionList: TActionList;
     AssembleBtn: TButton;
     B1: TEdit;
@@ -91,6 +92,7 @@ type
     RAMValueList: TValueListEditor;
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
+    procedure FileSave_ExitActExecute(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure RunPauseBtnClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -112,7 +114,7 @@ type
     procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
       aRect: TRect; aState: TGridDrawState);
     procedure RunClick(Sender: TObject);
-    procedure ShowExitDlg;
+    //procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
     //procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
@@ -351,33 +353,26 @@ end;
 
 // standard actions:------------------------------------------------------------
 
-procedure TmainFrm.ShowExitDlg;
-var
-  answer: longint;
-begin
-  if saved then
-  begin
-    Application.Terminate;
-  end
-  else
-  begin
-    answer := MessageDlg('Unsaved Changes! Do you really want to quit?',
-      mtConfirmation, mbYesNoCancel, 0);
-    if answer = mrYes then
-      Application.Terminate
-    else
-    if answer = mrNo then
-      SaveDlg.Execute;
-  end;
-end;
-
-//procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
+//procedure TmainFrm.ShowExitDlg;
+//var
+//  answer: longint;
 //begin
-//  ShowExitDlg;
-//  //TODO use TAction
-//  //  ActionList.;
-//  //  TFileExit.ActionList.;
+//  if saved then
+//  begin
+//    Application.Terminate;
+//  end
+//  else
+//  begin
+//    answer := MessageDlg('Unsaved Changes! Do you really want to quit?',
+//      mtConfirmation, mbYesNoCancel, 0);
+//    if answer = mrYes then
+//      Application.Terminate
+//    else
+//    if answer = mrNo then
+//      SaveDlg.Execute;
+//  end;
 //end;
+
 
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
 begin
@@ -464,6 +459,25 @@ begin
   MainFrm.DoCompile;
 end;
 
+procedure TmainFrm.FileSave_ExitActExecute(Sender: TObject);
+var
+  answer: longint;
+begin
+  if saved then
+  begin
+    Application.Terminate;
+  end
+  else
+  begin
+    answer := MessageDlg('Do you want to save changes?',
+      mtConfirmation, mbYesNoCancel, 0);
+    if answer = mrYes then
+      SaveDlg.Execute
+    else if answer = mrNo then
+      Application.Terminate
+  end;
+end;
+
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -529,7 +543,7 @@ end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  ShowExitDlg;
+  FileSave_ExitAct.Execute;
 end;
 
 procedure TmainFrm.AssembleBtnClick(Sender: TObject);

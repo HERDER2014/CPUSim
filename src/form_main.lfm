@@ -1139,6 +1139,7 @@ object mainFrm: TmainFrm
       Dialog.Filter = 'Assembly source code|*.asm|All files|*'
       Hint = 'Open'
       ShortCut = 16463
+      OnAccept = FileOpenActAccept
     end
     object FileSaveAsAct: TFileSaveAs
       Category = 'File'

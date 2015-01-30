@@ -91,6 +91,7 @@ type
     RAMValueList: TValueListEditor;
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
+    procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
     function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -117,8 +118,8 @@ type
     procedure RunClick(Sender: TObject);
     //procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
-    //procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
-    procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
+    ////procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
+    //procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
 
     procedure OnCPUTerminate(Sender: TObject);
@@ -127,6 +128,7 @@ type
     procedure StepOverBtnClick(Sender: TObject);
     procedure StopBtnClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    //procedure TOpenDialogClose(Sender: TObject);
     procedure updateRAM;
     procedure updateREG;
     procedure resume;
@@ -194,8 +196,6 @@ begin
     on e: Exception do
       Log_lb.Items.Insert(0,'[error] compilation failed: ' + e.Message);
   end;
-
-
 end;
 
 procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
@@ -277,7 +277,7 @@ begin
   end
   else
   begin
-    Log_lb.Items.Insert(0,'[error] simulation failed on line ' + IntToStr(comp.GetCodePosition(cpu.ReadRegister(IP))) + ' (Adress ' + IntToHex(cpu.ReadRegister(IP),4) + '): ' + Thread.getException());
+    Log_lb.Items.Insert(0,'[error] simulation failed on line ' + IntToStr(comp.GetCodePosition(cpu.ReadRegister(IP))) + ' (Address ' + IntToHex(cpu.ReadRegister(IP),4) + '): ' + Thread.getException());
   end;
 
   assembled := False;
@@ -324,6 +324,7 @@ begin
   updateRAM;
   InputSynEdit.Invalidate;
 end;
+
 
 procedure TmainFrm.Step;
 begin
@@ -412,15 +413,6 @@ begin
 end;
 
 
-procedure TmainFrm.MainFrm_Menu_File_OpenClick(Sender: TObject);
-var
-  path: string;
-begin
-  OpenDlg.Execute;
-  path := OpenDlg.FileName;
-  InputSynEdit.Lines.LoadFromFile(path);
-  SavePath:= path;
-end;
 
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
@@ -459,6 +451,16 @@ end;
 procedure TmainFrm.compileClick(Sender: TObject);
 begin
   MainFrm.DoCompile;
+end;
+
+procedure TmainFrm.FileOpenActAccept(Sender: TObject);
+var
+  path : String;
+begin
+  path := FileOpenAct.Dialog.FileName;
+  InputSynEdit.Lines.LoadFromFile(path);
+  SavePath:= path;
+  Saved:=True;
 end;
 
 procedure TmainFrm.FileSaveAsActAccept(Sender: TObject);
@@ -511,7 +513,7 @@ procedure TmainFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   if FileSave_ExitActExecute(mainFrm) then
   begin
-    CanClose:=true
+    CanClose:=true;
   end else
   begin
     CanClose:=false;
@@ -520,6 +522,9 @@ end;
 
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
+
+  //obsolete:
+
   //strg + s to save
   //if (Key=LCLType.VK_S) and (ssCtrl in Shift) then
   //   MainFrm_Menu_File_SaveClick(nil);
@@ -527,8 +532,11 @@ begin
   //if (Key=LCLType.VK_S) and (ssCtrl in Shift) and (ssShift in Shift) then
   //   MainFrm_Menu_File_SaveAsClick(nil);
   //strg + o to open
-  if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
-     MainFrm_Menu_File_OpenClick(nil);
+  //if (Key=LCLType.VK_O) and (ssCtrl in Shift) then
+     //MainFrm_Menu_File_OpenClick(nil);
+
+
+
   //f5 to assemble or run, depending on what is done
   if (Key=LCLType.VK_F5) then
   begin
@@ -600,7 +608,7 @@ begin
   else
   begin
     Stop;
-    Log_lb.Items.Insert(0,'Simulation canceled by User');
+    Log_lb.Items.Insert(0,'Simulation canceled by user');
   end;
 end;
 

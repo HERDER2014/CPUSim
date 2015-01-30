@@ -838,11 +838,17 @@ begin
 end; //xor R,R
 
 function TCPU.Step(): OPCode;
+var OPCodeNum : Byte;
 begin
+  OPCodeNum := Ram.ReadByte(Reg.IP);
   EnterCriticalSection(cs);
   try
-    result:=OPCode(Ram.ReadByte(Reg.IP));
-    OPCodeProcedures[Ram.ReadByte(Reg.IP)]();
+    if OPCodeNum<Integer(OPCode.COUNT) then begin
+      result:=OPCode(OPCodeNum);
+      OPCodeProcedures[OPCodeNum]();
+    end else begin
+      Raise Exception.CreateFmt('OP-Code with Index %x is invalid',[OPCodeNum]);
+    end;
   finally
     LeaveCriticalSection(cs);
   end;

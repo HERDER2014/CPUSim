@@ -1,7 +1,7 @@
 object OptionsFrm: TOptionsFrm
-  Left = 535
+  Left = 399
   Height = 240
-  Top = 193
+  Top = 201
   Width = 320
   Caption = 'Options'
   ClientHeight = 240

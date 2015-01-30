@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 171
+  Left = -82
   Height = 633
-  Top = 61
+  Top = 8
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 607
@@ -10,7 +10,6 @@ object mainFrm: TmainFrm
   Constraints.MinWidth = 600
   KeyPreview = True
   Menu = MainFrm_Menu
-  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   Position = poScreenCenter
@@ -1008,8 +1007,7 @@ object mainFrm: TmainFrm
         Caption = '-'
       end
       object MainFrm_Menu_File_Open: TMenuItem
-        Caption = 'Open'
-        OnClick = MainFrm_Menu_File_OpenClick
+        Action = FileOpenAct
       end
       object MainFrm_Menu_File_OpenRecent: TMenuItem
         Caption = 'Open Recent'
@@ -1020,22 +1018,19 @@ object mainFrm: TmainFrm
         OnClick = MainFrm_Menu_File_SaveClick
       end
       object MainFrm_Menu_File_SaveAs: TMenuItem
-        Caption = 'Save As'
-        OnClick = MainFrm_Menu_File_SaveAsClick
+        Action = FileSaveAsAct
       end
       object MainFrm_Menu_File_Spacer2: TMenuItem
         Caption = '-'
       end
       object MainFrm_Menu_File_Exit: TMenuItem
-        Caption = 'Exit'
-        OnClick = MainFrm_Menu_File_ExitClick
+        Action = FileExitAct
       end
     end
     object MainFrm_Menu_Edit: TMenuItem
       Caption = 'Edit'
       object MainFrm_Menu_Edit_Undo: TMenuItem
-        Caption = 'Undo'
-        OnClick = MainFrm_Menu_Edit_UndoClick
+        Action = EditUndoAct
       end
       object MainFrm_Menu_Edit_Redo: TMenuItem
         Caption = 'Redo'
@@ -1045,22 +1040,19 @@ object mainFrm: TmainFrm
         Caption = '-'
       end
       object MainFrm_Menu_Edit_Cut: TMenuItem
-        Caption = 'Cut'
-        OnClick = MainFrm_Menu_Edit_CutClick
+        Action = EditCutAct
       end
       object MainFrm_Menu_Edit_Copy: TMenuItem
-        Caption = 'Copy'
-        OnClick = MainFrm_Menu_Edit_CopyClick
+        Action = EditCopyAct
       end
       object MainFrm_Menu_Edit_Paste: TMenuItem
-        Caption = 'Paste'
-        OnClick = MainFrm_Menu_Edit_PasteClick
+        Action = EditPasteAct
       end
       object MainFrm_Menu_Edit_Spacer2: TMenuItem
         Caption = '-'
       end
       object MainFrm_Menu_Edit_Find: TMenuItem
-        Caption = 'Find'
+        Action = SearchFindAct
         OnClick = MainFrm_Menu_Edit_FindClick
       end
       object MainFrm_Menu_Edit_FindNext: TMenuItem
@@ -1086,6 +1078,7 @@ object mainFrm: TmainFrm
     end
   end
   object OpenDlg: TOpenDialog
+    DefaultExt = '.asm'
     FileName = '/home/leonard'
     InitialDir = '/home/'
     left = 736
@@ -1107,10 +1100,54 @@ object mainFrm: TmainFrm
   object ActionList: TActionList
     left = 736
     top = 80
-    object FileExit1: TFileExit
+    object FileExitAct: TFileExit
       Category = 'File'
       Caption = 'E&xit'
       Hint = 'Exit'
+    end
+    object SearchFindAct: TSearchFind
+      Category = 'Edit'
+      Caption = '&Find ...'
+      ShortCut = 16454
+    end
+    object EditCutAct: TEditCut
+      Category = 'Edit'
+      Caption = 'Cu&t'
+      Hint = 'Cut'
+      ShortCut = 16472
+    end
+    object EditCopyAct: TEditCopy
+      Category = 'Edit'
+      Caption = '&Copy'
+      Hint = 'Copy'
+      ShortCut = 16451
+    end
+    object EditPasteAct: TEditPaste
+      Category = 'Edit'
+      Caption = '&Paste'
+      Hint = 'Paste'
+      ShortCut = 16470
+    end
+    object EditUndoAct: TEditUndo
+      Category = 'Edit'
+      Caption = '&Undo'
+      Hint = 'Undo'
+      ShortCut = 16474
+    end
+    object FileOpenAct: TFileOpen
+      Category = 'File'
+      Caption = '&Open ...'
+      Dialog.DefaultExt = '.asm'
+      Dialog.Filter = 'Assembly source code|*.asm|All files|*'
+      Hint = 'Open'
+      ShortCut = 16463
+    end
+    object FileSaveAsAct: TFileSaveAs
+      Category = 'File'
+      Caption = 'Save &As ...'
+      Dialog.FileName = 'asm'
+      Dialog.Filter = 'Assembly source code|*.asm|All files|*'
+      Hint = 'Save As'
     end
   end
   object Timer1: TTimer

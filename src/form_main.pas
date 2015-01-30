@@ -20,6 +20,13 @@ type
     ActionList: TActionList;
     AssembleBtn: TButton;
     B1: TEdit;
+    EditCopyAct: TEditCopy;
+    EditCutAct: TEditCut;
+    EditPasteAct: TEditPaste;
+    EditUndoAct: TEditUndo;
+    FileOpenAct: TFileOpen;
+    FileSaveAsAct: TFileSaveAs;
+    H_Menu_CodeSplitter: TSplitter;
     IP2: TEdit;
     IP1: TEdit;
     BP1: TEdit;
@@ -34,6 +41,7 @@ type
     Label8: TLabel;
     Log_lb: TListBox;
     RunPauseBtn: TButton;
+    SearchFindAct: TSearchFind;
     SP2: TEdit;
     BP2: TEdit;
     F2: TEdit;
@@ -44,7 +52,7 @@ type
     D2: TEdit;
     D1: TEdit;
     RAMGrid: TStringGrid;
-    FileExit1: TFileExit;
+    FileExitAct: TFileExit;
     FindDlg: TFindDialog;
     MainFrm_Menu: TMainMenu;
     MainFrm_Menu_File: TMenuItem;
@@ -84,7 +92,6 @@ type
     procedure AssembleBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-
     procedure RunPauseBtnClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure InputSynEditChange(Sender: TObject);
@@ -107,7 +114,7 @@ type
     procedure RunClick(Sender: TObject);
     procedure ShowExitDlg;
     procedure FormCreate(Sender: TObject);
-    procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
+    //procedure MainFrm_Menu_File_ExitClick(Sender: TObject);
     procedure MainFrm_Menu_File_OpenClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
 
@@ -215,6 +222,7 @@ begin
   DoCompile;
   resume;
 end;
+
 
 procedure TmainFrm.updateRAM;
 var
@@ -357,13 +365,13 @@ begin
   end;
 end;
 
-procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
-begin
-  ShowExitDlg;
-  //TODO use TAction
-  //  ActionList.;
-  //  TFileExit.ActionList.;
-end;
+//procedure TmainFrm.MainFrm_Menu_File_ExitClick(Sender: TObject);
+//begin
+//  ShowExitDlg;
+//  //TODO use TAction
+//  //  ActionList.;
+//  //  TFileExit.ActionList.;
+//end;
 
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
 begin
@@ -410,6 +418,7 @@ begin
   InputSynEdit.Lines.LoadFromFile(path);
   SavePath:= path;
 end;
+
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
 begin

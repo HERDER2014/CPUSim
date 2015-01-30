@@ -39,10 +39,6 @@ type
   TNumberInputMode = (Decimal, Hexadecimal);
 
 type
-  {_____________________
-   COMPILER-Klasse
-   Nicht komplett funktionsfähig. Compile() wird u.U. Meldungen anzeigen.
-  }
 
   { TCompiler }
 
@@ -71,7 +67,7 @@ type
    {
    Vor.: Compile wurde ausgeführt.
    Eff.: -
-   Erg.: Liefert die Position in der Eingabe, die an Adresse addr kompiliert wurde. Wenn diese ungültig ist, wird 0 zurückgegeben.
+   Erg.: Liefert die Zeile in der Eingabe, die an Adresse addr kompiliert wurde. Wenn diese ungültig ist, wird 0 zurückgegeben.
    }
     function GetCodePosition(addr: Word): cardinal;
 

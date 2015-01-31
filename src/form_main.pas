@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo,
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
-  uCPUThread, uCompiler, strutils, uTypen, asmHighlighter, eventlog, types;
+  uCPUThread, uCompiler, strutils, uTypen, asmHighlighter, eventlog, types,
+  lclintf;
 
 type
 
@@ -139,7 +140,9 @@ var
   mainFrm: TmainFrm;
   SavePath: string;
   Saved: boolean;
+  startTime: QWord;
   assembled: boolean;
+  trackTime: boolean;
   drawCodeIPHighlighting: boolean;
   Thread: TCPUThread;
   hlt : TAsmHighlighter;
@@ -183,6 +186,7 @@ begin
     Thread := TCPUThread.Create(CPU);
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
+    trackTime:= True;
     drawCodeIPHighlighting:= true;
     InputSynEdit.ReadOnly:= true;
     updateRAM;
@@ -260,6 +264,7 @@ procedure TmainFrm.resume;
 begin
   Thread.setVel(speedEdt.Value);
   Thread.resume;
+  if trackTime and (speedEdt.Value = 0) then startTime := GetTickCount();
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);
@@ -267,7 +272,10 @@ begin
   //TODO
   if (Thread.getException() = '') then
   begin
-    Log_lb.Items.Insert(0,'[success] simulation ended');
+    if (trackTime) then
+       Log_lb.Items.Insert(0,'[success] simulation ended in ' + IntToStr(GetTickCount() - startTime) + ' ms')
+    else
+        Log_lb.Items.Insert(0,'[success] simulation ended');
   end
   else
   begin
@@ -296,8 +304,10 @@ end;
 
 procedure TmainFrm.speedEdtChange(Sender: TObject);
 begin
-  if assembled then
+  if assembled then begin
     Thread.setVel(speedEdt.Value);
+    trackTime:=false;
+  end;
 end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
@@ -305,6 +315,7 @@ begin
   Step;
   RunPauseBtn.Caption:= 'Run';
   Sleep(100);
+  trackTime:=false;
   Timer1Timer(nil);
 end;
 
@@ -313,12 +324,14 @@ begin
   StepOver;
   RunPauseBtn.Caption:= 'Run';
   Sleep(100);
+  trackTime:=false;
   Timer1Timer(nil);
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
   Stop;
+  trackTime:=false;
 end;
 
 procedure TmainFrm.TFindDialogFind(Sender: TObject);
@@ -554,6 +567,7 @@ begin
     Step;
     RunPauseBtn.Caption:='Run';
     Timer1.Enabled:=false;
+    trackTime:=false;
   end;
 end;
 

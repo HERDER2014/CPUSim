@@ -15,157 +15,160 @@ type
     // END
     _END = 0,
     // MOV R, X
-    MOV_R_X = 1,
+    MOV_R_X,
     // MOV R, [R]
-    MOV_R_ADDR_R = 2,
+    MOV_R_ADDR_R,
     // MOV R, [X]
-    MOV_R_ADDR_X = 3,
+    MOV_R_ADDR_X,
     // MOV [R], R
-    MOV_ADDR_R_R = 4,
+    MOV_ADDR_R_R,
     // MOV [X], R
-    MOV_ADDR_X_R = 5,
+    MOV_ADDR_X_R,
     // MOV R, R
-    MOV_R_R = 6,
+    MOV_R_R,
     // MOV R, [R+X]
-    MOV_R_ADDR_RX = 7,
+    MOV_R_ADDR_RX,
     // MOV [R+X], R
-    MOV_ADDR_RX_R = 8,
+    MOV_ADDR_RX_R,
 
     // ADD R, X
-    ADD_R_X = 9,
+    ADD_R_X,
     // ADD R, [R]
-    ADD_R_ADDR_R = 10,
+    ADD_R_ADDR_R,
     // ADD R, [X]
-    ADD_R_ADDR_X = 11,
+    ADD_R_ADDR_X,
     // ADD R, R
-    ADD_R_R = 12,
+    ADD_R_R,
 
     // SUB R, X
-    SUB_R_X = 13,
+    SUB_R_X,
     // SUB R, [X]
-    SUB_R_ADDR_X = 14,
+    SUB_R_ADDR_X,
     // SUB R, [R]
-    SUB_R_ADDR_R = 15,
+    SUB_R_ADDR_R,
     // SUB R, R
-    SUB_R_R = 16,
+    SUB_R_R,
 
     // MUL R, X
-    MUL_R_X = 17,
+    MUL_R_X,
     // MUL R, [X]
-    MUL_R_ADDR_X = 18,
+    MUL_R_ADDR_X,
     // MUL R, [R]
-    MUL_R_ADDR_R = 19,
+    MUL_R_ADDR_R,
     // MUL R, R
-    MUL_R_R = 20,
+    MUL_R_R,
 
     // DIV R, X
-    DIV_R_X = 21,
+    DIV_R_X,
     // DIV R, [X]
-    DIV_R_ADDR_X = 22,
+    DIV_R_ADDR_X,
     // DIV R, [R]
-    DIV_R_ADDR_R = 23,
+    DIV_R_ADDR_R,
     // DIV R, R
-    DIV_R_R = 24,
+    DIV_R_R,
 
     // MOD R, X
-    MOD_R_X = 25,
+    MOD_R_X,
     // MOD R, [X]
-    MOD_R_ADDR_X = 26,
+    MOD_R_ADDR_X,
     // MOD R, [R]
-    MOD_R_ADDR_R = 27,
+    MOD_R_ADDR_R,
     // MOD R, R
-    MOD_R_R = 28,
+    MOD_R_R,
 
     // CMP R, X
-    CMP_R_X = 29,
+    CMP_R_X,
 
     // JMP R
-    JMP_R = 30,
+    JMP_R,
     // JMP X
-    JMP_ADDR = 31,
+    JMP_ADDR,
 
     // JS R
-    JS_R = 32,
+    JS_R,
     // JS X
-    JS_X = 33,
+    JS_X,
     // JZ R
-    JZ_R = 34,
+    JZ_R,
     // JZ X
-    JZ_X = 35,
+    JZ_X,
     // JO R
-    JO_R = 36,
+    JO_R,
     // JO X
-    JO_X = 37,
+    JO_X,
     // JNS R
-    JNS_R = 38,
+    JNS_R,
     // JNS X
-    JNS_X = 39,
+    JNS_X,
     // JNZ R
-    JNZ_R = 40,
+    JNZ_R,
     // JNZ X
-    JNZ_X = 41,
+    JNZ_X,
 
     // CALL X
-    CALL_X = 42,
+    CALL_X,
     // CALL R
-    CALL_R = 43,
+    CALL_R,
 
     // CMP R, R
-    CMP_R_R = 44,
+    CMP_R_R,
 
     // RET
-    RET = 45,
+    RET,
 
     // PUSH R
-    PUSH_R = 46,
+    PUSH_R,
     // PUSH X
-    PUSH_X = 47,
+    PUSH_X,
     // POP
-    POP = 48,
+    POP,
     // POP R
-    POP_R = 49,
+    POP_R,
     // NOT R
-    NOT_R = 50,
+    NOT_R,
 
     // AND R, X
-    AND_R_X = 51,
+    AND_R_X,
     // AND R, R
-    AND_R_R = 52,
+    AND_R_R,
     // OR R, X
-    OR_R_X = 53,
+    OR_R_X,
     // OR R, R
-    OR_R_R = 54,
+    OR_R_R,
     // XOR R, X
-    XOR_R_X = 55,
+    XOR_R_X,
     // XOR R, R
-    XOR_R_R = 56,
+    XOR_R_R,
     // JNO R
-    JNO_R = 57,
+    JNO_R,
     // JNO X
-    JNO_X = 58,
+    JNO_X,
     // AND R, [X]
-    AND_R_ADDR_X = 59,
+    AND_R_ADDR_X,
     // AND R, [R]
-    AND_R_ADDR_R = 60,
+    AND_R_ADDR_R,
     // OR R, [X]
-    OR_R_ADDR_X = 61,
+    OR_R_ADDR_X,
     // OR R, [R]
-    OR_R_ADDR_R = 62,
+    OR_R_ADDR_R,
     // XOR R, [X]
-    XOR_R_ADDR_X = 63,
+    XOR_R_ADDR_X,
     // XOR R, [R]
-    XOR_R_ADDR_R = 64,
+    XOR_R_ADDR_R,
 
     // IN R
-    IN_R = 65,
+    IN_R,
 
     // INC R
-    INC_R = 66,
+    INC_R,
     // DEC R
-    DEC_R = 67,
+    DEC_R,
 
     //MOV [R], X
-    MOV_ADDR_R_X = 68
+    MOV_ADDR_R_X,
+
+    //Leave this at the end:
+    COUNT
 
     );
 

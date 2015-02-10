@@ -146,7 +146,6 @@ var
 	 mainFrm: TmainFrm;
 	 SavePath: string;
 	 Saved: boolean;
-	 startTime: QWord;
 	 assembled: boolean;
 	 trackTime: boolean;
 	 drawCodeIPHighlighting: boolean;
@@ -270,8 +269,6 @@ procedure TmainFrm.resume;
 begin
 	 setVel;
 	 Thread.resume;
-	 if trackTime then
-			 startTime := GetTickCount();
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);
@@ -281,7 +278,7 @@ begin
 	 begin
 			 if (trackTime) then
 					 Log_lb.Items.Insert(0, '[success] simulation ended in ' +
-							 IntToStr(GetTickCount() - startTime) + ' ms')
+							 FloatToStr(round(Thread.getElapsedTime()*100000)/100) + ' ms and executed ' + IntToStr(Thread.getBefehlCount()) + ' OP-codes.')
 			 else
 					 Log_lb.Items.Insert(0, '[success] simulation ended');
 	 end

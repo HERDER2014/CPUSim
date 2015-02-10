@@ -8,13 +8,18 @@ uses
 	 Classes, SysUtils, uCPU, uOPCodes, uTypen, EpikTimer;
 
 type
-	 TCPUThread = class(TThread)
+
+   { TCPUThread }
+
+  TCPUThread = class(TThread)
 	 private
 			 cpu: TCPU;
 			 cs: TRTLCriticalSection;
 			 p: extended;
 			 stopAtSP: word;
 			 FException: string;
+   	   countBefehle: int64;
+       elapsedTime: Extended;
 	 public
 
 			{
@@ -46,6 +51,18 @@ type
             zurueckgegeben
       }
 			 function getException(): string;
+      {
+      Vor.: -
+      Eff.: -
+      Erg.: Gibt die Anzahl der bisher ausgeführten Befehle zurück
+      }
+       function getBefehlCount(): Int64;
+      {
+      Vor.: Der Thread wurde beendet (Terminated = True)
+      Eff.: -
+      Erg.: Gibt die Zeit der Ausführung in Sekunden zurück.
+      }
+       function getElapsedTime(): Extended;
 
 			{
         DO NOT CALL THIS OR YOU WILL EXECUTE IT IN THE SAME THREAD
@@ -84,8 +101,6 @@ var
 	 op_code: OPCode;
 	 StackPointer: word;
 	 ET: TEpikTimer;
-	 countBefehle: int64;
-
 begin
 	 stopAtSP := High(word); // at start do not stop at any specific Stack-Pointer
 	 FException := '';
@@ -128,6 +143,7 @@ begin
 					 LeaveCriticalSection(cs);
 			 end;
 
+       Inc(countBefehle);
 			 // suspend or sleep depending on t and other parameters
 			 if ((op_code = CALL_X) or (op_code = CALL_R)) and (stopAtSP = High(word)) and
 					 (t = -2) then
@@ -140,18 +156,28 @@ begin
 			 end
 			 else if (t > 0) then
 			 begin
-					 Inc(countBefehle);
 					 while (ET.Elapsed < countBefehle / t) do
 					 begin
 					 end;
 			 end;
 	 end;
+   elapsedTime:= ET.Elapsed;
 	 ET.Destroy;
 end;
 
 function TCPUThread.getException(): string;
 begin
 	 Result := FException;
+end;
+
+function TCPUThread.getBefehlCount(): Int64;
+begin
+  result:= countBefehle;
+end;
+
+function TCPUThread.getElapsedTime(): Extended;
+begin
+  result:= elapsedTime;
 end;
 
 destructor TCPUThread.Destroy();

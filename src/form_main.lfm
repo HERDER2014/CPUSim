@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 78
+  Left = 489
   Height = 633
-  Top = 154
+  Top = 242
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 615
@@ -538,9 +538,9 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 545
-    Height = 408
+    Height = 400
     Hint = 'The RAM will be displayed here'
-    Top = 120
+    Top = 128
     Width = 435
     Anchors = [akTop, akRight, akBottom]
     ColCount = 17
@@ -1092,6 +1092,10 @@ object mainFrm: TmainFrm
       object MainFrm_Menu_Edit_FindNext: TMenuItem
         Caption = 'Find Next'
       end
+    end
+    object MainFrm_Menu_Options: TMenuItem
+      Caption = 'Options'
+      OnClick = MainFrm_Menu_OptionsClick
     end
     object MainFrm_Menu_Help: TMenuItem
       Caption = 'Help'

@@ -5,29 +5,30 @@ unit form_options;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls;
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Spin;
 
 type
 
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
-    OptionsFrm_Step_VelEt: TEdit;
+    //OptionsFrm_Step_VelEt: TEdit;
     Label1: TLabel;
-    OptionsFrm_Step_Vel: TLabel;
+    //OptionsFrm_Step_Vel: TLabel;
     OptionsFrm_ApplyBtn: TButton;
-    OptionsFrm_RAMSizeEdt: TEdit;
+    OptionsFrm_RAMSizeEdt: TSpinEdit;
     procedure FormCreate(Sender: TObject);
     procedure OptionsFrm_ApplyBtnClick(Sender: TObject);
   private
     { private declarations }
   public
     { public declarations }
+    ramsize: Cardinal;
   end;
 
 var
   OptionsFrm: TOptionsFrm;
-  rsize: Cardinal;
 
 implementation
 
@@ -37,13 +38,12 @@ implementation
 
 procedure TOptionsFrm.OptionsFrm_ApplyBtnClick(Sender: TObject);
 begin
-  rsize:=StrToInt(OptionsFrm_RAMSizeEdt.Text);
+  ramsize:=StrToInt(OptionsFrm_RAMSizeEdt.Text);
   Close;
 end;
 
 procedure TOptionsFrm.FormCreate(Sender: TObject);
 begin
-
 end;
 
 end.

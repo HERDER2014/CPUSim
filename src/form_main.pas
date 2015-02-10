@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo,
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
-  uCPUThread, uCompiler, strutils, uTypen, asmHighlighter, eventlog, types, lclintf;
+  uCompiler, form_options, uCPUThread, strutils, uTypen,
+  asmHighlighter, eventlog, types, lclintf;
 
 type
 
@@ -95,6 +96,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure RunPauseBtnClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -550,6 +552,14 @@ begin
     if assembled then
         StepBtnClick(nil);
   end;
+end;
+
+procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
+begin
+  OptionsFrm:=TOptionsFrm.Create(mainFrm, RAMSize);
+  OptionsFrm.ramsize:=RAMSize;
+  OptionsFrm.Show;
+  //On OptionsFrm.Close -> getRAMSize
 end;
 
 

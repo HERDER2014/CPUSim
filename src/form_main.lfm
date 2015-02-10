@@ -4,7 +4,7 @@ object mainFrm: TmainFrm
   Top = 146
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 614
+  ClientHeight = 615
   ClientWidth = 980
   Constraints.MinHeight = 343
   Constraints.MinWidth = 600
@@ -21,7 +21,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 407
+    Height = 408
     Top = 120
     Width = 545
     Align = alCustom
@@ -538,7 +538,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 545
-    Height = 407
+    Height = 408
     Top = 120
     Width = 435
     Anchors = [akTop, akRight, akBottom]
@@ -836,7 +836,7 @@ object mainFrm: TmainFrm
     Left = 23
     Height = 15
     Top = 16
-    Width = 19
+    Width = 17
     Caption = 'AX'
     Font.Height = -13
     ParentColor = False
@@ -864,7 +864,7 @@ object mainFrm: TmainFrm
     Left = 23
     Height = 15
     Top = 40
-    Width = 19
+    Width = 17
     Caption = 'BX'
     Font.Height = -13
     ParentColor = False
@@ -874,7 +874,7 @@ object mainFrm: TmainFrm
     Left = 23
     Height = 15
     Top = 64
-    Width = 19
+    Width = 17
     Caption = 'CX'
     Font.Height = -13
     ParentColor = False
@@ -884,7 +884,7 @@ object mainFrm: TmainFrm
     Left = 23
     Height = 15
     Top = 88
-    Width = 20
+    Width = 17
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -903,7 +903,7 @@ object mainFrm: TmainFrm
     Left = 242
     Height = 15
     Top = 16
-    Width = 11
+    Width = 17
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
@@ -923,7 +923,7 @@ object mainFrm: TmainFrm
     Left = 216
     Height = 15
     Top = 88
-    Width = 42
+    Width = 40
     Caption = 'FLAGS'
     Font.Height = -13
     ParentColor = False
@@ -958,7 +958,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 527
+    Top = 528
     Width = 977
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -989,13 +989,13 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 533
+    Top = 534
     Width = 980
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'
     )
-    ItemHeight = 14
+    ItemHeight = 11
     MultiSelect = True
     TabOrder = 24
   end
@@ -1136,7 +1136,8 @@ object mainFrm: TmainFrm
     object FileSaveAsAct: TFileSaveAs
       Category = 'File'
       Caption = 'Save &As ...'
-      Dialog.FileName = 'asm'
+      Dialog.DefaultExt = '.asm'
+      Dialog.FileName = 'Untitled.asm'
       Dialog.Filter = 'Assembly source code|*.asm|All files|*'
       Hint = 'Save As'
       ShortCut = 24659

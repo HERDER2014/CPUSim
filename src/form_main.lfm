@@ -1065,9 +1065,9 @@ object mainFrm: TmainFrm
     end
     object MainFrm_Menu_Help: TMenuItem
       Caption = 'Help'
-      object MainFrm_Menu_Help_Contents: TMenuItem
-        Caption = 'Contents'
-        OnClick = MainFrm_Menu_Help_ContentsClick
+      object MainFrm_Menu_Help_Wiki: TMenuItem
+        Caption = 'Wiki'
+        OnClick = MainFrm_Menu_Help_WikiClick
       end
       object MainFrm_Menu_Help_Tutorial: TMenuItem
         Caption = 'Tutorial'

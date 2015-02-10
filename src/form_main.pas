@@ -8,8 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo,
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
-  uCPUThread, uCompiler, strutils, uTypen, asmHighlighter, eventlog, types,
-  lclintf;
+  uCPUThread, uCompiler, strutils, uTypen, asmHighlighter, eventlog, types, lclintf;
 
 type
 
@@ -70,7 +69,7 @@ type
     MainFrm_Menu_Edit_FindNext: TMenuItem;
     MainFrm_Menu_File_Spacer1: TMenuItem;
     MainFrm_Menu_Help: TMenuItem;
-    MainFrm_Menu_Help_Contents: TMenuItem;
+    MainFrm_Menu_Help_Wiki: TMenuItem;
     MainFrm_Menu_Help_Tutorial: TMenuItem;
     MainFrm_Menu_Help_Spacer1: TMenuItem;
     MainFrm_Menu_Help_About: TMenuItem;
@@ -109,7 +108,7 @@ type
     procedure MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
     procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
-    procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
+    procedure MainFrm_Menu_Help_WikiClick(Sender: TObject);
     procedure DoCompile;
     procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
     procedure RunClick(Sender: TObject);
@@ -403,9 +402,9 @@ begin
   MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
-procedure TmainFrm.MainFrm_Menu_Help_ContentsClick(Sender: TObject);
+procedure TmainFrm.MainFrm_Menu_Help_WikiClick(Sender: TObject);
 begin
-
+  OpenURL('https://github.com/HERDER2014/CPUSim/wiki');
 end;
 
 

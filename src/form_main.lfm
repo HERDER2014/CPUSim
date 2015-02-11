@@ -684,7 +684,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 3
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object C2: TEdit
     Left = 161
@@ -702,7 +702,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 5
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object D2: TEdit
     Left = 161
@@ -720,7 +720,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 7
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object IP1: TEdit
     Left = 264
@@ -729,7 +729,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 8
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object BP1: TEdit
     Left = 264
@@ -738,7 +738,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 9
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object F1: TEdit
     Left = 497
@@ -850,7 +850,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 18
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object A2: TEdit
     Left = 161
@@ -898,7 +898,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 20
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object Label5: TLabel
     Left = 243
@@ -1037,7 +1037,7 @@ object mainFrm: TmainFrm
     Width = 112
     ReadOnly = True
     TabOrder = 26
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object VP2: TEdit
     Left = 376

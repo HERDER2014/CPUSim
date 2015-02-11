@@ -69,7 +69,7 @@ uses
 {$IFDEF Windows}
   Windows, MMSystem,
 {$ELSE}
-  unix, unixutil, baseunix,
+  unix, unixutil, baseunix, Linux,
 {$ENDIF}
   Classes, SysUtils, dateutils;
 

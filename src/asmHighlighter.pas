@@ -200,7 +200,7 @@ begin
     Result := AdressAttri
   else
     case LowerCase(copy(FLineText, FTokenPos, FTokenEnd - FTokenPos)) of
-      'mov','add','sub', 'mul', 'div', 'mod', 'cmp', 'jmp','jz','jnz','je','jne','js','jns','jo','jno','call','ret','push','pop','not','and','or','xor', 'in', 'out', 'inc', 'dec', 'org', 'end':
+      'mov', 'movb', 'movw' ,'add','sub', 'mul', 'div', 'mod', 'cmp', 'jmp','jz','jnz','je','jne','js','jns','jo','jno','call','ret','push','pop','not','and','or','xor', 'in', 'out', 'inc', 'dec', 'org', 'end':
         Result:= OPCodeAttri;
       'ax','bx','cx','dx','al','bl','cl','dl','ah','bh','ch','dh','ip','sp','bp','flags':
         Result:= RegisterAttri;

@@ -5,163 +5,161 @@ unit form_main;
 interface
 
 uses
-	 Classes, SysUtils, FileUtil, SynEdit, SynCompletion,
-	 Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
-	 ValEdit, Grids, ActnList, StdActns, Spin, types, lclintf, Math,
-	 uRAM, uCPU, uCPUThread, uCompiler, strutils, uTypen, asmHighlighter;
+  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo,
+  Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
+  ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
+  uCompiler, form_options, uCPUThread, strutils, uTypen,
+  asmHighlighter, eventlog, types, lclintf, Math;
 
 type
 
-	 { TmainFrm }
+  { TmainFrm }
 
-	 TmainFrm = class(TForm)
-			 A1: TEdit;
-			 A2: TEdit;
-			 VP1: TEdit;
-			 VP2: TEdit;
-			 FrequencyType: TComboBox;
-			 FileSave_ExitAct: TAction;
-			 ActionList: TActionList;
-			 AssembleBtn: TButton;
-			 B1: TEdit;
-			 EditCopyAct: TEditCopy;
-			 EditCutAct: TEditCut;
-			 EditPasteAct: TEditPaste;
-			 EditUndoAct: TEditUndo;
-			 FileOpenAct: TFileOpen;
-			 FileSaveAsAct: TFileSaveAs;
-			 speedEdt: TFloatSpinEdit;
-			 H_Menu_CodeSplitter: TSplitter;
-			 IP2: TEdit;
-			 IP1: TEdit;
-			 BP1: TEdit;
-			 F1: TEdit;
-			 Label1: TLabel;
-			 Label2: TLabel;
-			 Label3: TLabel;
-			 Label4: TLabel;
-			 Label5: TLabel;
-			 Label6: TLabel;
-			 Label7: TLabel;
-			 Label8: TLabel;
-			 Label9: TLabel;
-			 Log_lb: TListBox;
-			 RunPauseBtn: TButton;
-			 SearchFindAct: TSearchFind;
-			 SP2: TEdit;
-			 BP2: TEdit;
-			 F2: TEdit;
-			 B2: TEdit;
-			 SP1: TEdit;
-			 C2: TEdit;
-			 C1: TEdit;
-			 D2: TEdit;
-			 D1: TEdit;
-			 RAMGrid: TStringGrid;
-			 FileExitAct: TFileExit;
-			 MainFrm_Menu: TMainMenu;
-			 MainFrm_Menu_File: TMenuItem;
-			 MainFrm_Menu_File_New: TMenuItem;
-			 MainFrm_Menu_Edit: TMenuItem;
-			 MainFrm_Menu_Edit_Undo: TMenuItem;
-			 MainFrm_Menu_Edit_Redo: TMenuItem;
-			 MainFrm_Menu_Edit_Spacer1: TMenuItem;
-			 MainFrm_Menu_Edit_Cut: TMenuItem;
-			 MainFrm_Menu_Edit_Copy: TMenuItem;
-			 MainFrm_Menu_Edit_Paste: TMenuItem;
-			 MainFrm_Menu_Edit_Spacer2: TMenuItem;
-			 MainFrm_Menu_Edit_Find: TMenuItem;
-			 MainFrm_Menu_Edit_FindNext: TMenuItem;
-			 MainFrm_Menu_File_Spacer1: TMenuItem;
-			 MainFrm_Menu_Help: TMenuItem;
-			 MainFrm_Menu_Help_Contents: TMenuItem;
-			 MainFrm_Menu_Help_Tutorial: TMenuItem;
-			 MainFrm_Menu_Help_Spacer1: TMenuItem;
-			 MainFrm_Menu_Help_About: TMenuItem;
-			 MainFrm_Menu_File_Open: TMenuItem;
-			 MainFrm_Menu_File_OpenRecent: TMenuItem;
-			 MainFrm_Menu_File_Save: TMenuItem;
-			 MainFrm_Menu_File_SaveAs: TMenuItem;
-			 MainFrm_Menu_File_Spacer2: TMenuItem;
-			 MainFrm_Menu_File_Exit: TMenuItem;
-			 ReplaceDialog1: TReplaceDialog;
-			 Splitter1: TSplitter;
-			 StepBtn: TButton;
-			 StepOverBtn: TButton;
-			 Timer1: TTimer;
-			 InputSynEdit: TSynEdit;
-			 RAMValueList: TValueListEditor;
-			 procedure AssembleBtnClick(Sender: TObject);
-			 procedure compileClick(Sender: TObject);
-			 procedure FileOpenActAccept(Sender: TObject);
-			 procedure FileSaveAsActAccept(Sender: TObject);
-			 function FileSave_ExitActExecute(Sender: TObject): boolean;
-			 procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-			 procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
-			 procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-			 procedure FrequencyTypeChange(Sender: TObject);
-			 procedure RunPauseBtnClick(Sender: TObject);
-			 procedure InputSynEditChange(Sender: TObject);
-			 procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
-					 var Special: boolean; var FG, BG: TColor);
-			 procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
-			 procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
-			 procedure MainFrm_Menu_Edit_PasteClick(Sender: TObject);
-			 procedure MainFrm_Menu_Edit_RedoClick(Sender: TObject);
-			 procedure MainFrm_Menu_Edit_UndoClick(Sender: TObject);
-			 procedure MainFrm_Menu_File_NewClick(Sender: TObject);
-			 procedure MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
-			 procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
-			 procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
-			 procedure MainFrm_Menu_Help_ContentsClick(Sender: TObject);
-			 procedure DoCompile;
-			 procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
-					 aRect: TRect; aState: TGridDrawState);
-			 procedure RunClick(Sender: TObject);
-			 procedure FormCreate(Sender: TObject);
-			 procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
-			 procedure OnCPUTerminate(Sender: TObject);
-			 //procedure SearchFindActAccept(Sender: TObject);
-			 //procedure SearchFindActBeforeExecute(Sender: TObject);
-			 procedure speedEdtChange(Sender: TObject);
-			 procedure StepBtnClick(Sender: TObject);
-			 procedure StepOverBtnClick(Sender: TObject);
-			 procedure StopBtnClick(Sender: TObject);
-			 procedure TFindDialogFind(Sender: TObject);
-			 procedure Timer1Timer(Sender: TObject);
-			 procedure setupRAM;
-			 procedure updateREG;
-			 procedure resume;
-			 procedure Step;
-			 procedure StepOver;
-			 procedure Stop;
-			 procedure setVel;
-           procedure OnRAMChange(addr: Word);
-
-	 private
-	 public
-			 { public declarations }
-	 end;
+  TmainFrm = class(TForm)
+    A1: TEdit;
+    A2: TEdit;
+    ActionList: TActionList;
+    AssembleBtn: TButton;
+    B1: TEdit;
+    EditCopyAct: TEditCopy;
+    EditCutAct: TEditCut;
+    EditPasteAct: TEditPaste;
+    EditUndoAct: TEditUndo;
+    FileOpenAct: TFileOpen;
+    FileSaveAsAct: TFileSaveAs;
+    H_Menu_CodeSplitter: TSplitter;
+    IP2: TEdit;
+    IP1: TEdit;
+    BP1: TEdit;
+    F1: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Log_lb: TListBox;
+    RunPauseBtn: TButton;
+    SearchFindAct: TSearchFind;
+    SP2: TEdit;
+    BP2: TEdit;
+    F2: TEdit;
+    B2: TEdit;
+    SP1: TEdit;
+    C2: TEdit;
+    C1: TEdit;
+    D2: TEdit;
+    D1: TEdit;
+    RAMGrid: TStringGrid;
+    FileExitAct: TFileExit;
+    FrequencyType: TComboBox;
+    MainFrm_Menu: TMainMenu;
+    MainFrm_Menu_File: TMenuItem;
+    MainFrm_Menu_File_New: TMenuItem;
+    MainFrm_Menu_Edit: TMenuItem;
+    MainFrm_Menu_Edit_Undo: TMenuItem;
+    MainFrm_Menu_Edit_Redo: TMenuItem;
+    MainFrm_Menu_Edit_Spacer1: TMenuItem;
+    MainFrm_Menu_Edit_Cut: TMenuItem;
+    MainFrm_Menu_Edit_Copy: TMenuItem;
+    MainFrm_Menu_Edit_Paste: TMenuItem;
+    MainFrm_Menu_Edit_Spacer2: TMenuItem;
+    MainFrm_Menu_Edit_Find: TMenuItem;
+    MainFrm_Menu_Edit_FindNext: TMenuItem;
+    MainFrm_Menu_File_Spacer1: TMenuItem;
+    MainFrm_Menu_Help: TMenuItem;
+    MainFrm_Menu_Help_Wiki: TMenuItem;
+    MainFrm_Menu_Help_Tutorial: TMenuItem;
+    MainFrm_Menu_Help_Spacer1: TMenuItem;
+    MainFrm_Menu_Help_About: TMenuItem;
+    MainFrm_Menu_File_Open: TMenuItem;
+    MainFrm_Menu_File_OpenRecent: TMenuItem;
+    MainFrm_Menu_File_Save: TMenuItem;
+    MainFrm_Menu_File_SaveAs: TMenuItem;
+    MainFrm_Menu_File_Spacer2: TMenuItem;
+    MainFrm_Menu_File_Exit: TMenuItem;
+    ReplaceDialog1: TReplaceDialog;
+    speedEdt: TFloatSpinEdit;
+    Splitter1: TSplitter;
+    StepBtn: TButton;
+    StepOverBtn: TButton;
+    Timer1: TTimer;
+    InputSynEdit: TSynEdit;
+    RAMValueList: TValueListEditor;
+    procedure AssembleBtnClick(Sender: TObject);
+    procedure compileClick(Sender: TObject);
+    procedure FileOpenActAccept(Sender: TObject);
+    procedure FileSaveAsActAccept(Sender: TObject);
+    //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
+    function FileExitActExecute(Sender: TObject) : Boolean;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FrequencyTypeChange(Sender: TObject);
+    procedure MainFrm_Menu_OptionsClick(Sender: TObject);
+    procedure RunPauseBtnClick(Sender: TObject);
+    procedure InputSynEditChange(Sender: TObject);
+    procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
+      var Special: boolean; var FG, BG: TColor);
+    procedure MainFrm_Menu_Edit_CopyClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_CutClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_PasteClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_RedoClick(Sender: TObject);
+    procedure MainFrm_Menu_Edit_UndoClick(Sender: TObject);
+    procedure MainFrm_Menu_File_NewClick(Sender: TObject);
+    procedure MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
+    procedure MainFrm_Menu_File_SaveAsClick(Sender: TObject);
+    procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
+    procedure MainFrm_Menu_Help_WikiClick(Sender: TObject);
+    procedure DoCompile;
+    procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
+    procedure RunClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
+    procedure OnCPUTerminate(Sender: TObject);
+    //procedure SearchFindActAccept(Sender: TObject);
+    //procedure SearchFindActBeforeExecute(Sender: TObject);
+    procedure speedEdtChange(Sender: TObject);
+    procedure StepBtnClick(Sender: TObject);
+    procedure StepOverBtnClick(Sender: TObject);
+    procedure StopBtnClick(Sender: TObject);
+    procedure TFindDialogFind(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure setupRAM;
+    procedure updateREG;
+    procedure resume;
+    procedure Step;
+    procedure StepOver;
+    procedure Stop;
+    procedure setVel;
+    procedure OnRAMChange(addr: Word);
+  private
+  public
+    { public declarations }
+    RAMSize: cardinal;
+  end;
 
 var
-	 comp: TCompiler;
-	 mainFrm: TmainFrm;
-	 SavePath: string;
-	 Saved: boolean;
-	 assembled: boolean;
-	 trackTime: boolean;
-	 drawCodeIPHighlighting: boolean;
-	 Thread: TCPUThread;
-	 hlt: TAsmHighlighter;
-	 RAM: TRAM;
-	 CPU: TCPU;
-	 // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
-	 // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
-	 RAMSize: cardinal;
-   oldIP : Word;
-   oldBP : Word;
-   oldSP : Word;
-
+  comp: TCompiler;
+  mainFrm: TmainFrm;
+  SavePath: string;
+  Saved: boolean;
+  startTime: QWord;
+  assembled: boolean;
+  trackTime: boolean;
+  drawCodeIPHighlighting: boolean;
+  Thread: TCPUThread;
+  hlt : TAsmHighlighter;
+  RAM: TRAM;
+  CPU: TCPU;
+  // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
+  // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
+  RAMSize: cardinal;
+  oldIP : Word;
+  oldBP : Word;
+  oldSP : Word;
 implementation
 
 {$R *.lfm}
@@ -360,6 +358,20 @@ begin
 	 trackTime := False;
 end;
 
+procedure TmainFrm.FrequencyTypeChange(Sender: TObject);
+begin
+	 if FrequencyType.ItemIndex = 3 then
+	 begin
+			 speedEdt.Enabled := False;
+	 end
+	 else
+	 begin
+			 speedEdt.Enabled := True;
+	 end;
+	 if assembled then
+			 setVel;
+end;
+
 procedure TmainFrm.TFindDialogFind(Sender: TObject);
 var
 	 findtext: string;
@@ -467,8 +479,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
 begin
-	 FileSaveAsAct.Execute;
-	 ;
+  FileSaveAsAct.Execute;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -480,13 +491,10 @@ begin
 	 MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
-procedure TmainFrm.MainFrm_Menu_Help_ContentsClick(Sender: TObject);
+procedure TmainFrm.MainFrm_Menu_Help_WikiClick(Sender: TObject);
 begin
-
+  OpenURL('https://github.com/HERDER2014/CPUSim/wiki');
 end;
-
-
-
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
 begin
@@ -543,110 +551,97 @@ begin
 	 Saved := True;
 end;
 
-function TmainFrm.FileSave_ExitActExecute(Sender: TObject): boolean;
-var
-	 answer: longint;
+//function TmainFrm.FileSave_ExitActExecute(Sender: TObject) : Boolean;
+//var
+//  testbool : Boolean;
+//begin
+//  mainFrm.Close;
+//end;
+//
+function TmainFrm.FileExitActExecute(Sender: TObject) : Boolean;
 begin
-	 if saved then
-	 begin
-			 //Application.Terminate;
-			 Result := True;
-	 end
-	 else
-	 begin
-			 answer := MessageDlg('Do you want to save changes?', mtConfirmation,
-					 mbYesNoCancel, 0);
-			 if answer = mrYes then
-			 begin
-					 if SavePath = '' then
-					 begin
-							 Result := FileSaveAsAct.Execute;
-					 end
-					 else
-					 begin
-							 InputSynEdit.Lines.SaveToFile(SavePath);
-							 Saved := True;
-							 Result := False;
-					 end;
-			 end
-			 else if answer = mrNo then
-			 begin
-					 Result := True;
-					 //Application.Terminate;
-			 end
-			 else
-			 begin
-					 Result := False;
-			 end;
-	 end;
+  mainFrm.Close;
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-	 CloseAction := caFree;
+  CloseAction:=caFree;
 end;
 
 procedure TmainFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+var
+  answer: longint;
 begin
-	 if FileSave_ExitActExecute(mainFrm) then
-	 begin
-			 CanClose := True;
-	 end
-	 else
-	 begin
-			 CanClose := False;
-	 end;
+  if Saved then
+  begin
+    CanClose:=True;
+  end else
+  begin
+    answer := MessageDlg('Do you want to save changes?',
+      mtConfirmation, mbYesNoCancel, 0);
+    if answer = mrYes then
+    begin
+      if SavePath='' then
+      begin
+        FileSaveAsAct.Execute;
+        CanClose:=Saved;
+      end else
+      begin
+        InputSynEdit.Lines.SaveToFile(SavePath);
+        Saved:=true;
+        CanClose:=True;
+      end
+    end else if answer = mrNo then
+    begin
+      CanClose:=true;
+    end else
+    begin
+      CanClose:=False;
+    end;
+  end;
 end;
 
-procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
 
-	 //f5 to assemble or run, depending on what is done
-	 if (Key = LCLType.VK_F5) then
-	 begin
-			 if assembled then
-					 RunPauseBtnClick(nil)
-			 else
-					 AssembleBtnClick(nil);
-	 end;
-	 //f9 to assemble and then run
-	 if (Key = LCLType.VK_F9) then
-	 begin
-			 if not assembled then
-					 AssembleBtnClick(nil);
-			 if assembled then
-					 RunPauseBtnClick(nil);
-	 end;
-	 //f8 zum stepOver
-	 if (key = LCLType.VK_F8) then
-	 begin
-			 if not assembled then
-					 AssembleBtnClick(nil);
-			 if assembled then
-					 StepOverBtnClick(nil);
-	 end;
-	 //f7 zum step
-	 if (key = LCLType.VK_F7) then
-	 begin
-			 if not assembled then
-					 AssembleBtnClick(nil);
-			 if assembled then
-					 StepBtnClick(nil);
-	 end;
+  //f5 to assemble or run, depending on what is done
+  if (Key=LCLType.VK_F5) then
+  begin
+    if assembled then
+        RunPauseBtnClick(nil)
+    else
+        AssembleBtnClick(nil);
+  end;
+  //f9 to assemble and then run
+  if (Key=LCLType.VK_F9) then
+  begin
+    if not assembled then
+        AssembleBtnClick(nil);
+    if assembled then
+       RunPauseBtnClick(nil);
+  end;
+  //f8 zum stepOver
+  if (key=LCLType.VK_F8) then
+  begin
+    if not assembled then
+        AssembleBtnClick(nil);
+    if assembled then
+        StepOverBtnClick(nil);
+  end;
+  //f7 zum step
+  if (key=LCLType.VK_F7) then
+  begin
+    if not assembled then
+        AssembleBtnClick(nil);
+    if assembled then
+        StepBtnClick(nil);
+  end;
 end;
 
-procedure TmainFrm.FrequencyTypeChange(Sender: TObject);
+procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
-	 if FrequencyType.ItemIndex = 3 then
-	 begin
-			 speedEdt.Enabled := False;
-	 end
-	 else
-	 begin
-			 speedEdt.Enabled := True;
-	 end;
-	 if assembled then
-			 setVel;
+  OptionsFrm:=TOptionsFrm.Create(mainFrm);
+  OptionsFrm.Show;
 end;
 
 

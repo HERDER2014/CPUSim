@@ -538,8 +538,9 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 545
-    Height = 407
-    Top = 120
+    Height = 399
+    Hint = 'The RAM will be displayed here'
+    Top = 128
     Width = 435
     Anchors = [akTop, akRight, akBottom]
     ColCount = 17
@@ -594,7 +595,9 @@ object mainFrm: TmainFrm
         Title.Caption = 'F'
       end>
     DefaultColWidth = 24
+    ParentShowHint = False
     ScrollBars = ssVertical
+    ShowHint = True
     TabOrder = 1
     OnDrawCell = RAMGridDrawCell
     ColWidths = (
@@ -670,7 +673,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 35
     Width = 40
     ReadOnly = True
@@ -679,7 +682,7 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 35
     Width = 112
     ReadOnly = True
@@ -688,7 +691,7 @@ object mainFrm: TmainFrm
   end
   object C2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 59
     Width = 40
     ReadOnly = True
@@ -697,7 +700,7 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 59
     Width = 112
     ReadOnly = True
@@ -706,7 +709,7 @@ object mainFrm: TmainFrm
   end
   object D2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 83
     Width = 40
     ReadOnly = True
@@ -715,7 +718,7 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 83
     Width = 112
     ReadOnly = True
@@ -724,7 +727,7 @@ object mainFrm: TmainFrm
   end
   object IP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 11
     Width = 112
     ReadOnly = True
@@ -733,7 +736,7 @@ object mainFrm: TmainFrm
   end
   object BP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 59
     Width = 112
     ReadOnly = True
@@ -742,7 +745,7 @@ object mainFrm: TmainFrm
   end
   object F1: TEdit
     Left = 497
-    Height = 20
+    Height = 21
     Top = 12
     Width = 120
     ReadOnly = True
@@ -751,7 +754,7 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 35
     Width = 40
     ReadOnly = True
@@ -760,7 +763,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 59
     Width = 40
     ReadOnly = True
@@ -769,7 +772,7 @@ object mainFrm: TmainFrm
   end
   object F2: TEdit
     Left = 619
-    Height = 20
+    Height = 21
     Top = 12
     Width = 40
     ReadOnly = True
@@ -778,7 +781,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 11
     Width = 40
     ReadOnly = True
@@ -787,7 +790,7 @@ object mainFrm: TmainFrm
   end
   object AssembleBtn: TButton
     AnchorSideLeft.Side = asrBottom
-    Left = 584
+    Left = 608
     Height = 25
     Hint = 'Assembles the code'
     Top = 44
@@ -805,9 +808,9 @@ object mainFrm: TmainFrm
     AnchorSideTop.Side = asrBottom
     Left = 449
     Height = 25
-    Hint = 'moves one step forward in RAM. The code needs to be assembled'
-    Top = 44
-    Width = 60
+    Hint = 'Moves one step forward in RAM.'
+    Top = 79
+    Width = 63
     BorderSpacing.Left = 20
     BorderSpacing.Top = 30
     Caption = 'Step'
@@ -819,11 +822,11 @@ object mainFrm: TmainFrm
   end
   object RunPauseBtn: TButton
     AnchorSideLeft.Side = asrBottom
-    Left = 584
+    Left = 688
     Height = 25
-    Hint = 'After stopping the program it may continued by clikcing this button.'
-    Top = 78
-    Width = 75
+    Hint = 'Runs the program'
+    Top = 48
+    Width = 73
     BorderSpacing.Left = 30
     Caption = 'Run'
     Enabled = False
@@ -835,17 +838,20 @@ object mainFrm: TmainFrm
   end
   object Label1: TLabel
     Left = 23
-    Height = 15
+    Height = 16
+    Hint = 'AX register'
     Top = 16
-    Width = 19
+    Width = 16
     Caption = 'AX'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object A1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 11
     Width = 112
     ReadOnly = True
@@ -854,7 +860,7 @@ object mainFrm: TmainFrm
   end
   object A2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 11
     Width = 40
     ReadOnly = True
@@ -863,37 +869,46 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 15
+    Height = 16
+    Hint = 'BX register'
     Top = 40
-    Width = 19
+    Width = 15
     Caption = 'BX'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object Label3: TLabel
     Left = 23
-    Height = 15
+    Height = 16
+    Hint = 'CX register'
     Top = 64
-    Width = 19
+    Width = 16
     Caption = 'CX'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object Label4: TLabel
     Left = 23
-    Height = 15
-    Top = 86
-    Width = 20
+    Height = 16
+    Hint = 'DX register'
+    Top = 88
+    Width = 16
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object B1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 35
     Width = 112
     ReadOnly = True
@@ -901,44 +916,56 @@ object mainFrm: TmainFrm
     Text = '00000000 00000000'
   end
   object Label5: TLabel
-    Left = 243
-    Height = 15
+    Left = 240
+    Height = 16
+    Hint = 'Instructionpointer'
     Top = 16
     Width = 11
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object Label6: TLabel
-    Left = 239
-    Height = 15
+    Left = 240
+    Height = 16
+    Hint = 'Stackpointer'
     Top = 40
-    Width = 17
+    Width = 15
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object Label7: TLabel
-    Left = 449
-    Height = 15
-    Top = 15
-    Width = 42
+    Left = 456
+    Height = 16
+    Hint = 'FLAGs register'
+    Top = 16
+    Width = 37
     Caption = 'FLAGS'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object Label8: TLabel
-    Left = 239
-    Height = 15
+    Left = 240
+    Height = 16
+    Hint = 'Basepointer'
     Top = 64
-    Width = 17
+    Width = 14
     Caption = 'BP'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object H_Menu_CodeSplitter: TSplitter
     AnchorSideRight.Control = Owner
@@ -955,11 +982,11 @@ object mainFrm: TmainFrm
   object StepOverBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Side = asrBottom
-    Left = 516
+    Left = 560
     Height = 25
-    Hint = 'moves one step forward in RAM. The code needs to be assembled'
-    Top = 44
-    Width = 60
+    Hint = 'Moves one step over the next function'
+    Top = 78
+    Width = 63
     BorderSpacing.Left = 20
     BorderSpacing.Top = 30
     Caption = 'Step Over'
@@ -983,15 +1010,15 @@ object mainFrm: TmainFrm
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'
     )
-    ItemHeight = 14
+    ItemHeight = 13
     ItemIndex = 0
     MultiSelect = True
     TabOrder = 23
   end
   object speedEdt: TFloatSpinEdit
-    Left = 449
-    Height = 20
-    Top = 79
+    Left = 448
+    Height = 21
+    Top = 56
     Width = 60
     Enabled = False
     Increment = 1
@@ -1002,12 +1029,12 @@ object mainFrm: TmainFrm
     Value = 1
   end
   object FrequencyType: TComboBox
-    Left = 516
-    Height = 20
-    Top = 79
+    Left = 512
+    Height = 21
+    Top = 56
     Width = 60
     Enabled = False
-    ItemHeight = 14
+    ItemHeight = 13
     ItemIndex = 3
     Items.Strings = (
       'Hz'
@@ -1022,9 +1049,9 @@ object mainFrm: TmainFrm
   end
   object Label9: TLabel
     Left = 239
-    Height = 15
+    Height = 16
     Top = 86
-    Width = 17
+    Width = 15
     Caption = 'VP'
     Font.Height = -13
     ParentColor = False
@@ -1032,7 +1059,7 @@ object mainFrm: TmainFrm
   end
   object VP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 83
     Width = 112
     ReadOnly = True
@@ -1041,7 +1068,7 @@ object mainFrm: TmainFrm
   end
   object VP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 83
     Width = 40
     ReadOnly = True
@@ -1078,7 +1105,7 @@ object mainFrm: TmainFrm
         Caption = '-'
       end
       object MainFrm_Menu_File_Exit: TMenuItem
-        Action = FileSave_ExitAct
+        Action = FileExitAct
       end
     end
     object MainFrm_Menu_Edit: TMenuItem
@@ -1112,11 +1139,15 @@ object mainFrm: TmainFrm
         Caption = 'Find Next'
       end
     end
+    object MainFrm_Menu_Options: TMenuItem
+      Caption = 'Options'
+      OnClick = MainFrm_Menu_OptionsClick
+    end
     object MainFrm_Menu_Help: TMenuItem
       Caption = 'Help'
-      object MainFrm_Menu_Help_Contents: TMenuItem
-        Caption = 'Contents'
-        OnClick = MainFrm_Menu_Help_ContentsClick
+      object MainFrm_Menu_Help_Wiki: TMenuItem
+        Caption = 'Wiki'
+        OnClick = MainFrm_Menu_Help_WikiClick
       end
       object MainFrm_Menu_Help_Tutorial: TMenuItem
         Caption = 'Tutorial'
@@ -1185,17 +1216,12 @@ object mainFrm: TmainFrm
     object FileSaveAsAct: TFileSaveAs
       Category = 'File'
       Caption = 'Save &As ...'
-      Dialog.FileName = 'asm'
+      Dialog.DefaultExt = '.asm'
+      Dialog.FileName = 'Untitled.asm'
       Dialog.Filter = 'Assembly source code|*.asm|All files|*'
       Hint = 'Save As'
       ShortCut = 24659
       OnAccept = FileSaveAsActAccept
-    end
-    object FileSave_ExitAct: TAction
-      Category = 'File'
-      Caption = 'E&xit'
-      Hint = 'Exit'
-      OnExecute = FileSave_ExitActExecute
     end
   end
   object Timer1: TTimer

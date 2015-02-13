@@ -84,7 +84,18 @@ type
 			 procedure Run_MOV_R_ADDR_RX();
 			 procedure Run_MOV_ADDR_RX_R();
 			 procedure Run_MOV_ADDR_RX_X();
-			 procedure Run_INC_R();
+       procedure Run_MOVB_R_X();
+			 procedure Run_MOVB_R_ADDR_R();
+			 procedure Run_MOVB_R_ADDR_X();
+			 procedure Run_MOVB_ADDR_R_R();
+			 procedure Run_MOVB_ADDR_X_R();
+			 procedure Run_MOVB_ADDR_X_X();
+			 procedure Run_MOVB_ADDR_R_X();
+			 procedure Run_MOVB_R_R();
+			 procedure Run_MOVB_R_ADDR_RX();
+			 procedure Run_MOVB_ADDR_RX_R();
+			 procedure Run_MOVB_ADDR_RX_X();
+       procedure Run_INC_R();
 			 procedure Run_DEC_R();
 			 procedure Run_ADD_R_X();
 			 procedure Run_ADD_R_ADDR_R();
@@ -167,6 +178,17 @@ begin
 	 OPCodeProcedures[integer(MOV_R_ADDR_RX)] := @Run_MOV_R_ADDR_RX;
 	 OPCodeProcedures[integer(MOV_ADDR_RX_R)] := @Run_MOV_ADDR_RX_R;
 	 OPCodeProcedures[integer(MOV_ADDR_RX_X)] := @Run_MOV_ADDR_RX_X;
+	 OPCodeProcedures[integer(MOVB_R_X)] := @Run_MOVB_R_X;
+	 OPCodeProcedures[integer(MOVB_R_ADDR_X)] := @Run_MOVB_R_ADDR_X;
+	 OPCodeProcedures[integer(MOVB_R_ADDR_R)] := @Run_MOVB_R_ADDR_R;
+	 OPCodeProcedures[integer(MOVB_ADDR_R_R)] := @Run_MOVB_ADDR_R_R;
+	 OPCodeProcedures[integer(MOVB_ADDR_X_R)] := @Run_MOVB_ADDR_X_R;
+	 OPCodeProcedures[integer(MOVB_ADDR_R_X)] := @Run_MOVB_ADDR_R_X;
+	 OPCodeProcedures[integer(MOVB_ADDR_X_X)] := @Run_MOVB_ADDR_X_X;
+	 OPCodeProcedures[integer(MOVB_R_R)] := @Run_MOVB_R_R;
+	 OPCodeProcedures[integer(MOVB_R_ADDR_RX)] := @Run_MOVB_R_ADDR_RX;
+	 OPCodeProcedures[integer(MOVB_ADDR_RX_R)] := @Run_MOVB_ADDR_RX_R;
+	 OPCodeProcedures[integer(MOVB_ADDR_RX_X)] := @Run_MOVB_ADDR_RX_X;
 	 OPCodeProcedures[integer(ADD_R_X)] := @Run_ADD_R_X;
 	 OPCodeProcedures[integer(ADD_R_ADDR_R)] := @Run_ADD_R_ADDR_R;
 	 OPCodeProcedures[integer(ADd_R_ADDR_X)] := @Run_ADD_R_ADDR_X;
@@ -401,10 +423,7 @@ begin
 	 Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)), RR(Ram.ReadByte(Reg.IP + 2)));
 	 Reg.IP += 3;
 end; // MOV [R],R
-			{MOV_ADDR_R_X: begin
-        Ram.WriteWord(RR(Ram.ReadByte(Reg.IP+1)),Ram.ReadWord(Reg.IP+2));
-        Reg.IP += 3;
-      end; // MOV [R],X  }
+
 procedure TCPU.Run_MOV_ADDR_X_R();
 begin
 	 Ram.WriteWord(Ram.ReadWord(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 3)));
@@ -448,6 +467,76 @@ begin
 	 Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
 			 Ram.ReadWord(Reg.IP + 4));
 	 Reg.IP += 6;
+end;
+
+procedure TCPU.Run_MOVB_R_X();
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(Reg.IP + 2));
+	 Reg.IP += 3;
+end; // MOVB R,X
+
+procedure TCPU.Run_MOVB_R_ADDR_R();
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(RR(Ram.ReadByte(Reg.IP + 2))));
+	 Reg.IP += 3;
+end; // MOVB R,[R]
+
+procedure TCPU.Run_MOVB_R_ADDR_X();
+begin
+	 WR(
+		Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(Ram.ReadWord(Reg.IP + 2)));
+	 Reg.IP += 4;
+end; // MOVB R,[x]
+
+procedure TCPU.Run_MOVB_ADDR_R_R();
+begin
+	 Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)), RR(Ram.ReadByte(Reg.IP + 2)));
+	 Reg.IP += 3;
+end; // MOVB [R],R
+
+procedure TCPU.Run_MOVB_ADDR_X_R();
+begin
+	 Ram.WriteByte(Ram.ReadWord(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 3)));
+	 Reg.IP += 4;
+end; // movb [x],R
+
+procedure TCPU.Run_MOVB_ADDR_X_X;
+begin
+	 Ram.WriteByte(Ram.ReadWord(Reg.IP + 1), Ram.ReadByte(Reg.IP + 3));
+	 Reg.IP += 4;
+end; // movb [x],x
+
+procedure TCPU.Run_MOVB_ADDR_R_X;
+begin
+	 Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)), Ram.ReadByte(Reg.IP + 2));
+	 Reg.IP += 3;
+end; //movb [R],x
+
+procedure TCPU.Run_MOVB_R_R();
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Byte(RR(Ram.ReadByte(Reg.IP + 2))));
+	 Reg.IP += 3;
+end;//movb R,R
+
+procedure TCPU.Run_MOVB_R_ADDR_RX();
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(RR(Ram.ReadByte(Reg.IP + 2)) +
+			 Ram.ReadWord(Reg.IP + 3)));
+	 Reg.IP += 5;
+end; //movb R,[R+x]
+
+procedure TCPU.Run_MOVB_ADDR_RX_R();
+begin
+	 Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+			 RR(Ram.ReadByte(Reg.IP + 4)));
+	 Reg.IP += 5;
+end; //movb [R+x],R
+
+procedure TCPU.Run_MOVB_ADDR_RX_X;
+begin
+	 Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+			 Ram.ReadByte(Reg.IP + 4));
+	 Reg.IP += 5;
 end;
 
 procedure TCPU.Run_INC_R();

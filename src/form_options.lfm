@@ -6,6 +6,8 @@ object OptionsFrm: TOptionsFrm
   Caption = 'Options'
   ClientHeight = 240
   ClientWidth = 320
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object OptionsFrm_ApplyBtn: TButton
@@ -19,19 +21,33 @@ object OptionsFrm: TOptionsFrm
   end
   object Label1: TLabel
     Left = 144
-    Height = 11
+    Height = 19
     Top = 27
-    Width = 49
+    Width = 63
     Caption = 'RAM Size:'
     ParentColor = False
   end
   object OptionsFrm_RAMSizeEdt: TSpinEdit
     Left = 216
-    Height = 20
+    Height = 25
     Top = 24
     Width = 50
     MaxValue = 999999999
     TabOrder = 1
     Value = 256
+  end
+  object ActionList1: TActionList
+    left = 213
+    top = 57
+    object FileSaveAsAct: TFileSaveAs
+      Category = 'File'
+      Caption = 'Save &As ...'
+      Hint = 'Save As'
+    end
+    object FileExitAct: TFileExit
+      Category = 'File'
+      Caption = 'E&xit'
+      Hint = 'Exit'
+    end
   end
 end

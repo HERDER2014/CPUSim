@@ -134,6 +134,7 @@ type
   private
   public
     { public declarations }
+    RAMSize: cardinal;
   end;
 
 var
@@ -151,7 +152,6 @@ var
   CPU: TCPU;
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
-  RAMSize: cardinal;
 
 implementation
 
@@ -484,6 +484,7 @@ begin
       if SavePath='' then
       begin
         Result:=FileSaveAsAct.Execute;
+        FileExitAct.Execute;
       end else
       begin
         InputSynEdit.Lines.SaveToFile(SavePath);
@@ -556,10 +557,8 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
-  OptionsFrm:=TOptionsFrm.Create(mainFrm, RAMSize);
-  OptionsFrm.ramsize:=RAMSize;
+  OptionsFrm:=TOptionsFrm.Create(mainFrm);
   OptionsFrm.Show;
-  //On OptionsFrm.Close -> getRAMSize
 end;
 
 

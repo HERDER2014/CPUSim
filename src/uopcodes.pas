@@ -37,6 +37,31 @@ type
     // MOV [R+X], X
     MOV_ADDR_RX_X,
 
+    // MOVW = MOV
+
+    // MOVB R, X
+    MOVB_R_X,
+    // MOVB R, [R]
+    MOVB_R_ADDR_R,
+    // MOVB R, [X]
+    MOVB_R_ADDR_X,
+    // MOVB [R], R
+    MOVB_ADDR_R_R,
+    // MOVB [R], X
+    MOVB_ADDR_R_X,
+    // MOVB [X], R
+    MOVB_ADDR_X_R,
+    // MOVB [X], X
+    MOVB_ADDR_X_X,
+    // MOVB R, R
+    MOVB_R_R,
+    // MOVB R, [R+X]
+    MOVB_R_ADDR_RX,
+    // MOVB [R+X], R
+    MOVB_ADDR_RX_R,
+    // MOVB [R+X], X
+    MOVB_ADDR_RX_X,
+
     // ADD R, X
     ADD_R_X,
     // ADD R, [R]
@@ -169,9 +194,6 @@ type
     INC_R,
     // DEC R
     DEC_R,
-
-    //MOV [R], X
-    MOV_ADDR_R_X,
 
     //Leave this at the end:
     COUNT

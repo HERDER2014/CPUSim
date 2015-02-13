@@ -402,6 +402,19 @@ begin
   end;
 end;
 
+// Gibt true zurück, wenn Register nur 1B groß.
+function RegisterSmall(r : RegisterIndex) : Boolean;
+begin
+  if (r = RegisterIndex.AL) or (r = RegisterIndex.AH) or
+     (r = RegisterIndex.BL) or (r = RegisterIndex.BH) or
+     (r = RegisterIndex.CL) or (r = RegisterIndex.CH) or
+     (r = RegisterIndex.DL) or (r = RegisterIndex.DH) then
+     begin
+       exit(TRUE);
+     end;
+  exit(FALSE);
+end;
+
 // ======================= TCompiler functions =================================
 
 function TCompiler.WriteInstrucitonLineToRAM(instruction, operandsString: string;
@@ -454,8 +467,15 @@ begin
       end;
     end;
 
-    'MOV': // 8
+    'MOV', 'MOVW': // 11(*2)
     begin
+      if (r1 <> RegisterIndex.INVALID) or (r2 <> RegisterIndex.INVALID) then
+      begin
+        if RegisterSmall(r1) or RegisterSmall(r2) then
+        begin
+          //warnung ausgeben
+        end;
+      end;
       if operands.Count = 2 then
       begin
         if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
@@ -574,6 +594,144 @@ begin
             Ram.WriteWord(offset + 1, Ord(a1.X));
             Ram.WriteWord(offset + 3, n2);
             rBytesWritten := 5;
+            exit(True);
+          end
+        end
+        else
+        // Keine anderen Kombinationen von Operanden
+        begin
+          // Keine passenden Operanden
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(2);
+        exit(False);
+      end;
+    end;
+
+    'MOVB': // 8
+    begin
+      if operands.Count = 2 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // MOVB R, R
+          Ram.WriteByte(offset, Ord(OPCode.MOVB_R_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Ord(r2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        begin
+          // MOVB R, X
+          Ram.WriteByte(offset, Ord(OPCode.MOVB_R_X));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          Ram.WriteByte(offset + 2, Byte(n2));
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        if (r1 <> RegisterIndex.INVALID) and (a2.valid) then
+        begin
+          // MOVB R, [A]
+          if (a2.rFound and a2.xFound) then
+          begin
+            // A = R+X
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_R_ADDR_RX));
+            Ram.WriteByte(offset + 1, Ord(r1));
+            Ram.WriteByte(offset + 2, Ord(a2.R));
+            Ram.WriteWord(offset + 3, a2.x);
+            rBytesWritten := 5;
+          end
+          else
+          if a2.xFound then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_R_ADDR_X));
+            Ram.WriteByte(offset + 1, Ord(r1));
+            Ram.WriteWord(offset + 2, word(a2.x));
+            rBytesWritten := 4;
+          end
+          else
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_R_ADDR_R));
+            Ram.WriteByte(offset + 1, Ord(r1));
+            Ram.WriteByte(offset + 2, Ord(a2.R));
+            rBytesWritten := 3;
+          end;
+          exit(True);
+        end
+        else
+        if (a1.valid) and (r2 <> RegisterIndex.INVALID) then
+        begin
+          // MOVB [A], R
+          if (a1.rFound) and (not a1.xFound) then
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_ADDR_R_R));
+            Ram.WriteByte(offset + 1, Ord(a1.R));
+            Ram.WriteByte(offset + 2, Ord(r2));
+            rBytesWritten := 3;
+          end
+          else
+          if (a1.xFound) and (not a1.rFound) then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_ADDR_X_R));
+            Ram.WriteWord(offset + 1, Ord(a1.x));
+            Ram.WriteByte(offset + 3, Ord(r2));
+            rBytesWritten := 4;
+          end
+          else
+          if (a1.rFound) and (a1.xFound) then
+          begin
+            // A = R+X
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_ADDR_RX_R));
+            Ram.WriteByte(offset + 1, Ord(a1.R));
+            Ram.WriteWord(offset + 2, Ord(a1.x));
+            Ram.WriteByte(offset + 4, Ord(r2));
+            rBytesWritten := 5;
+          end;
+          exit(True);
+        end
+        else
+        if (a1.valid) and TryParseInt(operands.op2, n2) then
+        begin
+          // MOVB [A], X
+          if a1.rFound and a1.xFound then
+          begin
+            // A = R+X
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_ADDR_RX_X));
+            Ram.WriteByte(offset + 1, Ord(a1.R));
+            Ram.WriteWord(offset + 2, Ord(a1.x));
+            Ram.WriteByte(offset + 4, Byte(n2));
+            rBytesWritten := 5;
+            exit(True);
+          end
+          else
+          if a1.rFound and (not a1.xFound) then
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_ADDR_R_X));
+            Ram.WriteByte(offset + 1, Ord(a1.R));
+            Ram.WriteByte(offset + 2, Byte(n2));
+            rBytesWritten := 3;
+            exit(True);
+          end
+          else
+          if a1.xFound and (not a1.rFound) then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MOVB_ADDR_X_X));
+            Ram.WriteWord(offset + 1, Ord(a1.X));
+            Ram.WriteByte(offset + 3, Byte(n2));
+            rBytesWritten := 4;
             exit(True);
           end
         end

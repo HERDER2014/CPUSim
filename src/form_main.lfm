@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 191
+  Left = 330
   Height = 633
-  Top = 66
+  Top = 94
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 614
@@ -744,10 +744,10 @@ object mainFrm: TmainFrm
     Left = 497
     Height = 20
     Top = 12
-    Width = 112
+    Width = 120
     ReadOnly = True
     TabOrder = 10
-    Text = '0000000000000000'
+    Text = '00000000 00000000'
   end
   object SP2: TEdit
     Left = 376

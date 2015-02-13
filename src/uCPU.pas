@@ -8,7 +8,10 @@ uses
 	 Classes, SysUtils, uRAM, uTypen, uOPCodes;
 
 type
-	 TCPU = class
+
+   { TCPU }
+
+  TCPU = class
 
 			 type TProc =
 			 procedure of object;
@@ -75,9 +78,12 @@ type
 			 procedure Run_MOV_R_ADDR_X();
 			 procedure Run_MOV_ADDR_R_R();
 			 procedure Run_MOV_ADDR_X_R();
+			 procedure Run_MOV_ADDR_X_X();
+			 procedure Run_MOV_ADDR_R_X();
 			 procedure Run_MOV_R_R();
 			 procedure Run_MOV_R_ADDR_RX();
 			 procedure Run_MOV_ADDR_RX_R();
+			 procedure Run_MOV_ADDR_RX_X();
 			 procedure Run_INC_R();
 			 procedure Run_DEC_R();
 			 procedure Run_ADD_R_X();
@@ -155,9 +161,12 @@ begin
 	 OPCodeProcedures[integer(MOV_R_ADDR_R)] := @Run_MOV_R_ADDR_R;
 	 OPCodeProcedures[integer(MOV_ADDR_R_R)] := @Run_MOV_ADDR_R_R;
 	 OPCodeProcedures[integer(MOV_ADDR_X_R)] := @Run_MOV_ADDR_X_R;
+	 OPCodeProcedures[integer(MOV_ADDR_R_X)] := @Run_MOV_ADDR_R_X;
+	 OPCodeProcedures[integer(MOV_ADDR_X_X)] := @Run_MOV_ADDR_X_X;
 	 OPCodeProcedures[integer(MOV_R_R)] := @Run_MOV_R_R;
 	 OPCodeProcedures[integer(MOV_R_ADDR_RX)] := @Run_MOV_R_ADDR_RX;
 	 OPCodeProcedures[integer(MOV_ADDR_RX_R)] := @Run_MOV_ADDR_RX_R;
+	 OPCodeProcedures[integer(MOV_ADDR_RX_X)] := @Run_MOV_ADDR_RX_X;
 	 OPCodeProcedures[integer(ADD_R_X)] := @Run_ADD_R_X;
 	 OPCodeProcedures[integer(ADD_R_ADDR_R)] := @Run_ADD_R_ADDR_R;
 	 OPCodeProcedures[integer(ADd_R_ADDR_X)] := @Run_ADD_R_ADDR_X;
@@ -402,6 +411,18 @@ begin
 	 Reg.IP += 4;
 end; // mov [x],R
 
+procedure TCPU.Run_MOV_ADDR_X_X;
+begin
+	 Ram.WriteWord(Ram.ReadWord(Reg.IP + 1), Ram.ReadWord(Reg.IP + 3));
+	 Reg.IP += 5;
+end;
+
+procedure TCPU.Run_MOV_ADDR_R_X;
+begin
+	 Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)), Ram.ReadWord(Reg.IP + 2));
+	 Reg.IP += 4;
+end;
+
 procedure TCPU.Run_MOV_R_R();
 begin
 	 WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 2)));
@@ -421,6 +442,13 @@ begin
 			 RR(Ram.ReadByte(Reg.IP + 4)));
 	 Reg.IP += 5;
 end; //mov [R+x],R
+
+procedure TCPU.Run_MOV_ADDR_RX_X;
+begin
+	 Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+			 Ram.ReadWord(Reg.IP + 4));
+	 Reg.IP += 6;
+end;
 
 procedure TCPU.Run_INC_R();
 begin

@@ -170,9 +170,6 @@ type
     // DEC R
     DEC_R,
 
-    //MOV [R], X
-    MOV_ADDR_R_X,
-
     //Leave this at the end:
     COUNT
 

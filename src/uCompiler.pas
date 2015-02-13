@@ -47,6 +47,7 @@ type
   var
     Ram: TRAM;
     CodePosMap : TCodePositionMap;
+    warnings : TStringList;
 
   public
   var
@@ -63,6 +64,11 @@ type
    }
     procedure Compile(input: string);
 
+    {
+     Vor: -
+     Erg.: Liefert die Warnungen vom letzten Assemblen.
+    }
+    function GetWarnings() : TStringList;
 
    {
    Vor.: Compile wurde ausgeführt.
@@ -101,6 +107,7 @@ begin
   Ram := r;
   NumberInputMode:=TNumberInputMode.Decimal;
   CodePosMap := TCodePositionMap.Create;
+  warnings := TStringList.Create;
 end;
 
 {
@@ -437,6 +444,11 @@ var
     rErrorString := UpperCase(instruction) + ': Invalid operands.';
   end;
 
+  procedure ReportWarning(s : String);
+  begin
+    warnings.Add(s);
+  end;
+
   function TryParseInt(s : String; out i : Integer) : Boolean;
   begin
     Result := TryParseIntBase(s, i, NumberInputMode);
@@ -473,7 +485,7 @@ begin
       begin
         if RegisterSmall(r1) or RegisterSmall(r2) then
         begin
-          //warnung ausgeben
+          ReportWarning('Register may be too small for this operation.');
         end;
       end;
       if operands.Count = 2 then
@@ -1887,6 +1899,7 @@ var
   end;
 
 begin
+  warnings.Clear;
   commandLines := TCommandLineList.Create;
   labelTable := TLabelMap.Create;
   labelResolveList := TLabelResolveList.Create;
@@ -1990,6 +2003,11 @@ begin
   }
   ResolveLabelAddresses();
   LastSize := bytepos;
+end;
+
+function TCompiler.GetWarnings: TStringList;
+begin
+  Result := warnings;
 end;
 
 function TCompiler.GetCodePosition(addr: Word): cardinal;

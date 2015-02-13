@@ -41,7 +41,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="11">
+    <Units Count="10">
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -98,11 +98,6 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="asmHighlighter"/>
       </Unit9>
-      <Unit10>
-        <Filename Value="epiktimer.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="EpikTimer"/>
-      </Unit10>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

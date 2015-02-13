@@ -1,10 +1,10 @@
 object mainFrm: TmainFrm
-  Left = 191
+  Left = 319
   Height = 633
-  Top = 66
+  Top = 146
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 614
+  ClientHeight = 613
   ClientWidth = 980
   Constraints.MinHeight = 343
   Constraints.MinWidth = 600
@@ -21,7 +21,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 407
+    Height = 406
     Top = 120
     Width = 545
     Align = alCustom
@@ -538,7 +538,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 545
-    Height = 407
+    Height = 406
     Top = 120
     Width = 435
     Anchors = [akTop, akRight, akBottom]
@@ -670,7 +670,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 35
     Width = 40
     ReadOnly = True
@@ -679,16 +679,16 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 35
     Width = 112
     ReadOnly = True
     TabOrder = 3
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object C2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 59
     Width = 40
     ReadOnly = True
@@ -697,16 +697,16 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 59
     Width = 112
     ReadOnly = True
     TabOrder = 5
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object D2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 83
     Width = 40
     ReadOnly = True
@@ -715,35 +715,35 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 83
     Width = 112
     ReadOnly = True
     TabOrder = 7
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object IP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 11
     Width = 112
     ReadOnly = True
     TabOrder = 8
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object BP1: TEdit
     Left = 264
-    Height = 20
+    Height = 21
     Top = 59
     Width = 112
     ReadOnly = True
     TabOrder = 9
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object F1: TEdit
-    Left = 497
-    Height = 20
-    Top = 12
+    Left = 264
+    Height = 21
+    Top = 83
     Width = 112
     ReadOnly = True
     TabOrder = 10
@@ -751,7 +751,7 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 35
     Width = 40
     ReadOnly = True
@@ -760,7 +760,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 59
     Width = 40
     ReadOnly = True
@@ -768,9 +768,9 @@ object mainFrm: TmainFrm
     Text = '0000'
   end
   object F2: TEdit
-    Left = 619
-    Height = 20
-    Top = 12
+    Left = 376
+    Height = 21
+    Top = 83
     Width = 40
     ReadOnly = True
     TabOrder = 13
@@ -778,7 +778,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 20
+    Height = 21
     Top = 11
     Width = 40
     ReadOnly = True
@@ -787,11 +787,11 @@ object mainFrm: TmainFrm
   end
   object AssembleBtn: TButton
     AnchorSideLeft.Side = asrBottom
-    Left = 584
+    Left = 447
     Height = 25
     Hint = 'Assembles the code'
-    Top = 44
-    Width = 75
+    Top = 8
+    Width = 130
     BorderSpacing.Left = 20
     BorderSpacing.Top = 10
     Caption = 'Assemble'
@@ -803,11 +803,11 @@ object mainFrm: TmainFrm
   object StepBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Side = asrBottom
-    Left = 449
+    Left = 447
     Height = 25
     Hint = 'moves one step forward in RAM. The code needs to be assembled'
-    Top = 44
-    Width = 60
+    Top = 79
+    Width = 63
     BorderSpacing.Left = 20
     BorderSpacing.Top = 30
     Caption = 'Step'
@@ -819,25 +819,24 @@ object mainFrm: TmainFrm
   end
   object RunPauseBtn: TButton
     AnchorSideLeft.Side = asrBottom
-    Left = 584
+    Left = 504
     Height = 25
     Hint = 'After stopping the program it may continued by clikcing this button.'
-    Top = 78
-    Width = 75
+    Top = 44
+    Width = 73
     BorderSpacing.Left = 30
     Caption = 'Run'
     Enabled = False
     OnClick = RunPauseBtnClick
-    ParentFont = False
     ParentShowHint = False
     ShowHint = True
     TabOrder = 17
   end
   object Label1: TLabel
     Left = 23
-    Height = 15
+    Height = 16
     Top = 16
-    Width = 19
+    Width = 16
     Caption = 'AX'
     Font.Height = -13
     ParentColor = False
@@ -845,16 +844,16 @@ object mainFrm: TmainFrm
   end
   object A1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 11
     Width = 112
     ReadOnly = True
     TabOrder = 18
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object A2: TEdit
     Left = 161
-    Height = 20
+    Height = 21
     Top = 11
     Width = 40
     ReadOnly = True
@@ -863,9 +862,9 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 15
+    Height = 16
     Top = 40
-    Width = 19
+    Width = 15
     Caption = 'BX'
     Font.Height = -13
     ParentColor = False
@@ -873,9 +872,9 @@ object mainFrm: TmainFrm
   end
   object Label3: TLabel
     Left = 23
-    Height = 15
+    Height = 16
     Top = 64
-    Width = 19
+    Width = 16
     Caption = 'CX'
     Font.Height = -13
     ParentColor = False
@@ -883,9 +882,9 @@ object mainFrm: TmainFrm
   end
   object Label4: TLabel
     Left = 23
-    Height = 15
-    Top = 86
-    Width = 20
+    Height = 16
+    Top = 88
+    Width = 16
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -893,16 +892,16 @@ object mainFrm: TmainFrm
   end
   object B1: TEdit
     Left = 49
-    Height = 20
+    Height = 21
     Top = 35
     Width = 112
     ReadOnly = True
     TabOrder = 20
-    Text = '00000000 00000000'
+    Text = '0000000000000000'
   end
   object Label5: TLabel
-    Left = 243
-    Height = 15
+    Left = 242
+    Height = 16
     Top = 16
     Width = 11
     Caption = 'IP'
@@ -912,33 +911,46 @@ object mainFrm: TmainFrm
   end
   object Label6: TLabel
     Left = 239
-    Height = 15
+    Height = 16
     Top = 40
-    Width = 17
+    Width = 15
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
   end
   object Label7: TLabel
-    Left = 449
-    Height = 15
-    Top = 15
-    Width = 42
+    Left = 216
+    Height = 16
+    Top = 88
+    Width = 37
     Caption = 'FLAGS'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
   end
   object Label8: TLabel
-    Left = 239
-    Height = 15
+    Left = 240
+    Height = 16
     Top = 64
-    Width = 17
+    Width = 14
     Caption = 'BP'
     Font.Height = -13
     ParentColor = False
     ParentFont = False
+  end
+  object SpeedEdt: TSpinEdit
+    Left = 447
+    Height = 25
+    Top = 44
+    Width = 50
+    AutoSize = False
+    Enabled = False
+    Font.Height = 18
+    MaxValue = 10000
+    OnChange = SpeedEdtChange
+    ParentFont = False
+    TabOrder = 21
   end
   object H_Menu_CodeSplitter: TSplitter
     AnchorSideRight.Control = Owner
@@ -946,7 +958,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 527
+    Top = 526
     Width = 977
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -955,11 +967,11 @@ object mainFrm: TmainFrm
   object StepOverBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Side = asrBottom
-    Left = 516
+    Left = 514
     Height = 25
     Hint = 'moves one step forward in RAM. The code needs to be assembled'
-    Top = 44
-    Width = 60
+    Top = 79
+    Width = 63
     BorderSpacing.Left = 20
     BorderSpacing.Top = 30
     Caption = 'Step Over'
@@ -967,7 +979,7 @@ object mainFrm: TmainFrm
     OnClick = StepOverBtnClick
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 22
+    TabOrder = 23
   end
   object Log_lb: TListBox
     AnchorSideTop.Control = H_Menu_CodeSplitter
@@ -977,80 +989,19 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 533
+    Top = 532
     Width = 980
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'
     )
-    ItemHeight = 14
-    ItemIndex = 0
+    ItemHeight = 13
     MultiSelect = True
-    TabOrder = 23
-  end
-  object speedEdt: TFloatSpinEdit
-    Left = 449
-    Height = 20
-    Top = 79
-    Width = 60
-    Enabled = False
-    Increment = 1
-    MaxValue = 1000
-    MinValue = 0.01
-    OnChange = SpeedEdtChange
     TabOrder = 24
-    Value = 1
-  end
-  object FrequencyType: TComboBox
-    Left = 516
-    Height = 20
-    Top = 79
-    Width = 60
-    Enabled = False
-    ItemHeight = 14
-    ItemIndex = 3
-    Items.Strings = (
-      'Hz'
-      'KHz'
-      'MHz'
-      'max'
-    )
-    OnChange = FrequencyTypeChange
-    Style = csDropDownList
-    TabOrder = 25
-    Text = 'max'
-  end
-  object Label9: TLabel
-    Left = 239
-    Height = 15
-    Top = 86
-    Width = 17
-    Caption = 'VP'
-    Font.Height = -13
-    ParentColor = False
-    ParentFont = False
-  end
-  object VP1: TEdit
-    Left = 264
-    Height = 20
-    Top = 83
-    Width = 112
-    ReadOnly = True
-    TabOrder = 26
-    Text = '00000000 00000000'
-  end
-  object VP2: TEdit
-    Left = 376
-    Height = 20
-    Top = 83
-    Width = 40
-    ReadOnly = True
-    TabOrder = 27
-    Text = '0000'
   end
   object MainFrm_Menu: TMainMenu
-    left = 872
-    top = 128
+    left = 776
+    top = 40
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
       object MainFrm_Menu_File_New: TMenuItem
@@ -1132,12 +1083,12 @@ object mainFrm: TmainFrm
   end
   object ReplaceDialog1: TReplaceDialog
     Options = [frDown, frReplace, frReplaceAll, frHidePromptOnReplace]
-    left = 928
-    top = 56
+    left = 656
+    top = 24
   end
   object ActionList: TActionList
-    left = 864
-    top = 32
+    left = 736
+    top = 88
     object FileExitAct: TFileExit
       Category = 'File'
       Caption = 'E&xit'
@@ -1202,7 +1153,7 @@ object mainFrm: TmainFrm
     Enabled = False
     Interval = 100
     OnTimer = Timer1Timer
-    left = 968
-    top = 120
+    left = 656
+    top = 88
   end
 end

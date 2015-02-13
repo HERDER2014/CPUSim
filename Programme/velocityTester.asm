@@ -3,7 +3,6 @@
 ; of the simulation. The total
 ; count of executed OP-Codes is
 ; 33555203. ((2*16^4+3)*16^2+3)
-;actual executed: 33423617
 
 MOV AX,FFFF
 MOV BX,FF

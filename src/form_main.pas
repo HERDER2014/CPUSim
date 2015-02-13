@@ -340,7 +340,7 @@ procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
 	 Step;
 	 RunPauseBtn.Caption := 'Run';
-	 Sleep(100);
+	 Sleep(200);
 	 trackTime := False;
 	 Timer1Timer(nil);
 end;
@@ -349,7 +349,7 @@ procedure TmainFrm.StepOverBtnClick(Sender: TObject);
 begin
 	 StepOver;
 	 RunPauseBtn.Caption := 'Run';
-	 Sleep(100);
+	 Sleep(200);
 	 trackTime := False;
 	 Timer1Timer(nil);
 end;

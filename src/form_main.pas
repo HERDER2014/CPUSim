@@ -30,6 +30,8 @@ type
     H_Menu_CodeSplitter: TSplitter;
     IP2: TEdit;
     IP1: TEdit;
+    VP2: TEdit;
+    VP1: TEdit;
     BP1: TEdit;
     F1: TEdit;
     Label1: TLabel;
@@ -277,7 +279,9 @@ begin
 	 SP2.Text := IntToHex(CPU.ReadRegister(SP), 4);
 	 BP1.Text := IntTOBin(CPU.ReadRegister(BP), 16, 8);
 	 BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
-	 F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
+	 VP1.Text := IntTOBin(CPU.ReadRegister(VP), 16, 8);
+	 VP2.Text := IntToHex(CPU.ReadRegister(VP), 4);
+   F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
 	 F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
 end;
 

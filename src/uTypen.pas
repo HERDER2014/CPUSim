@@ -11,7 +11,8 @@ type
   RegisterIndex = (AX, BX, CX, DX,
     AL, BL, CL, DL,
     AH, BH, CH, DH,
-    BP, SP, IP, FLAGS,
+    BP, SP, IP, VP,
+    FLAGS,
 
     {
      Wird vom Compiler dazu genutzt, ungültige Register-
@@ -29,6 +30,7 @@ type
     BP: word;
     SP: word;
     IP: word;
+    VP: word;
 
     FLAGS: word;
   end;

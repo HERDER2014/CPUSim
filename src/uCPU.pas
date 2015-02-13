@@ -274,6 +274,8 @@ begin
 			 integer(BP): Result := Reg.BP;
 			 integer(IP): Result := Reg.IP;
 			 integer(SP): Result := Reg.SP;
+			 integer(VP): Result := Reg.VP;
+
 			 integer(FLAGS): Result := Reg.FLAGS;
 			 else
 					 raise Exception.CreateFmt('Register with index %x is invalid.', [index]);
@@ -323,6 +325,7 @@ begin
 
 			 integer(BP): Reg.BP := w;
 			 integer(SP): Reg.SP := w;
+			 integer(VP): Reg.VP := w;
 			 else
 			 begin
 					 if force then

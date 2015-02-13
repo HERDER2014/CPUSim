@@ -294,6 +294,7 @@ begin
     'BP': Result := RegisterIndex.BP;
     'SP': Result := RegisterIndex.SP;
     'IP': Result := RegisterIndex.IP;
+    'VP': Result := RegisterIndex.VP;
     'FLAGS': Result := RegisterIndex.FLAGS;
     else
       Result := RegisterIndex.INVALID;

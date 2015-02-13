@@ -21,15 +21,15 @@ object OptionsFrm: TOptionsFrm
   end
   object Label1: TLabel
     Left = 144
-    Height = 19
+    Height = 13
     Top = 27
-    Width = 63
+    Width = 48
     Caption = 'RAM Size:'
     ParentColor = False
   end
   object OptionsFrm_RAMSizeEdt: TSpinEdit
     Left = 216
-    Height = 25
+    Height = 21
     Top = 24
     Width = 50
     MaxValue = 999999999

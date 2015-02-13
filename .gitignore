@@ -18,5 +18,8 @@ src/lib/
 bin/
 src/bin/
 
-#Programme
+# Programme
 Programme/
+
+# Mergetool .orig's
+*.orig

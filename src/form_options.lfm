@@ -33,17 +33,31 @@ object OptionsFrm: TOptionsFrm
     Top = 24
     Width = 50
     MaxValue = 999999999
+    OnChange = OptionsFrm_RAMSizeEdtChange
     TabOrder = 1
     Value = 256
+  end
+  object OptionsFrm_CloseBtn: TButton
+    Left = 152
+    Height = 25
+    Top = 200
+    Width = 75
+    Caption = 'Close'
+    OnClick = OptionsFrm_CloseBtnClick
+    TabOrder = 2
+  end
+  object OptionsFrm_OkBtn: TButton
+    Left = 72
+    Height = 25
+    Top = 200
+    Width = 75
+    Caption = 'OK'
+    OnClick = OptionsFrm_OkBtnClick
+    TabOrder = 3
   end
   object ActionList1: TActionList
     left = 213
     top = 57
-    object FileSaveAsAct: TFileSaveAs
-      Category = 'File'
-      Caption = 'Save &As ...'
-      Hint = 'Save As'
-    end
     object FileExitAct: TFileExit
       Category = 'File'
       Caption = 'E&xit'

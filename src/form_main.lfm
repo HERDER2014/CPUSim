@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 276
+  Left = 556
   Height = 633
-  Top = 175
+  Top = 10
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 607
@@ -1059,7 +1059,7 @@ object mainFrm: TmainFrm
         Caption = '-'
       end
       object MainFrm_Menu_File_Exit: TMenuItem
-        Action = FileSave_ExitAct
+        Action = FileExitAct
       end
     end
     object MainFrm_Menu_Edit: TMenuItem
@@ -1176,12 +1176,6 @@ object mainFrm: TmainFrm
       Hint = 'Save As'
       ShortCut = 24659
       OnAccept = FileSaveAsActAccept
-    end
-    object FileSave_ExitAct: TAction
-      Category = 'File'
-      Caption = 'E&xit'
-      Hint = 'Exit'
-      OnExecute = FileSave_ExitActExecute
     end
   end
   object Timer1: TTimer

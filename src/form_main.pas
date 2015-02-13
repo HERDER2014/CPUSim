@@ -18,7 +18,6 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
-    FileSave_ExitAct: TAction;
     ActionList: TActionList;
     AssembleBtn: TButton;
     B1: TEdit;
@@ -92,7 +91,8 @@ type
     procedure compileClick(Sender: TObject);
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
-    function FileSave_ExitActExecute(Sender: TObject) : Boolean;
+    //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
+    function FileExitActExecute(Sender: TObject) : Boolean;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -392,7 +392,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
 begin
-  FileSaveAsAct.Execute;;
+  FileSaveAsAct.Execute;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
@@ -467,39 +467,16 @@ begin
   Saved := true;
 end;
 
-function TmainFrm.FileSave_ExitActExecute(Sender: TObject) : Boolean;
-var
-  answer: longint;
+//function TmainFrm.FileSave_ExitActExecute(Sender: TObject) : Boolean;
+//var
+//  testbool : Boolean;
+//begin
+//  mainFrm.Close;
+//end;
+//
+function TmainFrm.FileExitActExecute(Sender: TObject) : Boolean;
 begin
-  if saved then
-  begin
-    //Application.Terminate;
-    Result:=true;
-  end else
-  begin
-    answer := MessageDlg('Do you want to save changes?',
-      mtConfirmation, mbYesNoCancel, 0);
-    if answer = mrYes then
-    begin
-      if SavePath='' then
-      begin
-        Result:=FileSaveAsAct.Execute;
-        FileExitAct.Execute;
-      end else
-      begin
-        InputSynEdit.Lines.SaveToFile(SavePath);
-        Saved := true;
-        Result:=False;
-      end
-    end else if answer = mrNo then
-    begin
-      Result:=true;
-      //Application.Terminate;
-    end else
-    begin
-      Result:=False;
-    end;
-  end;
+  mainFrm.Close;
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -508,13 +485,35 @@ begin
 end;
 
 procedure TmainFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+var
+  answer: longint;
 begin
-  if FileSave_ExitActExecute(mainFrm) then
+  if Saved then
   begin
-    CanClose:=true;
+    CanClose:=True;
   end else
   begin
-    CanClose:=false;
+    answer := MessageDlg('Do you want to save changes?',
+      mtConfirmation, mbYesNoCancel, 0);
+    if answer = mrYes then
+    begin
+      if SavePath='' then
+      begin
+        FileSaveAsAct.Execute;
+        CanClose:=Saved;
+      end else
+      begin
+        InputSynEdit.Lines.SaveToFile(SavePath);
+        Saved:=true;
+        CanClose:=True;
+      end
+    end else if answer = mrNo then
+    begin
+      CanClose:=true;
+    end else
+    begin
+      CanClose:=False;
+    end;
   end;
 end;
 

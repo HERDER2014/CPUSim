@@ -524,7 +524,7 @@ begin
           else
           if (a1.xFound) and (not a1.rFound) then
           begin
-            // A = R
+            // A = X
             Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_X_R));
             Ram.WriteWord(offset + 1, Ord(a1.x));
             Ram.WriteByte(offset + 3, Ord(r2));
@@ -541,7 +541,43 @@ begin
             rBytesWritten := 5;
           end;
           exit(True);
-        end;
+        end
+        else
+        if (a1.valid) and TryParseInt(operands.op2, n2) then
+        begin
+          // MOV [A], X
+          if a1.rFound and a1.xFound then
+          begin
+            // A = R+X
+            Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_RX_X));
+            Ram.WriteByte(offset + 1, Ord(a1.R));
+            Ram.WriteWord(offset + 2, Ord(a1.x));
+            Ram.WriteWord(offset + 4, n2);
+            rBytesWritten := 6;
+            exit(True);
+          end
+          else
+          if a1.rFound and (not a1.xFound) then
+          begin
+            // A = R
+            Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_R_X));
+            Ram.WriteByte(offset + 1, Ord(a1.R));
+            Ram.WriteWord(offset + 2, n2);
+            rBytesWritten := 4;
+            exit(True);
+          end
+          else
+          if a1.xFound and (not a1.rFound) then
+          begin
+            // A = X
+            Ram.WriteByte(offset, Ord(OPCode.MOV_ADDR_X_X));
+            Ram.WriteWord(offset + 1, Ord(a1.X));
+            Ram.WriteWord(offset + 3, n2);
+            rBytesWritten := 5;
+            exit(True);
+          end
+        end
+        else
         // Keine anderen Kombinationen von Operanden
         begin
           // Keine passenden Operanden

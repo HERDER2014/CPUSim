@@ -22,14 +22,20 @@ type
     MOV_R_ADDR_X,
     // MOV [R], R
     MOV_ADDR_R_R,
+    // MOV [R], X
+    MOV_ADDR_R_X,
     // MOV [X], R
     MOV_ADDR_X_R,
+    // MOV [X], X
+    MOV_ADDR_X_X,
     // MOV R, R
     MOV_R_R,
     // MOV R, [R+X]
     MOV_R_ADDR_RX,
     // MOV [R+X], R
     MOV_ADDR_RX_R,
+    // MOV [R+X], X
+    MOV_ADDR_RX_X,
 
     // ADD R, X
     ADD_R_X,

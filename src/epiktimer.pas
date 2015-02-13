@@ -74,7 +74,7 @@ uses
   Classes, SysUtils, dateutils;
 
 Const
-  DefaultSystemTicksPerSecond = 1000000; //Divisor for microsecond resolution
+  DefaultSystemTicksPerSecond = 1000000;  //Divisor for microsecond resolution
   { HW Tick frequency falls back to gated measurement if the initial system
     clock measurement is outside this range plus or minus.}
   SystemTicksNormalRangeLimit = 100000;

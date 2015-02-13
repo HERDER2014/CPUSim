@@ -129,13 +129,15 @@ type
 			 procedure StopBtnClick(Sender: TObject);
 			 procedure TFindDialogFind(Sender: TObject);
 			 procedure Timer1Timer(Sender: TObject);
-			 procedure updateRAM;
+			 procedure setupRAM;
 			 procedure updateREG;
 			 procedure resume;
 			 procedure Step;
 			 procedure StepOver;
 			 procedure Stop;
 			 procedure setVel;
+           procedure OnRAMChange(addr: Word);
+
 	 private
 	 public
 			 { public declarations }
@@ -156,6 +158,9 @@ var
 	 // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
 	 // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
 	 RAMSize: cardinal;
+   oldIP : Word;
+   oldBP : Word;
+   oldSP : Word;
 
 implementation
 
@@ -180,25 +185,38 @@ end;
 
 procedure TmainFrm.DoCompile;
 begin
-	 RAM := TRAM.Create(RAMSize);
-	 comp := TCompiler.Create(RAM);
-	 comp.NumberInputMode := TNumberInputMode.Hexadecimal;
-	 try
-			 comp.Compile(InputSynEdit.Text);
-			 Log_lb.Items.Insert(0, '[success] compilation completed');
-			 CPU.Destroy;
-			 CPU := TCPU.Create(RAM);
-			 Thread := TCPUThread.Create(CPU);
-			 Thread.OnTerminate := @OnCPUTerminate;
-			 assembled := True;
-			 trackTime := True;
-			 drawCodeIPHighlighting := True;
-			 InputSynEdit.ReadOnly := True;
-			 updateRAM;
-	 except
-			 on e: Exception do
-					 Log_lb.Items.Insert(0, '[error] compilation failed: ' + e.Message);
-	 end;
+  if RAM <> NIL then
+    RAM.Destroy;
+  if comp <> NIL then
+    comp.Destroy;
+  if CPU <> NIL then
+    CPU.Destroy;
+
+  RAM := TRAM.Create(RAMSize);
+  RAM.ChangeCallback:=@OnRAMChange;
+
+  comp := TCompiler.Create(RAM);
+  comp.NumberInputMode := TNumberInputMode.Hexadecimal;
+  try
+    comp.Compile(InputSynEdit.Text);
+    Log_lb.Items.Insert(0,'[success] compilation completed');
+    CPU := TCPU.Create(RAM);
+    Thread := TCPUThread.Create(CPU);
+    Thread.OnTerminate := @OnCPUTerminate;
+    assembled := True;
+    trackTime:= True;
+    drawCodeIPHighlighting:= true;
+    InputSynEdit.ReadOnly:= true;
+
+    oldIP := CPU.ReadRegister(RegisterIndex.IP);
+    oldBP := CPU.ReadRegister(RegisterIndex.BP);
+    oldSP := CPU.ReadRegister(RegisterIndex.SP);
+
+    setupRAM;
+  except
+    on e: Exception do
+      Log_lb.Items.Insert(0,'[error] compilation failed: ' + e.Message);
+  end;
 end;
 
 procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
@@ -230,7 +248,7 @@ begin
 end;
 
 
-procedure TmainFrm.updateRAM;
+procedure TmainFrm.setupRAM;
 var
 	 i: cardinal;
 begin
@@ -352,9 +370,23 @@ end;
 
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
-	 updateREG;
-	 updateRAM;
-	 InputSynEdit.Invalidate;
+	updateREG;
+
+
+  RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
+  RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
+  RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
+
+  oldIP := CPU.ReadRegister(RegisterIndex.IP);
+  oldBP := CPU.ReadRegister(RegisterIndex.BP);
+  oldSP := CPU.ReadRegister(RegisterIndex.SP);
+
+  RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
+  RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
+  RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
+
+   //updateRAM;
+	InputSynEdit.Invalidate;
 end;
 
 
@@ -397,6 +429,28 @@ begin
 			 Thread.setVel(speedEdt.Value * power(1000, FrequencyType.ItemIndex));
 	 end;
 
+end;
+
+procedure TmainFrm.OnRAMChange(addr: Word);
+var
+  row, col : Integer;
+begin
+  row := addr and 15 + 1;
+  col := addr shr 4 + 1;
+  RAMGrid.Cells[row, col] := IntToHex(Ram.ReadByte(addr), 2);
+  RAMGrid.InvalidateCell(row, col);
+  if (col-1) + ((row-1) shl 4) = CPU.ReadRegister(IP) then
+    begin
+      Canvas.Brush.Color := clYellow;
+    end
+    else if (Col-1) + ((Row-1) shl 4) = CPU.ReadRegister(BP) then
+    begin
+      Canvas.Brush.Color := $FF8888;
+    end
+    else if (Col-1) + ((Row-1) shl 4) = CPU.ReadRegister(SP) then
+    begin
+      Canvas.Brush.Color := clGreen;
+    end;
 end;
 
 // standard actions:------------------------------------------------------------

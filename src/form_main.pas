@@ -5,7 +5,7 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo,
+  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo, RTTICtrls,
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
   uCompiler, form_options, uCPUThread, strutils, uTypen,
@@ -21,6 +21,9 @@ type
     ActionList: TActionList;
     AssembleBtn: TButton;
     B1: TEdit;
+    Flag_O: TCheckBox;
+    Flag_S: TCheckBox;
+    Flag_Z: TCheckBox;
     EditCopyAct: TEditCopy;
     EditCutAct: TEditCut;
     EditPasteAct: TEditPaste;
@@ -30,10 +33,12 @@ type
     H_Menu_CodeSplitter: TSplitter;
     IP2: TEdit;
     IP1: TEdit;
+    Label9: TLabel;
+    MainFrm_Menu_Options: TMenuItem;
+    Panel1: TPanel;
     VP2: TEdit;
     VP1: TEdit;
     BP1: TEdit;
-    F1: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -47,7 +52,6 @@ type
     SearchFindAct: TSearchFind;
     SP2: TEdit;
     BP2: TEdit;
-    F2: TEdit;
     B2: TEdit;
     SP1: TEdit;
     C2: TEdit;
@@ -101,6 +105,8 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FrequencyTypeChange(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
+
     procedure RunPauseBtnClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -162,6 +168,7 @@ var
   oldIP : Word;
   oldBP : Word;
   oldSP : Word;
+  oldVP : Word;
 implementation
 
 {$R *.lfm}
@@ -211,6 +218,7 @@ begin
     oldIP := CPU.ReadRegister(RegisterIndex.IP);
     oldBP := CPU.ReadRegister(RegisterIndex.BP);
     oldSP := CPU.ReadRegister(RegisterIndex.SP);
+    oldVP := CPU.ReadRegister(RegisterIndex.VP);
 
     setupRAM;
   except
@@ -224,17 +232,21 @@ procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
 begin
 	 with TStringGrid(Sender) do
 	 begin
-			 if (aCol - 1) + ((aRow - 1) shl 4) = CPU.ReadRegister(IP) then
+			 if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
 			 begin
 					 Canvas.Brush.Color := clYellow;
 			 end
-			 else if (aCol - 1) + ((aRow - 1) shl 4) = CPU.ReadRegister(BP) then
+			 else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
 			 begin
 					 Canvas.Brush.Color := $FF8888;
 			 end
-			 else if (aCol - 1) + ((aRow - 1) shl 4) = CPU.ReadRegister(SP) then
+			 else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
 			 begin
 					 Canvas.Brush.Color := clGreen;
+			 end
+       else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
+			 begin
+					 Canvas.Brush.Color := clLime;
 			 end;
 			 Canvas.FillRect(aRect);
 			 Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
@@ -264,8 +276,46 @@ begin
 end;
 
 procedure TmainFrm.updateREG;
+var
+   newIP : word;
+   newBP : word;
+   newSP : word;
+   newVP : word;
 begin
-	 A1.Text := IntTOBin(CPU.ReadRegister(AX), 16, 8);
+  newIP := CPU.ReadRegister(RegisterIndex.IP);
+  newBP := CPU.ReadRegister(RegisterIndex.BP);
+  newSP := CPU.ReadRegister(RegisterIndex.SP);
+  newVP := CPU.ReadRegister(RegisterIndex.VP);
+
+  if (newIP <> oldIP) then begin
+    RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
+    InputSynEdit.InvalidateLine(comp.GetCodePosition(oldIP));
+    oldIP := newIP;
+    RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
+    InputSynEdit.Invalidate;
+    InputSynEdit.InvalidateLine(comp.GetCodePosition(oldIP));
+  end;
+
+  if (newBP <> oldBP) then begin
+    RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
+    oldBP := newBP;
+    RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
+  end;
+
+  if (newSP <> oldSP) then begin
+    RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
+    oldSP := newSP;
+    RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
+  end;
+
+  if (newVP <> oldVP) then begin
+    RAMGrid.InvalidateCell(oldVP and 15 + 1, oldVP shr 4 + 1);
+    oldVP := newVP;
+    RAMGrid.InvalidateCell(oldVP and 15 + 1, oldVP shr 4 + 1);
+  end;
+
+
+   A1.Text := IntTOBin(CPU.ReadRegister(AX), 16, 8);
 	 A2.Text := IntToHex(CPU.ReadRegister(AX), 4);
 	 B1.Text := IntTOBin(CPU.ReadRegister(BX), 16, 8);
 	 B2.Text := IntToHex(CPU.ReadRegister(BX), 4);
@@ -281,8 +331,12 @@ begin
 	 BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
 	 VP1.Text := IntTOBin(CPU.ReadRegister(VP), 16, 8);
 	 VP2.Text := IntToHex(CPU.ReadRegister(VP), 4);
-   F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
-	 F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
+   Flag_S.Checked:=(CPU.ReadRegister(FLAGS) and Integer(S))>0;
+   Flag_Z.Checked:=(CPU.ReadRegister(FLAGS) and Integer(Z))>0;
+   Flag_O.Checked:=(CPU.ReadRegister(FLAGS) and Integer(O))>0;
+
+ //  F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
+//	 F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
 end;
 
 procedure TmainFrm.resume;
@@ -387,22 +441,6 @@ end;
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
 	updateREG;
-
-
-  RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
-  RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
-  RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
-
-  oldIP := CPU.ReadRegister(RegisterIndex.IP);
-  oldBP := CPU.ReadRegister(RegisterIndex.BP);
-  oldSP := CPU.ReadRegister(RegisterIndex.SP);
-
-  RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
-  RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
-  RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
-
-   //updateRAM;
-	InputSynEdit.Invalidate;
 end;
 
 
@@ -526,7 +564,7 @@ end;
 procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
 	 Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
-	 if (drawCodeIPHighlighting) and (Line = comp.GetCodePosition(Hex2Dec(IP2.Text))) then
+	 if (drawCodeIPHighlighting) and (Line = comp.GetCodePosition(oldIP)) then
 	 begin
 			 Special := True;
 			 BG := clYellow;
@@ -646,6 +684,11 @@ procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
   OptionsFrm:=TOptionsFrm.Create(mainFrm);
   OptionsFrm.Show;
+end;
+
+procedure TmainFrm.Panel1Click(Sender: TObject);
+begin
+
 end;
 
 

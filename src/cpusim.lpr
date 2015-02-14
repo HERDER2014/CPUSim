@@ -7,8 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, form_main, uRAM, uCompiler, uTypen, form_options, asmHighlighter,
-  EpikTimer;
+  Forms, runtimetypeinfocontrols, form_main, uRAM, uCompiler, uTypen,
+  form_options, asmHighlighter, EpikTimer;
 
 {$R *.res}
 

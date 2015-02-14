@@ -190,6 +190,11 @@ type
     // IN R
     IN_R,
 
+    // OUT X
+    OUT_X,
+    // OUT R
+    OUT_R,
+
     // INC R
     INC_R,
     // DEC R

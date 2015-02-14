@@ -153,7 +153,10 @@ type
 			 procedure Run_XOR_R_R();
 			 procedure Run_XOR_R_ADDR_X();
 			 procedure Run_XOR_R_ADDR_R();
-	 end;
+       procedure Run_OUT_R();
+       procedure Run_OUT_X();
+
+  end;
 
 implementation
 
@@ -162,9 +165,10 @@ begin
 	 Ram := r;
 	 InitCriticalSection(cs);
 	 Reg.IP := 0;
-	 Reg.SP := r.GetSize - 1;
-	 Reg.BP := r.GetSize - 1;
-	 Reg.FLAGS := 0;
+	 Reg.SP := r.GetVRAMStart - 1;
+	 Reg.BP := r.GetVRAMStart - 1;
+   Reg.VP := r.GetVRAMStart;
+   Reg.FLAGS := 0;
 	 Reg.AX := 0;
 	 Reg.BX := 0;
 	 Reg.CX := 0;
@@ -254,6 +258,9 @@ begin
 	 // OPCodeProcedures[Integer(IN_R)] := @Run_IN_R;
 	 OPCodeProcedures[integer(INC_R)] := @Run_INC_R;
 	 OPCodeProcedures[integer(DEC_R)] := @Run_DEC_R;
+	 OPCodeProcedures[integer(OUT_R)] := @Run_OUT_R;
+	 OPCodeProcedures[integer(OUT_X)] := @Run_OUT_X;
+
 
 end;
 
@@ -1001,6 +1008,18 @@ begin
 	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP+2))) xor
 			 RR(Ram.ReadByte(Reg.IP + 1)), True);
 	 Reg.IP += 3;
+end;
+
+procedure TCPU.Run_OUT_R;
+begin
+  Ram.WriteByte(Reg.VP,RR(Ram.ReadByte(Reg.IP+1)));
+  Reg.IP += 2;
+end;
+
+procedure TCPU.Run_OUT_X;
+begin
+   Ram.WriteByte(Reg.VP,Ram.ReadByte(Reg.IP+1));
+   Reg.IP += 2;
 end;
 
 function TCPU.Step(): OPCode;

@@ -13,6 +13,7 @@ type
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
+    Label2: TLabel;
     OptionsFrm_OkBtn: TButton;
     OptionsFrm_CloseBtn: TButton;
     FileExitAct: TFileExit;
@@ -22,6 +23,7 @@ type
     //OptionsFrm_Step_Vel: TLabel;
     OptionsFrm_ApplyBtn: TButton;
     OptionsFrm_RAMSizeEdt: TSpinEdit;
+    OptionsFrm_VRAMSizeEdt: TSpinEdit;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -54,6 +56,7 @@ uses
 procedure TOptionsFrm.OptionsFrm_ApplyBtnClick(Sender: TObject);
 begin
   mainFrm.RAMSize:=StrToInt(OptionsFrm_RAMSizeEdt.Text);
+  mainFrm.VRAMSize:=StrToInt(OptionsFrm_VRAMSizeEdt.Text);
   Saved:=True;
 end;
 

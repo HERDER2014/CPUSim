@@ -147,6 +147,7 @@ type
   public
     { public declarations }
     RAMSize: cardinal;
+    VRAMSize: cardinal;
   end;
 
 var
@@ -183,9 +184,8 @@ begin
 	 InputSynEdit.Highlighter := hlt;
 
 	 RAMSize := 512;
+   VRAMSize := 64;
 	 Saved := True; // Don't ask for save when program just started
-	 RAM := TRAM.Create(RAMSize);
-	 CPU := TCPU.Create(RAM);
 	 assembled := False;
 	 InputSynEdit.ReadOnly := False;
 end;
@@ -199,7 +199,7 @@ begin
   if CPU <> NIL then
     CPU.Destroy;
 
-  RAM := TRAM.Create(RAMSize);
+  RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
   RAM.ChangeCallback:=@OnRAMChange;
 
   comp := TCompiler.Create(RAM);
@@ -266,8 +266,8 @@ procedure TmainFrm.setupRAM;
 var
 	 i: cardinal;
 begin
-	 RAMGrid.RowCount := (RAMSize - 1) div 16 + 2;
-	 for i := 0 to RAMSize - 1 do
+	 RAMGrid.RowCount := (RAMSize + VRAMSize - 1) div 16 + 2;
+	 for i := 0 to RAMSize + VRAMSize - 1 do
 	 begin
 			 RAMGrid.Cells[i and 15 + 1, i shr 4 + 1] := IntToHex(Ram.ReadByte(i), 2);
 	 end;
@@ -447,8 +447,6 @@ begin
   if Thread.Suspended then begin
     Timer1.Enabled:=false;
     RunPauseBtn.Caption:='Run';
-
-
   end;
 end;
 
@@ -724,8 +722,6 @@ procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
 	 if AssembleBtn.Caption = 'Assemble' then
 	 begin
-			 RAM.Destroy;
-			 RAM := TRAM.Create(RAMSize);
 			 DoCompile;
 			 if assembled then
 			 begin

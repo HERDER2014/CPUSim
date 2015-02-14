@@ -33,6 +33,7 @@ object OptionsFrm: TOptionsFrm
     Top = 24
     Width = 50
     MaxValue = 999999999
+    MinValue = 1
     OnChange = OptionsFrm_RAMSizeEdtChange
     TabOrder = 1
     Value = 256
@@ -55,9 +56,28 @@ object OptionsFrm: TOptionsFrm
     OnClick = OptionsFrm_OkBtnClick
     TabOrder = 3
   end
+  object OptionsFrm_VRAMSizeEdt: TSpinEdit
+    Left = 216
+    Height = 21
+    Top = 52
+    Width = 50
+    MaxValue = 999999999
+    MinValue = 1
+    OnChange = OptionsFrm_RAMSizeEdtChange
+    TabOrder = 4
+    Value = 64
+  end
+  object Label2: TLabel
+    Left = 144
+    Height = 13
+    Top = 55
+    Width = 58
+    Caption = 'V-RAM Size:'
+    ParentColor = False
+  end
   object ActionList1: TActionList
-    left = 213
-    top = 57
+    left = 216
+    top = 120
     object FileExitAct: TFileExit
       Category = 'File'
       Caption = 'E&xit'

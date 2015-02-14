@@ -12,8 +12,11 @@ type
   TRAMChangeCallback = procedure(addr: word) of object;
 
 type
+
+  { TRAM }
+
   TRAM = class
-    constructor Create(size: cardinal);
+    constructor Create(size: word; vStart: word);
 
   var
     ChangeCallback: TRAMChangeCallback;
@@ -47,6 +50,14 @@ type
     Ergebnis: Gibt Größe des RAM aus.
   }
     function GetSize: cardinal;
+
+  { Vor.: RAM ist kreiert
+    Effekt: -
+    Ergebnis: Gibt die erste Adresse des V-RAMs aus.
+  }
+    function GetVRAMStart: cardinal;
+
+
   end;
 
 type
@@ -56,16 +67,13 @@ implementation
 
 var
   ram: array of byte;
-
-var
-  size_RAM: cardinal;
-
-var
+  size_RAM: word;
   cs: Trtlcriticalsection;
+  vRamStart: word;
 
-constructor TRAM.Create(size: cardinal);
+constructor TRAM.Create(size: word; vStart: word);
 var
-  i: integer;
+  i: word;
 begin
   ChangeCallback := nil;
   SetLength(ram, size);
@@ -73,6 +81,7 @@ begin
     ram[i] := 0;
   size_RAM := size;
   initcriticalsection(cs);
+  vRamStart:=vStart;
 end;
 
 function TRAM.ReadByte(addr: cardinal): byte;
@@ -135,6 +144,11 @@ end;
 function TRAM.GetSize: cardinal;
 begin
   Result := size_RAM;
+end;
+
+function TRAM.GetVRAMStart: cardinal;
+begin
+  Result := vRamStart;
 end;
 
 end.

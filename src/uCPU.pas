@@ -143,10 +143,16 @@ type
 			 procedure Run_NOT_R();
 			 procedure Run_AND_R_X();
 			 procedure Run_AND_R_R();
+			 procedure Run_AND_R_ADDR_X();
+			 procedure Run_AND_R_ADDR_R();
 			 procedure Run_OR_R_X();
 			 procedure Run_OR_R_R();
+			 procedure Run_OR_R_ADDR_X();
+			 procedure Run_OR_R_ADDR_R();
 			 procedure Run_XOR_R_X();
 			 procedure Run_XOR_R_R();
+			 procedure Run_XOR_R_ADDR_X();
+			 procedure Run_XOR_R_ADDR_R();
 	 end;
 
 implementation
@@ -239,16 +245,15 @@ begin
 	 OPCodeProcedures[integer(XOR_R_R)] := @Run_XOR_R_R;
 	 OPCodeProcedures[integer(JNO_R)] := @Run_JNO_R;
 	 OPCodeProcedures[integer(JNO_X)] := @Run_JNO_X;
-	 // OPCodeProcedures[Integer(AND_R_ADDR_X)] := @Run_AND_R_ADDR_X;
-	 // OPCodeProcedures[Integer(AND_R_ADDR_R)] := @Run_AND_R_ADDR_R;
-	 // OPCodeProcedures[Integer(OR_R_ADDR_X)] := @Run_OR_R_ADDR_X;
-	 // OPCodeProcedures[Integer(OR_R_ADDR_R)] := @Run_OR_R_ADDR_R;
-	 // OPCodeProcedures[Integer(XOR_R_ADDR_X)] := @Run_XOR_R_ADDR_X;
-	 // OPCodeProcedures[Integer(XOR_R_ADDR_R)] := @Run_XOR_R_ADDR_R;
+	 OPCodeProcedures[Integer(AND_R_ADDR_X)] := @Run_AND_R_ADDR_X;
+	 OPCodeProcedures[Integer(AND_R_ADDR_R)] := @Run_AND_R_ADDR_R;
+	 OPCodeProcedures[Integer(OR_R_ADDR_X)] := @Run_OR_R_ADDR_X;
+	 OPCodeProcedures[Integer(OR_R_ADDR_R)] := @Run_OR_R_ADDR_R;
+	 OPCodeProcedures[Integer(XOR_R_ADDR_X)] := @Run_XOR_R_ADDR_X;
+	 OPCodeProcedures[Integer(XOR_R_ADDR_R)] := @Run_XOR_R_ADDR_R;
 	 // OPCodeProcedures[Integer(IN_R)] := @Run_IN_R;
 	 OPCodeProcedures[integer(INC_R)] := @Run_INC_R;
 	 OPCodeProcedures[integer(DEC_R)] := @Run_DEC_R;
-	 // OPCodeProcedures[Integer(MOD_ADDR_R_X)] := @Run_MOV_ADDR_R_X;
 
 end;
 
@@ -928,6 +933,20 @@ begin
 	 Reg.IP += 3;
 end; //and R,R
 
+procedure TCPU.Run_AND_R_ADDR_X;
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) and
+			 RR(Ram.ReadByte(Reg.IP + 1)), True);
+	 Reg.IP += 4;
+end;
+
+procedure TCPU.Run_AND_R_ADDR_R;
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP+2))) and
+			 RR(Ram.ReadByte(Reg.IP + 1)), True);
+	 Reg.IP += 3;
+end;
+
 procedure TCPU.Run_OR_R_X();
 begin
 	 WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 1)) or
@@ -942,6 +961,20 @@ begin
 	 Reg.IP += 3;
 end; //or R,R
 
+procedure TCPU.Run_OR_R_ADDR_X;
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) or
+			 RR(Ram.ReadByte(Reg.IP + 1)), True);
+	 Reg.IP += 4;
+end;
+
+procedure TCPU.Run_OR_R_ADDR_R;
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP+2))) or
+			 RR(Ram.ReadByte(Reg.IP + 1)), True);
+	 Reg.IP += 3;
+end;
+
 procedure TCPU.Run_XOR_R_X();
 begin
 	 WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 1)) xor
@@ -955,6 +988,20 @@ begin
 			 RR(Ram.ReadByte(Reg.IP + 1)), True);
 	 Reg.IP += 3;
 end; //xor R,R
+
+procedure TCPU.Run_XOR_R_ADDR_X;
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP+2)) xor
+			 RR(Ram.ReadByte(Reg.IP + 1)), True);
+	 Reg.IP += 4;
+end;
+
+procedure TCPU.Run_XOR_R_ADDR_R;
+begin
+	 WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP+2))) xor
+			 RR(Ram.ReadByte(Reg.IP + 1)), True);
+	 Reg.IP += 3;
+end;
 
 function TCPU.Step(): OPCode;
 var

@@ -220,6 +220,8 @@ begin
     oldSP := CPU.ReadRegister(RegisterIndex.SP);
     oldVP := CPU.ReadRegister(RegisterIndex.VP);
 
+    InputSynEdit.Invalidate;
+
     setupRAM;
   except
     on e: Exception do
@@ -394,20 +396,20 @@ end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
-	 Step;
+	 Timer1.Enabled := True;
+
+   Step;
 	 RunPauseBtn.Caption := 'Run';
-	 Sleep(200);
 	 trackTime := False;
-	 Timer1Timer(nil);
 end;
 
 procedure TmainFrm.StepOverBtnClick(Sender: TObject);
 begin
-	 StepOver;
-	 RunPauseBtn.Caption := 'Run';
-	 Sleep(200);
-	 trackTime := False;
-	 Timer1Timer(nil);
+  Timer1.Enabled := True;
+
+  StepOver;
+	RunPauseBtn.Caption := 'Run';
+	trackTime := False;
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
@@ -441,6 +443,13 @@ end;
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
 	updateREG;
+
+  if Thread.Suspended then begin
+    Timer1.Enabled:=false;
+    RunPauseBtn.Caption:='Run';
+
+
+  end;
 end;
 
 
@@ -483,6 +492,8 @@ begin
 			 Thread.setVel(speedEdt.Value * power(1000, FrequencyType.ItemIndex));
 	 end;
 
+   trackTime:=false;
+
 end;
 
 procedure TmainFrm.OnRAMChange(addr: Word);
@@ -493,7 +504,7 @@ begin
   col := addr shr 4 + 1;
   RAMGrid.Cells[row, col] := IntToHex(Ram.ReadByte(addr), 2);
   RAMGrid.InvalidateCell(row, col);
-  if (col-1) + ((row-1) shl 4) = CPU.ReadRegister(IP) then
+ { if (col-1) + ((row-1) shl 4) = CPU.ReadRegister(IP) then
     begin
       Canvas.Brush.Color := clYellow;
     end
@@ -504,7 +515,7 @@ begin
     else if (Col-1) + ((Row-1) shl 4) = CPU.ReadRegister(SP) then
     begin
       Canvas.Brush.Color := clGreen;
-    end;
+    end;  }
 end;
 
 // standard actions:------------------------------------------------------------
@@ -704,7 +715,6 @@ begin
 	 begin
 			 Step;
 			 RunPauseBtn.Caption := 'Run';
-			 Timer1.Enabled := False;
 			 trackTime := False;
 	 end;
 end;

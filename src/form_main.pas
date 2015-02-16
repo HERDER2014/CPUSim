@@ -101,9 +101,6 @@ type
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     function FileExitActExecute(Sender: TObject) : Boolean;
-    procedure Flag_OChange(Sender: TObject);
-    procedure Flag_SChange(Sender: TObject);
-    procedure Flag_ZChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -337,6 +334,7 @@ begin
 	 BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
 	 VP1.Text := IntTOBin(CPU.ReadRegister(VP), 16, 8);
 	 VP2.Text := IntToHex(CPU.ReadRegister(VP), 4);
+   FLAGS1.Text := IntToBin(CPU.ReadRegister(FLAGS), 16, 8);
    Flag_S.Checked:=(CPU.ReadRegister(FLAGS) and Integer(S))>0;
    Flag_Z.Checked:=(CPU.ReadRegister(FLAGS) and Integer(Z))>0;
    Flag_O.Checked:=(CPU.ReadRegister(FLAGS) and Integer(O))>0;
@@ -616,21 +614,6 @@ end;
 function TmainFrm.FileExitActExecute(Sender: TObject) : Boolean;
 begin
   mainFrm.Close;
-end;
-
-procedure TmainFrm.Flag_OChange(Sender: TObject);
-begin
-  Flag_O.Checked:= false;
-end;
-
-procedure TmainFrm.Flag_SChange(Sender: TObject);
-begin
-   Flag_S.Checked:= false;
-end;
-
-procedure TmainFrm.Flag_ZChange(Sender: TObject);
-begin
-  Flag_Z.Checked:= false;
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

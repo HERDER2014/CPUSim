@@ -1,11 +1,11 @@
 object mainFrm: TmainFrm
   Left = 349
-  Height = 633
+  Height = 584
   Top = 151
-  Width = 980
+  Width = 935
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 614
-  ClientWidth = 980
+  ClientHeight = 565
+  ClientWidth = 935
   Constraints.MinHeight = 343
   Constraints.MinWidth = 600
   KeyPreview = True
@@ -14,6 +14,7 @@ object mainFrm: TmainFrm
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
   inline InputSynEdit: TSynEdit
@@ -21,9 +22,9 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 399
+    Height = 350
     Top = 128
-    Width = 545
+    Width = 500
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -15
@@ -537,8 +538,8 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
-    Left = 545
-    Height = 399
+    Left = 500
+    Height = 350
     Hint = 'The RAM will be displayed here'
     Top = 128
     Width = 435
@@ -942,8 +943,8 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 527
-    Width = 977
+    Top = 478
+    Width = 932
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
     ResizeAnchor = akBottom
@@ -973,8 +974,8 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 533
-    Width = 980
+    Top = 484
+    Width = 935
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'

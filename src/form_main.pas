@@ -104,6 +104,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
@@ -688,6 +689,25 @@ begin
         AssembleBtnClick(nil);
     if assembled then
         StepBtnClick(nil);
+  end;
+end;
+
+procedure TmainFrm.FormResize(Sender: TObject);
+begin
+  If (mainFrm.Width > 900) then begin
+    RAMGrid.AnchorSide[akBottom].Control := mainFrm;
+    RAMGrid.AnchorSide[akBottom].Side:=asrBottom;
+    Log_lb.AnchorSide[akRight].Control := RAMGrid;
+    Log_lb.AnchorSide[akRight].Side := asrLeft;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Control := RAMGrid;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Side := asrLeft;
+  end else begin
+    RAMGrid.AnchorSide[akBottom].Control := H_Menu_CodeSplitter;
+    RAMGrid.AnchorSide[akBottom].Side:=asrTop;
+    Log_lb.AnchorSide[akRight].Control := mainFrm;
+    Log_lb.AnchorSide[akRight].Side := asrRight;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Control := mainFrm;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Side := asrRight;
   end;
 end;
 

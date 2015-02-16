@@ -1,10 +1,10 @@
 object mainFrm: TmainFrm
-  Left = 330
+  Left = 349
   Height = 633
-  Top = 94
+  Top = 151
   Width = 980
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 614
+  ClientHeight = 613
   ClientWidth = 980
   Constraints.MinHeight = 343
   Constraints.MinWidth = 600
@@ -21,8 +21,8 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 391
-    Top = 136
+    Height = 398
+    Top = 128
     Width = 545
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -538,9 +538,9 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 545
-    Height = 391
+    Height = 398
     Hint = 'The RAM will be displayed here'
-    Top = 136
+    Top = 128
     Width = 435
     Anchors = [akTop, akRight, akBottom]
     ColCount = 17
@@ -673,8 +673,8 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 21
-    Top = 35
+    Height = 23
+    Top = 38
     Width = 40
     ReadOnly = True
     TabOrder = 2
@@ -682,8 +682,8 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 21
-    Top = 35
+    Height = 23
+    Top = 38
     Width = 112
     ReadOnly = True
     TabOrder = 3
@@ -691,8 +691,8 @@ object mainFrm: TmainFrm
   end
   object C2: TEdit
     Left = 161
-    Height = 21
-    Top = 59
+    Height = 23
+    Top = 62
     Width = 40
     ReadOnly = True
     TabOrder = 4
@@ -700,8 +700,8 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 21
-    Top = 59
+    Height = 23
+    Top = 62
     Width = 112
     ReadOnly = True
     TabOrder = 5
@@ -709,8 +709,8 @@ object mainFrm: TmainFrm
   end
   object D2: TEdit
     Left = 161
-    Height = 21
-    Top = 83
+    Height = 23
+    Top = 86
     Width = 40
     ReadOnly = True
     TabOrder = 6
@@ -718,8 +718,8 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 21
-    Top = 83
+    Height = 23
+    Top = 86
     Width = 112
     ReadOnly = True
     TabOrder = 7
@@ -727,8 +727,8 @@ object mainFrm: TmainFrm
   end
   object IP1: TEdit
     Left = 264
-    Height = 21
-    Top = 11
+    Height = 23
+    Top = 14
     Width = 112
     ReadOnly = True
     TabOrder = 8
@@ -736,8 +736,8 @@ object mainFrm: TmainFrm
   end
   object BP1: TEdit
     Left = 264
-    Height = 21
-    Top = 59
+    Height = 23
+    Top = 62
     Width = 112
     ReadOnly = True
     TabOrder = 9
@@ -745,8 +745,8 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 21
-    Top = 35
+    Height = 23
+    Top = 38
     Width = 40
     ReadOnly = True
     TabOrder = 10
@@ -754,8 +754,8 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 21
-    Top = 59
+    Height = 23
+    Top = 62
     Width = 40
     ReadOnly = True
     TabOrder = 11
@@ -763,8 +763,8 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 21
-    Top = 11
+    Height = 23
+    Top = 14
     Width = 40
     ReadOnly = True
     TabOrder = 12
@@ -772,10 +772,10 @@ object mainFrm: TmainFrm
   end
   object AssembleBtn: TButton
     AnchorSideLeft.Side = asrBottom
-    Left = 448
+    Left = 488
     Height = 25
     Hint = 'Assembles the code'
-    Top = 26
+    Top = 38
     Width = 177
     BorderSpacing.Left = 20
     BorderSpacing.Top = 10
@@ -788,10 +788,10 @@ object mainFrm: TmainFrm
   object StepBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Side = asrBottom
-    Left = 449
+    Left = 488
     Height = 25
     Hint = 'Moves one step forward in RAM.'
-    Top = 79
+    Top = 91
     Width = 87
     BorderSpacing.Left = 20
     BorderSpacing.Top = 30
@@ -804,10 +804,10 @@ object mainFrm: TmainFrm
   end
   object RunPauseBtn: TButton
     AnchorSideLeft.Side = asrBottom
-    Left = 576
+    Left = 616
     Height = 21
     Hint = 'Runs the program'
-    Top = 55
+    Top = 67
     Width = 49
     BorderSpacing.Left = 30
     Caption = 'Run'
@@ -820,9 +820,9 @@ object mainFrm: TmainFrm
   end
   object Label1: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Hint = 'AX register'
-    Top = 16
+    Top = 19
     Width = 16
     Caption = 'AX'
     Font.Height = -13
@@ -833,8 +833,8 @@ object mainFrm: TmainFrm
   end
   object A1: TEdit
     Left = 49
-    Height = 21
-    Top = 11
+    Height = 23
+    Top = 14
     Width = 112
     ReadOnly = True
     TabOrder = 16
@@ -842,8 +842,8 @@ object mainFrm: TmainFrm
   end
   object A2: TEdit
     Left = 161
-    Height = 21
-    Top = 11
+    Height = 23
+    Top = 14
     Width = 40
     ReadOnly = True
     TabOrder = 17
@@ -851,9 +851,9 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Hint = 'BX register'
-    Top = 40
+    Top = 43
     Width = 15
     Caption = 'BX'
     Font.Height = -13
@@ -864,9 +864,9 @@ object mainFrm: TmainFrm
   end
   object Label3: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Hint = 'CX register'
-    Top = 64
+    Top = 67
     Width = 16
     Caption = 'CX'
     Font.Height = -13
@@ -877,10 +877,10 @@ object mainFrm: TmainFrm
   end
   object Label4: TLabel
     Left = 23
-    Height = 16
+    Height = 17
     Hint = 'DX register'
-    Top = 88
-    Width = 16
+    Top = 91
+    Width = 17
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -890,8 +890,8 @@ object mainFrm: TmainFrm
   end
   object B1: TEdit
     Left = 49
-    Height = 21
-    Top = 35
+    Height = 23
+    Top = 38
     Width = 112
     ReadOnly = True
     TabOrder = 18
@@ -899,10 +899,10 @@ object mainFrm: TmainFrm
   end
   object Label5: TLabel
     Left = 240
-    Height = 16
+    Height = 17
     Hint = 'Instructionpointer'
-    Top = 16
-    Width = 11
+    Top = 19
+    Width = 10
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
@@ -912,10 +912,10 @@ object mainFrm: TmainFrm
   end
   object Label6: TLabel
     Left = 240
-    Height = 16
+    Height = 17
     Hint = 'Stackpointer'
-    Top = 40
-    Width = 15
+    Top = 43
+    Width = 14
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
@@ -925,9 +925,9 @@ object mainFrm: TmainFrm
   end
   object Label8: TLabel
     Left = 240
-    Height = 16
+    Height = 17
     Hint = 'Basepointer'
-    Top = 64
+    Top = 67
     Width = 14
     Caption = 'BP'
     Font.Height = -13
@@ -942,7 +942,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 527
+    Top = 526
     Width = 977
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -951,10 +951,10 @@ object mainFrm: TmainFrm
   object StepOverBtn: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Side = asrBottom
-    Left = 538
+    Left = 578
     Height = 25
     Hint = 'Moves one step over the next function'
-    Top = 79
+    Top = 91
     Width = 87
     BorderSpacing.Left = 20
     BorderSpacing.Top = 30
@@ -973,21 +973,21 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 533
+    Top = 532
     Width = 980
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'
     )
-    ItemHeight = 13
+    ItemHeight = 15
     ItemIndex = 0
     MultiSelect = True
     TabOrder = 21
   end
   object speedEdt: TFloatSpinEdit
-    Left = 448
-    Height = 21
-    Top = 55
+    Left = 488
+    Height = 23
+    Top = 67
     Width = 60
     Enabled = False
     Increment = 1
@@ -998,12 +998,12 @@ object mainFrm: TmainFrm
     Value = 1
   end
   object FrequencyType: TComboBox
-    Left = 512
-    Height = 21
-    Top = 55
+    Left = 552
+    Height = 23
+    Top = 67
     Width = 60
     Enabled = False
-    ItemHeight = 13
+    ItemHeight = 15
     ItemIndex = 3
     Items.Strings = (
       'Hz'
@@ -1018,8 +1018,8 @@ object mainFrm: TmainFrm
   end
   object Label9: TLabel
     Left = 239
-    Height = 16
-    Top = 86
+    Height = 17
+    Top = 89
     Width = 15
     Caption = 'VP'
     Font.Height = -13
@@ -1028,8 +1028,8 @@ object mainFrm: TmainFrm
   end
   object VP1: TEdit
     Left = 264
-    Height = 21
-    Top = 83
+    Height = 23
+    Top = 86
     Width = 112
     ReadOnly = True
     TabOrder = 24
@@ -1037,55 +1037,65 @@ object mainFrm: TmainFrm
   end
   object VP2: TEdit
     Left = 376
-    Height = 21
-    Top = 83
+    Height = 23
+    Top = 86
     Width = 40
     ReadOnly = True
     TabOrder = 25
     Text = '0000'
   end
   object Panel1: TPanel
-    Left = 49
+    Left = 457
     Height = 30
-    Top = 104
-    Width = 341
+    Top = 4
+    Width = 240
+    BevelOuter = bvNone
     ClientHeight = 30
-    ClientWidth = 341
+    ClientWidth = 240
     TabOrder = 26
     OnClick = Panel1Click
     object Flag_Z: TCheckBox
-      Left = 168
-      Height = 17
-      Top = 7
-      Width = 86
-      Caption = 'Z (Zero - Null)'
+      Left = 185
+      Height = 19
+      Hint = 'Z-Flag (Zero)'#13#10'The Z-Flag is true if any operation''s result is zero.'
+      Top = 5
+      Width = 20
+      OnChange = Flag_ZChange
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 0
     end
     object Flag_O: TCheckBox
-      Left = 256
-      Height = 17
-      Top = 7
-      Width = 83
-      Caption = 'O (Overflow)'
+      Left = 210
+      Height = 19
+      Hint = 'O-Flag (Overflow)'#13#10'The O-Flag is true if any operation''s result is larger than FFFF and therefore cannot be saved in a register.'
+      Top = 5
+      Width = 20
+      OnChange = Flag_OChange
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 1
     end
     object Flag_S: TCheckBox
-      Left = 56
-      Height = 17
-      Top = 7
-      Width = 110
-      Caption = 'S (Sign - Negative)'
+      Left = 160
+      Height = 19
+      Hint = 'S-Flag (Sign)'#13#10'The S-Flag is true if any operation''s result is negative.'
+      Top = 5
+      Width = 20
+      OnChange = Flag_SChange
       ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 2
     end
     object Label7: TLabel
-      Left = 8
-      Height = 16
+      Left = 0
+      Height = 17
       Hint = 'FLAGs register'
-      Top = 8
-      Width = 37
+      Top = 6
+      Width = 36
       Caption = 'FLAGS'
       Font.Height = -13
       ParentColor = False
@@ -1093,9 +1103,18 @@ object mainFrm: TmainFrm
       ParentShowHint = False
       ShowHint = True
     end
+    object FLAGS1: TEdit
+      Left = 40
+      Height = 23
+      Top = 4
+      Width = 112
+      ReadOnly = True
+      TabOrder = 3
+      Text = '00000000 00000000'
+    end
   end
   object MainFrm_Menu: TMainMenu
-    left = 824
+    left = 872
     top = 72
     object MainFrm_Menu_File: TMenuItem
       Caption = 'File'
@@ -1182,12 +1201,12 @@ object mainFrm: TmainFrm
   end
   object ReplaceDialog1: TReplaceDialog
     Options = [frDown, frReplace, frReplaceAll, frHidePromptOnReplace]
-    left = 744
-    top = 72
+    left = 872
+    top = 16
   end
   object ActionList: TActionList
-    left = 680
-    top = 72
+    left = 944
+    top = 16
     object FileExitAct: TFileExit
       Category = 'File'
       Caption = 'E&xit'
@@ -1247,7 +1266,7 @@ object mainFrm: TmainFrm
     Enabled = False
     Interval = 100
     OnTimer = Timer1Timer
-    left = 888
+    left = 944
     top = 72
   end
 end

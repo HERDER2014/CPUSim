@@ -18,6 +18,7 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
+    FLAGS1: TEdit;
     ActionList: TActionList;
     AssembleBtn: TButton;
     B1: TEdit;
@@ -100,6 +101,9 @@ type
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     function FileExitActExecute(Sender: TObject) : Boolean;
+    procedure Flag_OChange(Sender: TObject);
+    procedure Flag_SChange(Sender: TObject);
+    procedure Flag_ZChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -612,6 +616,21 @@ end;
 function TmainFrm.FileExitActExecute(Sender: TObject) : Boolean;
 begin
   mainFrm.Close;
+end;
+
+procedure TmainFrm.Flag_OChange(Sender: TObject);
+begin
+  Flag_O.Checked:= false;
+end;
+
+procedure TmainFrm.Flag_SChange(Sender: TObject);
+begin
+   Flag_S.Checked:= false;
+end;
+
+procedure TmainFrm.Flag_ZChange(Sender: TObject);
+begin
+  Flag_Z.Checked:= false;
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

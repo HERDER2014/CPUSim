@@ -203,6 +203,9 @@ type
     // CKB
     CKB,
 
+    // DB
+    DB,
+
     //Leave this at the end:
     Count
 

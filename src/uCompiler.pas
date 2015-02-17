@@ -30,6 +30,9 @@ type
 type
   TCodePositionMap = specialize TFPGMap<Word, Cardinal>;
 
+type
+  TByteList = specialize TFPGList<Byte>;
+
 {$ENDIF}
 
 type
@@ -236,6 +239,63 @@ begin
   end;
 end;
 
+function ParseMultipleOperands(opString: string) : TStringList;
+var
+  pos : Integer;
+  n : Integer;
+  len : Integer;
+  operand : String;
+begin
+  Result := TStringList.Create;
+  pos := 1; // VORSICHT
+  len := Length(opString);
+
+  while pos <= len do
+  begin
+   n := PosEx(',', opString, pos);
+   if n = 0 then
+   begin
+     n := len;
+   end;
+   //operand
+  end;
+
+end;
+
+{
+
+ Erg.: Wenn nicht erfolgreich: gibt NIL zurück.
+}
+function GetAllOperandsAsBytes(opString : string) : TByteList;
+var
+  opList : TStringList;
+  i, x : Integer;
+  s : String;
+begin
+  Result := TByteList.Create;
+  opList := ParseMultipleOperands(opString);
+
+  for i := 0 to opList.Count-1 do
+  begin
+    s := opList[i];
+    if TryStrToInt(s, x) then
+    begin
+      // Zahl in Operand i
+      if x > 255 then
+      begin
+        // über Byte-Größe
+        Result := NIL;
+      end
+      else
+      begin
+        Result.Add(Byte(x));
+      end;
+      // STRINGS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    end;
+  end;
+
+end;
+
 {
  Liefert die Größe eines Registers in Bytes.
  Liefert 0, wenn das Register ungültig ist.
@@ -433,6 +493,7 @@ var
   r1, r2: RegisterIndex;
   n1, n2: integer;
   a1, a2: TAddress;
+  multiOPList: TStringList;
 
   procedure ReportOPCountError(expected: cardinal);
   begin
@@ -1739,6 +1800,40 @@ begin
       end;
     end;
 
+    'OUT':
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // OUT R
+          Ram.WriteByte(offset, Ord(OPCode.OUT_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        if TryParseInt(operands.op1, n1) then
+        begin
+          // OUT X
+          Ram.WriteByte(offset, Ord(OPCode.OUT_X));
+          Ram.WriteWord(offset+1, n1);
+          rBytesWritten:=3;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
     'INC':
     begin
       if (operands.Count = 1) then
@@ -1786,6 +1881,36 @@ begin
         exit(False);
       end;
     end;
+
+    'CKB':
+    begin
+      if (operands.Count = 0) then
+      begin
+        Ram.WriteByte(offset, Ord(OPCode.CKB));
+        rBytesWritten:=1;
+        exit(TRUE);
+      end
+      else
+      begin
+        ReportOPCountError(0);
+        exit(False);
+      end;
+    end;
+
+    'DB':
+    begin
+      if (operands.Count >= 1) then
+      begin
+        //multiOPList := GetAllOperandsAsBytes(operandsString);
+
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
 
     'ORG': // Pseudo instruction
     begin

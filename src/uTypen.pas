@@ -37,6 +37,8 @@ type
 
   type TFlags = (O=2048,S=128,Z=64);
 
+
+  type TBoolPointer = ^Boolean;
 implementation
 
 end.

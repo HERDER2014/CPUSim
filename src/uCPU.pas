@@ -25,7 +25,7 @@ type
     KeyInputs: TStringList;
 
     OPCodeProcedures: array[0..integer(OPCode.Count) - 1] of TProc;
-
+    Terminated: ^Boolean;
 
     procedure push(w: word); overload;
     function pop(): word;
@@ -69,6 +69,7 @@ type
   public
     function Step(): OPCode;
     procedure SendKeyInput(i : Char);
+    procedure SetTerminateFlag(t : TBoolPointer);
 
   private
    {
@@ -163,6 +164,7 @@ type
   end;
 
 implementation
+
 
 constructor TCPU.Create(var r: TRam);
 begin
@@ -1031,8 +1033,25 @@ begin
 end;
 
 procedure TCPU.Run_IN_R;
+var
+  b : Boolean;
 begin
-  while KeyInputs.Count = 0 do begin end;
+  b := (KeyInputs.Count = 0);
+  LeaveCriticalSection(cs);
+  while (b) do begin
+    if (not Terminated^) then begin
+      EnterCriticalSection(cs);
+      exit;
+    end;
+
+    EnterCriticalSection(cs);
+    try
+      b := (KeyInputs.Count = 0);
+    finally
+      LeaveCriticalSection(cs);
+    end;
+  end;
+  EnterCriticalSection(cs);
   WR(Ram.ReadByte(Reg.IP + 1), Byte(KeyInputs[0][1]));
   KeyInputs.Delete(0);
 end;
@@ -1067,7 +1086,17 @@ end;
 
 procedure TCPU.SendKeyInput(i: Char);
 begin
-  KeyInputs.Append(i);
+  EnterCriticalSection(cs);
+  try
+    KeyInputs.Append(i);
+  finally
+    LeaveCriticalSection(cs);
+  end;
+end;
+
+procedure TCPU.SetTerminateFlag(t: TBoolPointer);
+begin
+  Terminated:=@t;
 end;
 
 end.

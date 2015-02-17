@@ -79,6 +79,7 @@ implementation
 constructor TCPUThread.Create(sim: TCPU);
 begin
   cpu := sim;
+  sim.SetTerminateFlag(@Terminated);
   FreeOnTerminate := True;
   InitCriticalSection(cs);
   inherited Create(True);

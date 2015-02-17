@@ -22,6 +22,7 @@ type
     Reg: TRegRecord;
     cs: TRTLCriticalSection;
     Ram: TRAM;
+    KeyInputs: TStringList;
 
     OPCodeProcedures: array[0..integer(OPCode.Count) - 1] of TProc;
 
@@ -67,6 +68,7 @@ type
    }
   public
     function Step(): OPCode;
+    procedure SendKeyInput(i : Char);
 
   private
    {
@@ -155,6 +157,8 @@ type
     procedure Run_XOR_R_ADDR_R();
     procedure Run_OUT_R();
     procedure Run_OUT_X();
+    procedure Run_IN_R();
+    procedure Run_CKB();
 
   end;
 
@@ -173,6 +177,8 @@ begin
   Reg.BX := 0;
   Reg.CX := 0;
   Reg.DX := 0;
+
+  KeyInputs := TStringList.Create;
   //   Reg := TRegRecord.Create();
 
   // initialize OPCodeProcedures
@@ -255,7 +261,8 @@ begin
   OPCodeProcedures[integer(OR_R_ADDR_R)] := @Run_OR_R_ADDR_R;
   OPCodeProcedures[integer(XOR_R_ADDR_X)] := @Run_XOR_R_ADDR_X;
   OPCodeProcedures[integer(XOR_R_ADDR_R)] := @Run_XOR_R_ADDR_R;
-  // OPCodeProcedures[Integer(IN_R)] := @Run_IN_R;
+  OPCodeProcedures[integer(IN_R)] := @Run_IN_R;
+  OPCodeProcedures[integer(CKB)] := @Run_CKB;
   OPCodeProcedures[integer(INC_R)] := @Run_INC_R;
   OPCodeProcedures[integer(DEC_R)] := @Run_DEC_R;
   OPCodeProcedures[integer(OUT_R)] := @Run_OUT_R;
@@ -465,20 +472,20 @@ end;//mov R,R
 procedure TCPU.Run_MOV_R_ADDR_RX();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2)) +
-    Ram.ReadWord(Reg.IP + 3)));
+    Smallint(Ram.ReadWord(Reg.IP + 3))));
   Reg.IP += 5;
 end; //mov R,[R+x]
 
 procedure TCPU.Run_MOV_ADDR_RX_R();
 begin
-  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
     RR(Ram.ReadByte(Reg.IP + 4)));
   Reg.IP += 5;
 end; //mov [R+x],R
 
 procedure TCPU.Run_MOV_ADDR_RX_X;
 begin
-  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
     Ram.ReadWord(Reg.IP + 4));
   Reg.IP += 6;
 end;
@@ -535,20 +542,20 @@ end;//movb R,R
 procedure TCPU.Run_MOVB_R_ADDR_RX();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(RR(Ram.ReadByte(Reg.IP + 2)) +
-    Ram.ReadWord(Reg.IP + 3)));
+    Smallint(Ram.ReadWord(Reg.IP + 3))));
   Reg.IP += 5;
 end; //movb R,[R+x]
 
 procedure TCPU.Run_MOVB_ADDR_RX_R();
 begin
-  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
     RR(Ram.ReadByte(Reg.IP + 4)));
   Reg.IP += 5;
 end; //movb [R+x],R
 
 procedure TCPU.Run_MOVB_ADDR_RX_X;
 begin
-  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Ram.ReadWord(Reg.IP + 2),
+  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
     Ram.ReadByte(Reg.IP + 4));
   Reg.IP += 5;
 end;
@@ -1021,6 +1028,18 @@ begin
   Reg.IP += 2;
 end;
 
+procedure TCPU.Run_IN_R;
+begin
+  while KeyInputs.Count = 0 do begin end;
+  WR(Ram.ReadByte(Reg.IP + 1), Byte(KeyInputs[0][1]));
+  KeyInputs.Delete(0);
+end;
+
+procedure TCPU.Run_CKB;
+begin
+  KeyInputs.Clear;
+end;
+
 function TCPU.Step(): OPCode;
 var
   OPCodeNum: byte;
@@ -1042,6 +1061,11 @@ begin
   end;
 
 
+end;
+
+procedure TCPU.SendKeyInput(i: Char);
+begin
+  KeyInputs.Append(i);
 end;
 
 end.

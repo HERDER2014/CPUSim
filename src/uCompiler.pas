@@ -2024,5 +2024,4 @@ begin
     Result := 0;
   end;
 end;
-
 end.

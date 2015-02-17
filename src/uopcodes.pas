@@ -201,7 +201,7 @@ type
     DEC_R,
 
     //Leave this at the end:
-    COUNT
+    Count
 
     );
 

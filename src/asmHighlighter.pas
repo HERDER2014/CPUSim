@@ -20,7 +20,7 @@ type
     fAdressAttri: TSynHighlighterAttributes;
     fCommentAttri: TSynHighlighterAttributes;
     fNormalAttri: TSynHighlighterAttributes;
-    FCurRange: Integer;
+    FCurRange: integer;
     procedure SetOPCodeAttri(AValue: TSynHighlighterAttributes);
     procedure SetRegisterAttri(AValue: TSynHighlighterAttributes);
     procedure SetNumberAttri(AValue: TSynHighlighterAttributes);
@@ -29,17 +29,17 @@ type
     procedure SetNormalAttri(AValue: TSynHighlighterAttributes);
   protected
     // accesible for the other examples
-    FTokenPos, FTokenEnd: Integer;
-    FLineText: String;
+    FTokenPos, FTokenEnd: integer;
+    FLineText: string;
   public
-    procedure SetLine(const NewValue: String; LineNumber: Integer); override;
+    procedure SetLine(const NewValue: string; LineNumber: integer); override;
     procedure Next; override;
-    function  GetEol: Boolean; override;
+    function GetEol: boolean; override;
     procedure GetTokenEx(out TokenStart: PChar; out TokenLength: integer); override;
-    function  GetTokenAttribute: TSynHighlighterAttributes; override;
+    function GetTokenAttribute: TSynHighlighterAttributes; override;
   public
-    function GetToken: String; override;
-    function GetTokenPos: Integer; override;
+    function GetToken: string; override;
+    function GetTokenPos: integer; override;
     function GetTokenKind: integer; override;
     function GetDefaultAttribute(Index: integer): TSynHighlighterAttributes; override;
     constructor Create(AOwner: TComponent); override;
@@ -48,18 +48,18 @@ type
     function GetRange: Pointer; override;
   published
     (* Define 4 Attributes, for the different highlights. *)
-    property OPCodeAttri: TSynHighlighterAttributes read fOPCodeAttri
-      write SetOPCodeAttri;
-    property RegisterAttri: TSynHighlighterAttributes read fRegisterAttri
-      write SetRegisterAttri;
-    property NumberAttri: TSynHighlighterAttributes read fNumberAttri
-      write SetNumberAttri;
-    property AdressAttri: TSynHighlighterAttributes read fAdressAttri
-      write SetAdressAttri;
-    property CommentAttri: TSynHighlighterAttributes read fCommentAttri
-      write SetCommentAttri;
-    property NormalAttri: TSynHighlighterAttributes read fNormalAttri
-      write SetNormalAttri;
+    property OPCodeAttri: TSynHighlighterAttributes
+      read fOPCodeAttri write SetOPCodeAttri;
+    property RegisterAttri: TSynHighlighterAttributes
+      read fRegisterAttri write SetRegisterAttri;
+    property NumberAttri: TSynHighlighterAttributes
+      read fNumberAttri write SetNumberAttri;
+    property AdressAttri: TSynHighlighterAttributes
+      read fAdressAttri write SetAdressAttri;
+    property CommentAttri: TSynHighlighterAttributes
+      read fCommentAttri write SetCommentAttri;
+    property NormalAttri: TSynHighlighterAttributes
+      read fNormalAttri write SetNormalAttri;
   end;
 
 implementation
@@ -75,20 +75,20 @@ begin
 
   fRegisterAttri := TSynHighlighterAttributes.Create('register', 'register');
   AddAttribute(fRegisterAttri);
-  fRegisterAttri.Foreground:=clRed;
+  fRegisterAttri.Foreground := clRed;
 
   fNumberAttri := TSynHighlighterAttributes.Create('number', 'number');
   AddAttribute(fNumberAttri);
-  fNumberAttri.Foreground:=clBlue;
+  fNumberAttri.Foreground := clBlue;
 
   fAdressAttri := TSynHighlighterAttributes.Create('adress', 'adress');
   AddAttribute(fAdressAttri);
-  fAdressAttri.Foreground:=clGreen;
+  fAdressAttri.Foreground := clGreen;
 
   fCommentAttri := TSynHighlighterAttributes.Create('comment', 'comment');
   AddAttribute(fCommentAttri);
   fCommentAttri.Style := [fsItalic];
-  fCommentAttri.Foreground:=clGray;
+  fCommentAttri.Foreground := clGray;
 
   fNormalAttri := TSynHighlighterAttributes.Create('normal', 'normal');
   AddAttribute(fNormalAttri);
@@ -125,7 +125,7 @@ begin
   fNormalAttri.Assign(AValue);
 end;
 
-procedure TAsmHighlighter.SetLine(const NewValue: String; LineNumber: Integer);
+procedure TAsmHighlighter.SetLine(const NewValue: string; LineNumber: integer);
 begin
   inherited;
   FLineText := NewValue;
@@ -136,8 +136,8 @@ end;
 
 procedure TAsmHighlighter.Next;
 var
-  l: Integer;
-  i: Integer;
+  l: integer;
+  i: integer;
 begin
   // FTokenEnd should be at the start of the next Token (which is the Token we want)
   FTokenPos := FTokenEnd;
@@ -150,31 +150,38 @@ begin
   // - or past the end of line (which allows GetEOL to work)
 
   l := length(FLineText);
-  If FTokenPos > l then
+  if FTokenPos > l then
     // At line end
     exit
   else
   if FLineText[FTokenEnd] in [#9, ' ', ','] then
     // At Space? Find end of spaces
-    while (FTokenEnd <= l) and (FLineText[FTokenEnd] in [#9, ' ', ',']) do inc (FTokenEnd)
-  else if FLineText[FTokenEnd] = '[' then begin
+    while (FTokenEnd <= l) and (FLineText[FTokenEnd] in [#9, ' ', ',']) do
+      Inc(FTokenEnd)
+  else if FLineText[FTokenEnd] = '[' then
+  begin
     // At Address? Find end ]
-    while (FTokenEnd <= l) and (FLineText[FTokenEnd] <> ']') do inc (FTokenEnd);
-    inc (FTokenEnd);
+    while (FTokenEnd <= l) and (FLineText[FTokenEnd] <> ']') do
+      Inc(FTokenEnd);
+    Inc(FTokenEnd);
   end
   else if FLineText[FTokenEnd] = ';' then
     // At Comment? Find end of line
-    while (FTokenEnd <= l) do inc (FTokenEnd)
-  else begin
+    while (FTokenEnd <= l) do
+      Inc(FTokenEnd)
+  else
+  begin
     // At OPCode, Register or number? Find end of None-spaces
-    while (FTokenEnd <= l) and not(FLineText[FTokenEnd] in [#9, ' ', ',', '[', ';', ':']) do inc (FTokenEnd);
+    while (FTokenEnd <= l) and not (FLineText[FTokenEnd] in
+        [#9, ' ', ',', '[', ';', ':']) do
+      Inc(FTokenEnd);
     // At Label? Add : to Token
     if (FTokenEnd <= l) and (FLineText[FTokenEnd] = ':') then
-       inc (FTokenEnd);
+      Inc(FTokenEnd);
   end;
 end;
 
-function TAsmHighlighter.GetEol: Boolean;
+function TAsmHighlighter.GetEol: boolean;
 begin
   Result := FTokenPos > length(FLineText);
 end;
@@ -186,7 +193,8 @@ begin
 end;
 
 function TAsmHighlighter.GetTokenAttribute: TSynHighlighterAttributes;
-var i : Integer;
+var
+  i: integer;
 begin
   // Match the text, specified by FTokenPos and FTokenEnd
 
@@ -196,16 +204,20 @@ begin
     Result := AdressAttri
   else if FLineText[FTokenPos] = ';' then
     Result := CommentAttri
-  else if FLineText[FTokenEnd-1] = ':' then
+  else if FLineText[FTokenEnd - 1] = ':' then
     Result := AdressAttri
   else
     case LowerCase(copy(FLineText, FTokenPos, FTokenEnd - FTokenPos)) of
-      'mov', 'movb', 'movw' ,'add','sub', 'mul', 'div', 'mod', 'cmp', 'jmp','jz','jnz','je','jne','js','jns','jo','jno','call','ret','push','pop','not','and','or','xor', 'in', 'out', 'inc', 'dec', 'org', 'end':
-        Result:= OPCodeAttri;
-      'ax','bx','cx','dx','al','bl','cl','dl','ah','bh','ch','dh','ip','sp','bp','vp','flags':
-        Result:= RegisterAttri;
-      else begin
-        if TryStrToInt('$'+copy(FLineText, FTokenPos, FTokenEnd - FTokenPos), i) then
+      'mov', 'movb', 'movw', 'add', 'sub', 'mul', 'div', 'mod', 'cmp',
+      'jmp', 'jz', 'jnz', 'je', 'jne', 'js', 'jns', 'jo', 'jno', 'call', 'ret',
+      'push', 'pop', 'not', 'and', 'or', 'xor', 'in', 'out', 'inc', 'dec', 'org', 'end':
+        Result := OPCodeAttri;
+      'ax', 'bx', 'cx', 'dx', 'al', 'bl', 'cl', 'dl', 'ah', 'bh', 'ch', 'dh',
+      'ip', 'sp', 'bp', 'vp', 'flags':
+        Result := RegisterAttri;
+      else
+      begin
+        if TryStrToInt('$' + copy(FLineText, FTokenPos, FTokenEnd - FTokenPos), i) then
           Result := NumberAttri
         else
           Result := NormalAttri;
@@ -213,19 +225,19 @@ begin
     end;
 end;
 
-function TAsmHighlighter.GetToken: String;
+function TAsmHighlighter.GetToken: string;
 begin
   Result := copy(FLineText, FTokenPos, FTokenEnd - FTokenPos);
 end;
 
-function TAsmHighlighter.GetTokenPos: Integer;
+function TAsmHighlighter.GetTokenPos: integer;
 begin
   Result := FTokenPos - 1;
 end;
 
 function TAsmHighlighter.GetDefaultAttribute(Index: integer): TSynHighlighterAttributes;
 begin
-  result:=nil;
+  Result := nil;
 end;
 
 function TAsmHighlighter.GetTokenKind: integer;
@@ -235,11 +247,16 @@ begin
   // Map Attribute into a unique number
   a := GetTokenAttribute;
   Result := 0;
-  if a = fOPCodeAttri then Result := 1;
-  if a = fAdressAttri then Result := 2;
-  if a = fRegisterAttri then Result := 3;
-  if a = fNumberAttri then Result := 4;
-  if a = fCommentAttri then Result := 5;
+  if a = fOPCodeAttri then
+    Result := 1;
+  if a = fAdressAttri then
+    Result := 2;
+  if a = fRegisterAttri then
+    Result := 3;
+  if a = fNumberAttri then
+    Result := 4;
+  if a = fCommentAttri then
+    Result := 5;
 end;
 
 procedure TAsmHighlighter.SetRange(Value: Pointer);
@@ -262,4 +279,3 @@ begin
 end;
 
 end.
-

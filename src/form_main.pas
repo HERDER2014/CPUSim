@@ -100,10 +100,10 @@ type
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
-    function FileExitActExecute(Sender: TObject) : Boolean;
+    function FileExitActExecute(Sender: TObject): boolean;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
@@ -124,7 +124,8 @@ type
     procedure MainFrm_Menu_Help_AboutClick(Sender: TObject);
     procedure MainFrm_Menu_Help_WikiClick(Sender: TObject);
     procedure DoCompile;
-    procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer; aRect: TRect; aState: TGridDrawState);
+    procedure RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
+      aRect: TRect; aState: TGridDrawState);
     procedure RunClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MainFrm_Menu_File_SaveClick(Sender: TObject);
@@ -144,7 +145,7 @@ type
     procedure StepOver;
     procedure Stop;
     procedure setVel;
-    procedure OnRAMChange(addr: Word);
+    procedure OnRAMChange(addr: word);
   private
   public
     { public declarations }
@@ -162,16 +163,17 @@ var
   trackTime: boolean;
   drawCodeIPHighlighting: boolean;
   Thread: TCPUThread;
-  hlt : TAsmHighlighter;
+  hlt: TAsmHighlighter;
   RAM: TRAM;
   CPU: TCPU;
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: cardinal;
-  oldIP : Word;
-  oldBP : Word;
-  oldSP : Word;
-  oldVP : Word;
+  oldIP: word;
+  oldBP: word;
+  oldSP: word;
+  oldVP: word;
+
 implementation
 
 {$R *.lfm}
@@ -180,42 +182,42 @@ implementation
 
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
-	 InputSynEdit.ClearAll;
+  InputSynEdit.ClearAll;
 
-	 hlt := TAsmHighlighter.Create(self);
-	 InputSynEdit.Highlighter := hlt;
+  hlt := TAsmHighlighter.Create(self);
+  InputSynEdit.Highlighter := hlt;
 
-	 RAMSize := 512;
-   VRAMSize := 64;
-	 Saved := True; // Don't ask for save when program just started
-	 assembled := False;
-	 InputSynEdit.ReadOnly := False;
+  RAMSize := 512;
+  VRAMSize := 64;
+  Saved := True; // Don't ask for save when program just started
+  assembled := False;
+  InputSynEdit.ReadOnly := False;
 end;
 
 procedure TmainFrm.DoCompile;
 begin
-  if RAM <> NIL then
+  if RAM <> nil then
     RAM.Destroy;
-  if comp <> NIL then
+  if comp <> nil then
     comp.Destroy;
-  if CPU <> NIL then
+  if CPU <> nil then
     CPU.Destroy;
 
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
-  RAM.ChangeCallback:=@OnRAMChange;
+  RAM.ChangeCallback := @OnRAMChange;
 
   comp := TCompiler.Create(RAM);
   comp.NumberInputMode := TNumberInputMode.Hexadecimal;
   try
     comp.Compile(InputSynEdit.Text);
-    Log_lb.Items.Insert(0,'[success] compilation completed');
+    Log_lb.Items.Insert(0, '[success] compilation completed');
     CPU := TCPU.Create(RAM);
     Thread := TCPUThread.Create(CPU);
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
-    trackTime:= True;
-    drawCodeIPHighlighting:= true;
-    InputSynEdit.ReadOnly:= true;
+    trackTime := True;
+    drawCodeIPHighlighting := True;
+    InputSynEdit.ReadOnly := True;
 
     oldIP := CPU.ReadRegister(RegisterIndex.IP);
     oldBP := CPU.ReadRegister(RegisterIndex.BP);
@@ -227,71 +229,72 @@ begin
     setupRAM;
   except
     on e: Exception do
-      Log_lb.Items.Insert(0,'[error] compilation failed: ' + e.Message);
+      Log_lb.Items.Insert(0, '[error] compilation failed: ' + e.Message);
   end;
 end;
 
 procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
-	 aRect: TRect; aState: TGridDrawState);
+  aRect: TRect; aState: TGridDrawState);
 begin
-	 with TStringGrid(Sender) do
-	 begin
-			 if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
-			 begin
-					 Canvas.Brush.Color := clYellow;
-			 end
-			 else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
-			 begin
-					 Canvas.Brush.Color := $FF8888;
-			 end
-			 else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
-			 begin
-					 Canvas.Brush.Color := clGreen;
-			 end
-       else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
-			 begin
-					 Canvas.Brush.Color := clLime;
-			 end;
-			 Canvas.FillRect(aRect);
-			 Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
-	 end;
+  with TStringGrid(Sender) do
+  begin
+    if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
+    begin
+      Canvas.Brush.Color := clYellow;
+    end
+    else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
+    begin
+      Canvas.Brush.Color := $FF8888;
+    end
+    else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
+    begin
+      Canvas.Brush.Color := clGreen;
+    end
+    else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
+    begin
+      Canvas.Brush.Color := clLime;
+    end;
+    Canvas.FillRect(aRect);
+    Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
+  end;
 end;
 
 procedure TmainFrm.RunClick(Sender: TObject);
 begin
-	 DoCompile;
-	 resume;
+  DoCompile;
+  resume;
 end;
 
 
 procedure TmainFrm.setupRAM;
 var
-	 i: cardinal;
+  i: cardinal;
 begin
-	 RAMGrid.RowCount := (RAMSize + VRAMSize - 1) div 16 + 2;
-	 for i := 0 to RAMSize + VRAMSize - 1 do
-	 begin
-			 RAMGrid.Cells[i and 15 + 1, i shr 4 + 1] := IntToHex(Ram.ReadByte(i), 2);
-	 end;
-	 for i := 1 to RAMGrid.RowCount - 1 do
-	 begin
-			 RAMGrid.Cells[0, i] := IntToHex((i - 1) shl 4, 4);
-	 end;
+  RAMGrid.RowCount := (RAMSize + VRAMSize - 1) div 16 + 2;
+  for i := 0 to RAMSize + VRAMSize - 1 do
+  begin
+    RAMGrid.Cells[i and 15 + 1, i shr 4 + 1] := IntToHex(Ram.ReadByte(i), 2);
+  end;
+  for i := 1 to RAMGrid.RowCount - 1 do
+  begin
+    RAMGrid.Cells[0, i] := IntToHex((i - 1) shl 4, 4);
+  end;
 end;
 
 procedure TmainFrm.updateREG;
 var
-   newIP : word;
-   newBP : word;
-   newSP : word;
-   newVP : word;
+  newIP: word;
+  newBP: word;
+  newSP: word;
+  newVP: word;
 begin
   newIP := CPU.ReadRegister(RegisterIndex.IP);
   newBP := CPU.ReadRegister(RegisterIndex.BP);
   newSP := CPU.ReadRegister(RegisterIndex.SP);
   newVP := CPU.ReadRegister(RegisterIndex.VP);
 
-  if (newIP <> oldIP) then begin
+  if (newIP <> oldIP) then
+  begin
     RAMGrid.InvalidateCell(oldIP and 15 + 1, oldIP shr 4 + 1);
     InputSynEdit.InvalidateLine(comp.GetCodePosition(oldIP));
     oldIP := newIP;
@@ -300,84 +303,88 @@ begin
     InputSynEdit.InvalidateLine(comp.GetCodePosition(oldIP));
   end;
 
-  if (newBP <> oldBP) then begin
+  if (newBP <> oldBP) then
+  begin
     RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
     oldBP := newBP;
     RAMGrid.InvalidateCell(oldBP and 15 + 1, oldBP shr 4 + 1);
   end;
 
-  if (newSP <> oldSP) then begin
+  if (newSP <> oldSP) then
+  begin
     RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
     oldSP := newSP;
     RAMGrid.InvalidateCell(oldSP and 15 + 1, oldSP shr 4 + 1);
   end;
 
-  if (newVP <> oldVP) then begin
+  if (newVP <> oldVP) then
+  begin
     RAMGrid.InvalidateCell(oldVP and 15 + 1, oldVP shr 4 + 1);
     oldVP := newVP;
     RAMGrid.InvalidateCell(oldVP and 15 + 1, oldVP shr 4 + 1);
   end;
 
 
-   A1.Text := IntTOBin(CPU.ReadRegister(AX), 16, 8);
-	 A2.Text := IntToHex(CPU.ReadRegister(AX), 4);
-	 B1.Text := IntTOBin(CPU.ReadRegister(BX), 16, 8);
-	 B2.Text := IntToHex(CPU.ReadRegister(BX), 4);
-	 C1.Text := IntTOBin(CPU.ReadRegister(CX), 16, 8);
-	 C2.Text := IntToHex(CPU.ReadRegister(CX), 4);
-	 D1.Text := IntTOBin(CPU.ReadRegister(DX), 16, 8);
-	 D2.Text := IntToHex(CPU.ReadRegister(DX), 4);
-	 IP1.Text := IntTOBin(CPU.ReadRegister(IP), 16, 8);
-	 IP2.Text := IntToHex(CPU.ReadRegister(IP), 4);
-	 SP1.Text := IntTOBin(CPU.ReadRegister(SP), 16, 8);
-	 SP2.Text := IntToHex(CPU.ReadRegister(SP), 4);
-	 BP1.Text := IntTOBin(CPU.ReadRegister(BP), 16, 8);
-	 BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
-	 VP1.Text := IntTOBin(CPU.ReadRegister(VP), 16, 8);
-	 VP2.Text := IntToHex(CPU.ReadRegister(VP), 4);
-   FLAGS1.Text := IntToBin(CPU.ReadRegister(FLAGS), 16, 8);
-   Flag_S.Checked:=(CPU.ReadRegister(FLAGS) and Integer(S))>0;
-   Flag_Z.Checked:=(CPU.ReadRegister(FLAGS) and Integer(Z))>0;
-   Flag_O.Checked:=(CPU.ReadRegister(FLAGS) and Integer(O))>0;
+  A1.Text := IntTOBin(CPU.ReadRegister(AX), 16, 8);
+  A2.Text := IntToHex(CPU.ReadRegister(AX), 4);
+  B1.Text := IntTOBin(CPU.ReadRegister(BX), 16, 8);
+  B2.Text := IntToHex(CPU.ReadRegister(BX), 4);
+  C1.Text := IntTOBin(CPU.ReadRegister(CX), 16, 8);
+  C2.Text := IntToHex(CPU.ReadRegister(CX), 4);
+  D1.Text := IntTOBin(CPU.ReadRegister(DX), 16, 8);
+  D2.Text := IntToHex(CPU.ReadRegister(DX), 4);
+  IP1.Text := IntTOBin(CPU.ReadRegister(IP), 16, 8);
+  IP2.Text := IntToHex(CPU.ReadRegister(IP), 4);
+  SP1.Text := IntTOBin(CPU.ReadRegister(SP), 16, 8);
+  SP2.Text := IntToHex(CPU.ReadRegister(SP), 4);
+  BP1.Text := IntTOBin(CPU.ReadRegister(BP), 16, 8);
+  BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
+  VP1.Text := IntTOBin(CPU.ReadRegister(VP), 16, 8);
+  VP2.Text := IntToHex(CPU.ReadRegister(VP), 4);
+  FLAGS1.Text := IntToBin(CPU.ReadRegister(FLAGS), 16, 8);
+  Flag_S.Checked := (CPU.ReadRegister(FLAGS) and integer(S)) > 0;
+  Flag_Z.Checked := (CPU.ReadRegister(FLAGS) and integer(Z)) > 0;
+  Flag_O.Checked := (CPU.ReadRegister(FLAGS) and integer(O)) > 0;
 
- //  F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
-//	 F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
+  //  F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
+  //   F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
 end;
 
 procedure TmainFrm.resume;
 begin
-	 setVel;
-	 Thread.resume;
+  setVel;
+  Thread.resume;
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);
 begin
-	 //TODO
-	 if (Thread.getException() = '') then
-	 begin
-			 if (trackTime) then
-					 Log_lb.Items.Insert(0, '[success] simulation ended in ' +
-							 FloatToStr(round(Thread.getElapsedTime()*100000)/100) + ' ms and executed ' + IntToStr(Thread.getBefehlCount()) + ' OP-codes.')
-			 else
-					 Log_lb.Items.Insert(0, '[success] simulation ended');
-	 end
-	 else
-	 begin
-			 Log_lb.Items.Insert(0, '[error] simulation failed on line ' +
-					 IntToStr(comp.GetCodePosition(cpu.ReadRegister(IP))) + ' (Address ' +
-					 IntToHex(cpu.ReadRegister(IP), 4) + '): ' + Thread.getException());
-	 end;
+  //TODO
+  if (Thread.getException() = '') then
+  begin
+    if (trackTime) then
+      Log_lb.Items.Insert(0, '[success] simulation ended in ' +
+        FloatToStr(round(Thread.getElapsedTime() * 100000) / 100) +
+        ' ms and executed ' + IntToStr(Thread.getBefehlCount()) + ' OP-codes.')
+    else
+      Log_lb.Items.Insert(0, '[success] simulation ended');
+  end
+  else
+  begin
+    Log_lb.Items.Insert(0, '[error] simulation failed on line ' +
+      IntToStr(comp.GetCodePosition(cpu.ReadRegister(IP))) + ' (Address ' +
+      IntToHex(cpu.ReadRegister(IP), 4) + '): ' + Thread.getException());
+  end;
 
-	 InputSynEdit.ReadOnly := False;
-	 assembled := False;
+  InputSynEdit.ReadOnly := False;
+  assembled := False;
 
-	 RunPauseBtn.Enabled := False;
-	 speedEdt.Enabled := False;
-	 FrequencyType.Enabled := False;
-	 StepBtn.Enabled := False;
-	 StepOverBtn.Enabled := False;
-	 AssembleBtn.Caption := 'Assemble';
-	 RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Enabled := False;
+  speedEdt.Enabled := False;
+  FrequencyType.Enabled := False;
+  StepBtn.Enabled := False;
+  StepOverBtn.Enabled := False;
+  AssembleBtn.Caption := 'Assemble';
+  RunPauseBtn.Caption := 'Run';
 end;
 
 //procedure TmainFrm.SearchFindActAccept(Sender: TObject);
@@ -391,19 +398,19 @@ end;
 
 procedure TmainFrm.speedEdtChange(Sender: TObject);
 begin
-	 if assembled then
-	 begin
-			 setVel;
-	 end;
+  if assembled then
+  begin
+    setVel;
+  end;
 end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
-	 Timer1.Enabled := True;
+  Timer1.Enabled := True;
 
-   Step;
-	 RunPauseBtn.Caption := 'Run';
-	 trackTime := False;
+  Step;
+  RunPauseBtn.Caption := 'Run';
+  trackTime := False;
 end;
 
 procedure TmainFrm.StepOverBtnClick(Sender: TObject);
@@ -411,95 +418,96 @@ begin
   Timer1.Enabled := True;
 
   StepOver;
-	RunPauseBtn.Caption := 'Run';
-	trackTime := False;
+  RunPauseBtn.Caption := 'Run';
+  trackTime := False;
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
-	 Stop;
-	 trackTime := False;
+  Stop;
+  trackTime := False;
 end;
 
 procedure TmainFrm.FrequencyTypeChange(Sender: TObject);
 begin
-	 if FrequencyType.ItemIndex = 3 then
-	 begin
-			 speedEdt.Enabled := False;
-	 end
-	 else
-	 begin
-			 speedEdt.Enabled := True;
-	 end;
-	 if assembled then
-			 setVel;
+  if FrequencyType.ItemIndex = 3 then
+  begin
+    speedEdt.Enabled := False;
+  end
+  else
+  begin
+    speedEdt.Enabled := True;
+  end;
+  if assembled then
+    setVel;
 end;
 
 procedure TmainFrm.TFindDialogFind(Sender: TObject);
 var
-	 findtext: string;
+  findtext: string;
 begin
-	 SearchFindAct.Dialog.FindText := findtext;
-	 InputSynEdit.SearchReplace(findtext, '', []);
+  SearchFindAct.Dialog.FindText := findtext;
+  InputSynEdit.SearchReplace(findtext, '', []);
 end;
 
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
-	updateREG;
+  updateREG;
 
-  if Thread.Suspended then begin
-    Timer1.Enabled:=false;
-    RunPauseBtn.Caption:='Run';
+  if Thread.Suspended then
+  begin
+    Timer1.Enabled := False;
+    RunPauseBtn.Caption := 'Run';
   end;
 end;
 
 
 procedure TmainFrm.Step;
 begin
-	 Thread.setVel(-1);
-	 Thread.resume;
+  Thread.setVel(-1);
+  Thread.resume;
 end;
 
 procedure TmainFrm.StepOver;
 begin
-	 Thread.setVel(-2);
-	 Thread.resume;
+  Thread.setVel(-2);
+  Thread.resume;
 end;
 
 procedure TmainFrm.Stop;
 begin
-	 Thread.terminate;
+  Thread.terminate;
 
-	 assembled := False;
-	 InputSynEdit.ReadOnly := False;
+  assembled := False;
+  InputSynEdit.ReadOnly := False;
 
-	 RunPauseBtn.Enabled := False;
-	 speedEdt.Enabled := False;
-	 FrequencyType.Enabled := False;
-	 StepBtn.Enabled := False;
-	 StepOverBtn.Enabled := False;
-	 AssembleBtn.Caption := 'Assemble';
-	 RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Enabled := False;
+  speedEdt.Enabled := False;
+  FrequencyType.Enabled := False;
+  StepBtn.Enabled := False;
+  StepOverBtn.Enabled := False;
+  AssembleBtn.Caption := 'Assemble';
+  RunPauseBtn.Caption := 'Run';
 end;
 
 procedure TmainFrm.setVel;
 begin
-	 if FrequencyType.ItemIndex = 3 then
-	 begin
-			 Thread.setVel(0);
-	 end
-	 else
-	 begin
-			 Thread.setVel(speedEdt.Value * power(1000, FrequencyType.ItemIndex));
-	 end;
+  if FrequencyType.ItemIndex = 3 then
+  begin
+    Thread.setVel(0);
+  end
+  else
+  begin
+    Thread.setVel(speedEdt.Value * power(1000, FrequencyType.ItemIndex));
+  end;
 
-   trackTime:=false;
+  trackTime := False;
 
 end;
 
-procedure TmainFrm.OnRAMChange(addr: Word);
+procedure TmainFrm.OnRAMChange(addr: word);
 var
-  row, col : Integer;
+  row, col: integer;
 begin
   row := addr and 15 + 1;
   col := addr shr 4 + 1;
@@ -523,12 +531,12 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
 begin
-	 //TODO
+  //TODO
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
 begin
-	 //TODO Keep track of recent files?
+  //TODO Keep track of recent files?
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveAsClick(Sender: TObject);
@@ -538,11 +546,11 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_Help_AboutClick(Sender: TObject);
 var
-	 AboutStr: PChar;
+  AboutStr: PChar;
 begin
-	 AboutStr := 'CPU Simulator Herder 14' + sLineBreak +
-			 'by Informatik-LK 14/15 (3.Sem) of the Herder-Gymnasium Berlin';
-	 MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
+  AboutStr := 'CPU Simulator Herder 14' + sLineBreak +
+    'by Informatik-LK 14/15 (3.Sem) of the Herder-Gymnasium Berlin';
+  MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_WikiClick(Sender: TObject);
@@ -552,57 +560,57 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_File_SaveClick(Sender: TObject);
 begin
-	 if SavePath = '' then
-	 begin
-			 MainFrm_Menu_File_SaveAsClick(MainFrm_Menu_File_Save);
-	 end
-	 else
-			 InputSynEdit.Lines.SaveToFile(SavePath);
-	 saved := True;
+  if SavePath = '' then
+  begin
+    MainFrm_Menu_File_SaveAsClick(MainFrm_Menu_File_Save);
+  end
+  else
+    InputSynEdit.Lines.SaveToFile(SavePath);
+  saved := True;
 end;
 
 
 procedure TmainFrm.MainFrm_Menu_Edit_CopyClick(Sender: TObject);
 begin
-	 InputSynEdit.CopyToClipboard;
+  InputSynEdit.CopyToClipboard;
 end;
 
 procedure TmainFrm.InputSynEditChange(Sender: TObject);
 begin
-	 Saved := False;
-	 drawCodeIPHighlighting := False;
+  Saved := False;
+  drawCodeIPHighlighting := False;
 end;
 
 procedure TmainFrm.InputSynEditSpecialLineColors(Sender: TObject;
-	 Line: integer; var Special: boolean; var FG, BG: TColor);
+  Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
-	 if (drawCodeIPHighlighting) and (Line = comp.GetCodePosition(oldIP)) then
-	 begin
-			 Special := True;
-			 BG := clYellow;
-	 end;
+  if (drawCodeIPHighlighting) and (Line = comp.GetCodePosition(oldIP)) then
+  begin
+    Special := True;
+    BG := clYellow;
+  end;
 end;
 
 procedure TmainFrm.compileClick(Sender: TObject);
 begin
-	 MainFrm.DoCompile;
+  MainFrm.DoCompile;
 end;
 
 procedure TmainFrm.FileOpenActAccept(Sender: TObject);
 var
-	 path: string;
+  path: string;
 begin
-	 path := FileOpenAct.Dialog.FileName;
-	 InputSynEdit.Lines.LoadFromFile(path);
-	 SavePath := path;
-	 Saved := True;
+  path := FileOpenAct.Dialog.FileName;
+  InputSynEdit.Lines.LoadFromFile(path);
+  SavePath := path;
+  Saved := True;
 end;
 
 procedure TmainFrm.FileSaveAsActAccept(Sender: TObject);
 begin
-	 SavePath := FileSaveAsAct.Dialog.FileName;
-	 InputSynEdit.Lines.SaveToFile(SavePath);
-	 Saved := True;
+  SavePath := FileSaveAsAct.Dialog.FileName;
+  InputSynEdit.Lines.SaveToFile(SavePath);
+  Saved := True;
 end;
 
 //function TmainFrm.FileSave_ExitActExecute(Sender: TObject) : Boolean;
@@ -611,15 +619,15 @@ end;
 //begin
 //  mainFrm.Close;
 //end;
-//
-function TmainFrm.FileExitActExecute(Sender: TObject) : Boolean;
+
+function TmainFrm.FileExitActExecute(Sender: TObject): boolean;
 begin
   mainFrm.Close;
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  CloseAction:=caFree;
+  CloseAction := caFree;
 end;
 
 procedure TmainFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -628,82 +636,89 @@ var
 begin
   if Saved then
   begin
-    CanClose:=True;
-  end else
+    CanClose := True;
+  end
+  else
   begin
-    answer := MessageDlg('Do you want to save changes?',
-      mtConfirmation, mbYesNoCancel, 0);
+    answer := MessageDlg('Do you want to save changes?', mtConfirmation,
+      mbYesNoCancel, 0);
     if answer = mrYes then
     begin
-      if SavePath='' then
+      if SavePath = '' then
       begin
         FileSaveAsAct.Execute;
-        CanClose:=Saved;
-      end else
+        CanClose := Saved;
+      end
+      else
       begin
         InputSynEdit.Lines.SaveToFile(SavePath);
-        Saved:=true;
-        CanClose:=True;
-      end
-    end else if answer = mrNo then
+        Saved := True;
+        CanClose := True;
+      end;
+    end
+    else if answer = mrNo then
     begin
-      CanClose:=true;
-    end else
+      CanClose := True;
+    end
+    else
     begin
-      CanClose:=False;
+      CanClose := False;
     end;
   end;
 end;
 
-procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
+procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
 
   //f5 to assemble or run, depending on what is done
-  if (Key=LCLType.VK_F5) then
+  if (Key = LCLType.VK_F5) then
   begin
     if assembled then
-        RunPauseBtnClick(nil)
+      RunPauseBtnClick(nil)
     else
-        AssembleBtnClick(nil);
+      AssembleBtnClick(nil);
   end;
   //f9 to assemble and then run
-  if (Key=LCLType.VK_F9) then
+  if (Key = LCLType.VK_F9) then
   begin
     if not assembled then
-        AssembleBtnClick(nil);
+      AssembleBtnClick(nil);
     if assembled then
-       RunPauseBtnClick(nil);
+      RunPauseBtnClick(nil);
   end;
   //f8 zum stepOver
-  if (key=LCLType.VK_F8) then
+  if (key = LCLType.VK_F8) then
   begin
     if not assembled then
-        AssembleBtnClick(nil);
+      AssembleBtnClick(nil);
     if assembled then
-        StepOverBtnClick(nil);
+      StepOverBtnClick(nil);
   end;
   //f7 zum step
-  if (key=LCLType.VK_F7) then
+  if (key = LCLType.VK_F7) then
   begin
     if not assembled then
-        AssembleBtnClick(nil);
+      AssembleBtnClick(nil);
     if assembled then
-        StepBtnClick(nil);
+      StepBtnClick(nil);
   end;
 end;
 
 procedure TmainFrm.FormResize(Sender: TObject);
 begin
-  If (mainFrm.Width > 900) then begin
+  if (mainFrm.Width > 900) then
+  begin
     RAMGrid.AnchorSide[akBottom].Control := mainFrm;
-    RAMGrid.AnchorSide[akBottom].Side:=asrBottom;
+    RAMGrid.AnchorSide[akBottom].Side := asrBottom;
     Log_lb.AnchorSide[akRight].Control := RAMGrid;
     Log_lb.AnchorSide[akRight].Side := asrLeft;
     H_Menu_CodeSplitter.AnchorSide[akRight].Control := RAMGrid;
     H_Menu_CodeSplitter.AnchorSide[akRight].Side := asrLeft;
-  end else begin
+  end
+  else
+  begin
     RAMGrid.AnchorSide[akBottom].Control := H_Menu_CodeSplitter;
-    RAMGrid.AnchorSide[akBottom].Side:=asrTop;
+    RAMGrid.AnchorSide[akBottom].Side := asrTop;
     Log_lb.AnchorSide[akRight].Control := mainFrm;
     Log_lb.AnchorSide[akRight].Side := asrRight;
     H_Menu_CodeSplitter.AnchorSide[akRight].Control := mainFrm;
@@ -713,7 +728,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
-  OptionsFrm:=TOptionsFrm.Create(mainFrm);
+  OptionsFrm := TOptionsFrm.Create(mainFrm);
   OptionsFrm.Show;
 end;
 
@@ -725,63 +740,63 @@ end;
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin
-	 if RunPauseBtn.Caption = 'Run' then
-	 begin
-			 Timer1.Enabled := True;
-			 resume;
-			 RunPauseBtn.Caption := 'Pause';
-	 end
-	 else
-	 begin
-			 Step;
-			 RunPauseBtn.Caption := 'Run';
-			 trackTime := False;
-	 end;
+  if RunPauseBtn.Caption = 'Run' then
+  begin
+    Timer1.Enabled := True;
+    resume;
+    RunPauseBtn.Caption := 'Pause';
+  end
+  else
+  begin
+    Step;
+    RunPauseBtn.Caption := 'Run';
+    trackTime := False;
+  end;
 end;
 
 
 procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
-	 if AssembleBtn.Caption = 'Assemble' then
-	 begin
-			 DoCompile;
-			 if assembled then
-			 begin
-					 Timer1Timer(nil); // update ram and register once
-					 AssembleBtn.Caption := 'Stop';
-					 RunPauseBtn.Enabled := True;
-					 FrequencyType.Enabled := True;
-					 if FrequencyType.ItemIndex <> 3 then
-							 speedEdt.Enabled := True;
-					 StepBtn.Enabled := True;
-					 StepOverBtn.Enabled := True;
-			 end;
-	 end
-	 else
-	 begin
-			 Stop;
-			 Log_lb.Items.Insert(0, 'Simulation canceled by user');
-	 end;
+  if AssembleBtn.Caption = 'Assemble' then
+  begin
+    DoCompile;
+    if assembled then
+    begin
+      Timer1Timer(nil); // update ram and register once
+      AssembleBtn.Caption := 'Stop';
+      RunPauseBtn.Enabled := True;
+      FrequencyType.Enabled := True;
+      if FrequencyType.ItemIndex <> 3 then
+        speedEdt.Enabled := True;
+      StepBtn.Enabled := True;
+      StepOverBtn.Enabled := True;
+    end;
+  end
+  else
+  begin
+    Stop;
+    Log_lb.Items.Insert(0, 'Simulation canceled by user');
+  end;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);
 begin
-	 InputSynEdit.CutToClipboard;
+  InputSynEdit.CutToClipboard;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_PasteClick(Sender: TObject);
 begin
-	 InputSynEdit.PasteFromClipboard;
+  InputSynEdit.PasteFromClipboard;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_RedoClick(Sender: TObject);
 begin
-	 InputSynEdit.Redo;
+  InputSynEdit.Redo;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_UndoClick(Sender: TObject);
 begin
-	 InputSynEdit.Undo;
+  InputSynEdit.Undo;
 end;
 
 

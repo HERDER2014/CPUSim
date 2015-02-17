@@ -36,12 +36,12 @@ type
     { private declarations }
   public
     { public declarations }
-    ramsize: Cardinal;
+    ramsize: cardinal;
   end;
 
 var
   OptionsFrm: TOptionsFrm;
-  Saved : Boolean;
+  Saved: boolean;
 
 implementation
 
@@ -55,9 +55,9 @@ uses
 
 procedure TOptionsFrm.OptionsFrm_ApplyBtnClick(Sender: TObject);
 begin
-  mainFrm.RAMSize:=StrToInt(OptionsFrm_RAMSizeEdt.Text);
-  mainFrm.VRAMSize:=StrToInt(OptionsFrm_VRAMSizeEdt.Text);
-  Saved:=True;
+  mainFrm.RAMSize := StrToInt(OptionsFrm_RAMSizeEdt.Text);
+  mainFrm.VRAMSize := StrToInt(OptionsFrm_VRAMSizeEdt.Text);
+  Saved := True;
 end;
 
 procedure TOptionsFrm.OptionsFrm_CloseBtnClick(Sender: TObject);
@@ -67,14 +67,14 @@ end;
 
 procedure TOptionsFrm.OptionsFrm_OkBtnClick(Sender: TObject);
 begin
-  mainFrm.RAMSize:=StrToInt(OptionsFrm_RAMSizeEdt.Text);
-  Saved:=True;
+  mainFrm.RAMSize := StrToInt(OptionsFrm_RAMSizeEdt.Text);
+  Saved := True;
   Close;
 end;
 
 procedure TOptionsFrm.OptionsFrm_RAMSizeEdtChange(Sender: TObject);
 begin
-  Saved:=False;
+  Saved := False;
 end;
 
 procedure TOptionsFrm.FormCreate(Sender: TObject);
@@ -84,8 +84,8 @@ end;
 
 procedure TOptionsFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  CloseAction:=caFree;
-  OptionsFrm := Nil;
+  CloseAction := caFree;
+  OptionsFrm := nil;
 end;
 
 procedure TOptionsFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -94,25 +94,27 @@ var
 begin
   if Saved then
   begin
-    CanClose:=True;
-  end else
+    CanClose := True;
+  end
+  else
   begin
-    answer := MessageDlg('Do you want to save changes?',
-      mtConfirmation, mbYesNoCancel, 0);
+    answer := MessageDlg('Do you want to save changes?', mtConfirmation,
+      mbYesNoCancel, 0);
     if answer = mrYes then
     begin
       //Save
-      CanClose:=True;
-    end else if answer = mrNo then
+      CanClose := True;
+    end
+    else if answer = mrNo then
     begin
-      CanClose:=True;
-    end else
+      CanClose := True;
+    end
+    else
     begin
-      CanClose:=False;
+      CanClose := False;
     end;
   end;
 end;
 
 
 end.
-

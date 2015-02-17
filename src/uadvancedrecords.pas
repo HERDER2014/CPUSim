@@ -63,9 +63,9 @@ type
 type
   TAddress = record
     R: RegisterIndex;
-    x: SmallInt;
-    valid : Boolean;
-    rFound, xFound : Boolean;
+    x: smallint;
+    valid: boolean;
+    rFound, xFound: boolean;
   end;
 
 function CrTCodeLineNr(line: string; nr: cardinal): TCodeLineNr;

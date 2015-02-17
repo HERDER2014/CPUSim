@@ -81,7 +81,7 @@ begin
     ram[i] := 0;
   size_RAM := size;
   initcriticalsection(cs);
-  vRamStart:=vStart;
+  vRamStart := vStart;
 end;
 
 function TRAM.ReadByte(addr: cardinal): byte;
@@ -131,7 +131,7 @@ begin
       if ChangeCallback <> nil then
       begin
         ChangeCallback(addr);
-        ChangeCallback(addr+1);
+        ChangeCallback(addr + 1);
       end;
     end
     else

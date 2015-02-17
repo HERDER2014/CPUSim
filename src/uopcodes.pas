@@ -200,6 +200,12 @@ type
     // DEC R
     DEC_R,
 
+    // CKB
+    CKB,
+
+    // DB
+    DB,
+
     //Leave this at the end:
     Count
 

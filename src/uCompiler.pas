@@ -1815,10 +1815,10 @@ begin
         else
         if TryParseInt(operands.op1, n1) then
         begin
-          // OUT X
+          // OUT X (X : 1 byte)
           Ram.WriteByte(offset, Ord(OPCode.OUT_X));
-          Ram.WriteWord(offset+1, n1);
-          rBytesWritten:=3;
+          Ram.WriteByte(offset+1, n1);
+          rBytesWritten:=2;
           exit(TRUE);
         end
         else

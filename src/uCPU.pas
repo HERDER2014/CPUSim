@@ -1019,12 +1019,14 @@ end;
 procedure TCPU.Run_OUT_R;
 begin
   Ram.WriteByte(Reg.VP, RR(Ram.ReadByte(Reg.IP + 1)));
+  Reg.VP += 1;
   Reg.IP += 2;
 end;
 
 procedure TCPU.Run_OUT_X;
 begin
   Ram.WriteByte(Reg.VP, Ram.ReadByte(Reg.IP + 1));
+  Reg.VP += 1;
   Reg.IP += 2;
 end;
 

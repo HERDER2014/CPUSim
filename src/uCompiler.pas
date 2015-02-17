@@ -239,10 +239,10 @@ begin
   end;
 end;
 
-function ParseMultipleOperands(opString: string) : TStringList;
+function ParseMultipleOperands(opString: string) : TStringList;                             //ändern!!!!!
 var
   pos : Integer;
-  n : Integer;
+  kommapos : Integer;
   len : Integer;
   operand : String;
 begin
@@ -250,16 +250,23 @@ begin
   pos := 1; // VORSICHT
   len := Length(opString);
 
-  while pos <= len do
+
+  while pos < len do
+  // länge > 1
   begin
-   n := PosEx(',', opString, pos);
-   if n = 0 then
+   kommapos := PosEx(',', opString, pos);
+   if kommapos = 0 then
    begin
-     n := len;
+     kommapos := len;
    end;
-   //operand
+   Result.AddText(Trim(Copy(opString, pos, kommaPos - 1)));
+   pos:= kommapos;
   end;
 
+  if (len = 1) then
+  begin
+    Result.AddText(opString);
+  end;
 end;
 
 {
@@ -1776,7 +1783,7 @@ begin
       end;
     end;
 
-    'IN':
+    'IN':  // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1800,7 +1807,7 @@ begin
       end;
     end;
 
-    'OUT':
+    'OUT': // 2
     begin
       if (operands.Count = 1) then
       begin
@@ -1834,7 +1841,7 @@ begin
       end;
     end;
 
-    'INC':
+    'INC': // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1858,7 +1865,7 @@ begin
       end;
     end;
 
-    'DEC':
+    'DEC': // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1882,7 +1889,7 @@ begin
       end;
     end;
 
-    'CKB':
+    'CKB': // 1
     begin
       if (operands.Count = 0) then
       begin
@@ -1897,7 +1904,7 @@ begin
       end;
     end;
 
-    'DB':
+    'DB': // 1
     begin
       if (operands.Count >= 1) then
       begin

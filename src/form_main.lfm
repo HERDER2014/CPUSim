@@ -1,19 +1,20 @@
 object mainFrm: TmainFrm
   Left = 349
-  Height = 633
+  Height = 584
   Top = 151
-  Width = 980
+  Width = 935
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 613
-  ClientWidth = 980
+  ClientHeight = 564
+  ClientWidth = 935
   Constraints.MinHeight = 343
-  Constraints.MinWidth = 600
+  Constraints.MinWidth = 685
   KeyPreview = True
   Menu = MainFrm_Menu
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
   inline InputSynEdit: TSynEdit
@@ -21,9 +22,9 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 398
+    Height = 349
     Top = 128
-    Width = 545
+    Width = 500
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -15
@@ -537,8 +538,8 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
-    Left = 545
-    Height = 398
+    Left = 500
+    Height = 349
     Hint = 'The RAM will be displayed here'
     Top = 128
     Width = 435
@@ -942,8 +943,8 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 526
-    Width = 977
+    Top = 477
+    Width = 932
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
     ResizeAnchor = akBottom
@@ -973,8 +974,8 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 532
-    Width = 980
+    Top = 483
+    Width = 935
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
       'Hit "Assemble" to Compile your Program'
@@ -1060,7 +1061,6 @@ object mainFrm: TmainFrm
       Hint = 'Z-Flag (Zero)'#13#10'The Z-Flag is true if any operation''s result is zero.'
       Top = 5
       Width = 20
-      OnChange = Flag_ZChange
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -1072,7 +1072,6 @@ object mainFrm: TmainFrm
       Hint = 'O-Flag (Overflow)'#13#10'The O-Flag is true if any operation''s result is larger than FFFF and therefore cannot be saved in a register.'
       Top = 5
       Width = 20
-      OnChange = Flag_OChange
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -1084,7 +1083,6 @@ object mainFrm: TmainFrm
       Hint = 'S-Flag (Sign)'#13#10'The S-Flag is true if any operation''s result is negative.'
       Top = 5
       Width = 20
-      OnChange = Flag_SChange
       ParentFont = False
       ParentShowHint = False
       ShowHint = True

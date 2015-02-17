@@ -101,12 +101,10 @@ type
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     function FileExitActExecute(Sender: TObject): boolean;
-    procedure Flag_OChange(Sender: TObject);
-    procedure Flag_SChange(Sender: TObject);
-    procedure Flag_ZChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
@@ -343,6 +341,7 @@ begin
   BP2.Text := IntToHex(CPU.ReadRegister(BP), 4);
   VP1.Text := IntTOBin(CPU.ReadRegister(VP), 16, 8);
   VP2.Text := IntToHex(CPU.ReadRegister(VP), 4);
+  FLAGS1.Text := IntToBin(CPU.ReadRegister(FLAGS), 16, 8);
   Flag_S.Checked := (CPU.ReadRegister(FLAGS) and integer(S)) > 0;
   Flag_Z.Checked := (CPU.ReadRegister(FLAGS) and integer(Z)) > 0;
   Flag_O.Checked := (CPU.ReadRegister(FLAGS) and integer(O)) > 0;
@@ -626,21 +625,6 @@ begin
   mainFrm.Close;
 end;
 
-procedure TmainFrm.Flag_OChange(Sender: TObject);
-begin
-  Flag_O.Checked := False;
-end;
-
-procedure TmainFrm.Flag_SChange(Sender: TObject);
-begin
-  Flag_S.Checked := False;
-end;
-
-procedure TmainFrm.Flag_ZChange(Sender: TObject);
-begin
-  Flag_Z.Checked := False;
-end;
-
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   CloseAction := caFree;
@@ -717,6 +701,28 @@ begin
       AssembleBtnClick(nil);
     if assembled then
       StepBtnClick(nil);
+  end;
+end;
+
+procedure TmainFrm.FormResize(Sender: TObject);
+begin
+  if (mainFrm.Width > 900) then
+  begin
+    RAMGrid.AnchorSide[akBottom].Control := mainFrm;
+    RAMGrid.AnchorSide[akBottom].Side := asrBottom;
+    Log_lb.AnchorSide[akRight].Control := RAMGrid;
+    Log_lb.AnchorSide[akRight].Side := asrLeft;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Control := RAMGrid;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Side := asrLeft;
+  end
+  else
+  begin
+    RAMGrid.AnchorSide[akBottom].Control := H_Menu_CodeSplitter;
+    RAMGrid.AnchorSide[akBottom].Side := asrTop;
+    Log_lb.AnchorSide[akRight].Control := mainFrm;
+    Log_lb.AnchorSide[akRight].Side := asrRight;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Control := mainFrm;
+    H_Menu_CodeSplitter.AnchorSide[akRight].Side := asrRight;
   end;
 end;
 

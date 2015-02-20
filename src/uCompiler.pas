@@ -145,7 +145,7 @@ begin
     Result := EmptyStr
   else
   begin
-    Result := Trim(UpperCase(Copy(line, i + 1, Length(line) - i)));
+    Result := Trim(Copy(line, i + 1, Length(line) - i));
   end;
 end;
 
@@ -185,7 +185,7 @@ begin
     begin
       if c = ':' then
       begin
-        Result := r;
+        Result := UpperCase(r);
       end;
       break;
     end;
@@ -225,7 +225,7 @@ begin
       // Komma enthalten -> min. 2 Operanden
       if PosEx(',', opString, kommaPos + 1) <> 0 then
       begin
-        // mehr als 2 Operanden. Sollte nicht vorkommen.
+        // mehr als 2 Operanden. Sollte nicht vorkommen. (siehe MultipleOp...)
         Result.Count := 3;
       end
       else
@@ -242,35 +242,42 @@ end;
 function ParseMultipleOperands(opString: string) : TStringList;
 var
   pos : Integer;
-  n : Integer;
+  kommapos : Integer;
+  //afzpos : Integer; // "-Pos
   len : Integer;
   operand : String;
+  s : String;
 begin
   Result := TStringList.Create;
   pos := 1; // VORSICHT
   len := Length(opString);
 
-  while pos <= len do
-  begin
-   n := PosEx(',', opString, pos);
-   if n = 0 then
-   begin
-     n := len;
-   end;
-   //operand
-  end;
 
+  while pos < len do
+  // länge > 1
+  begin
+   kommapos := PosEx(',', opString, pos);
+   //afzpos:=PosEx('"', opString, pos;
+   if kommapos = 0 then
+   begin
+     kommapos := len+1;
+   end;
+   s := Trim(Copy(opString, pos, kommaPos - pos));
+   if not (s = EmptyStr) then
+     Result.Add(s);
+   pos:= kommapos+1;
+  end;
 end;
 
 {
 
  Erg.: Wenn nicht erfolgreich: gibt NIL zurück.
 }
-function GetAllOperandsAsBytes(opString : string) : TByteList;
+function GetAllOperandsAsBytes(opString : string; numberInputMode : TNumberInputMode) : TByteList;
 var
   opList : TStringList;
-  i, x : Integer;
-  s : String;
+  i, j, x : Integer;
+  s, ss : String;
 begin
   Result := TByteList.Create;
   opList := ParseMultipleOperands(opString);
@@ -278,22 +285,39 @@ begin
   for i := 0 to opList.Count-1 do
   begin
     s := opList[i];
-    if TryStrToInt(s, x) then
+    if TryParseIntBase(s, x, numberInputMode) then
     begin
       // Zahl in Operand i
       if x > 255 then
       begin
         // über Byte-Größe
-        Result := NIL;
+        exit(NIL);
       end
       else
       begin
         Result.Add(Byte(x));
       end;
+    end
+    else
+    begin
       // STRINGS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      if (LeftStr(s, 1) = '"') and (RightStr(s, 1) = '"') and (Length(s) >= 2) then
+      begin
+        // "String"
+        ss := Copy(s, 2, Length(s) - 2);
+        if ss = EmptyStr then
+          Continue;
+        for j := 1 to Length(ss) do
+        begin
+          Result.Add(Byte(ss[j]));
+        end;
+      end
+      else
+      begin
+        exit(NIL);
+      end;
     end;
   end;
-
 end;
 
 {
@@ -338,7 +362,7 @@ end;
 }
 function ParseRegisterIndex(registerString: string): RegisterIndex;
 begin
-  case registerString of
+  case UpperCase(registerString) of
     'AX': Result := RegisterIndex.AX;
     'BX': Result := RegisterIndex.BX;
     'CX': Result := RegisterIndex.CX;
@@ -493,7 +517,9 @@ var
   r1, r2: RegisterIndex;
   n1, n2: integer;
   a1, a2: TAddress;
-  multiOPList: TStringList;
+  dbBytes: TByteList;
+
+  i : Integer; // Zählervariable, nur zum Testen
 
   procedure ReportOPCountError(expected: cardinal);
   begin
@@ -1207,7 +1233,7 @@ begin
         begin
           // JMP LABEL
           Ram.WriteByte(offset, Ord(OPCode.JMP_ADDR));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1244,7 +1270,7 @@ begin
         begin
           // JS LABEL
           Ram.WriteByte(offset, Ord(OPCode.JS_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1281,7 +1307,7 @@ begin
         begin
           // JZ LABEL
           Ram.WriteByte(offset, Ord(OPCode.JZ_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1318,7 +1344,7 @@ begin
         begin
           // JO LABEL
           Ram.WriteByte(offset, Ord(OPCode.JO_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1355,7 +1381,7 @@ begin
         begin
           // JNS LABEL
           Ram.WriteByte(offset, Ord(OPCode.JNS_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1392,7 +1418,7 @@ begin
         begin
           // JNZ LABEL
           Ram.WriteByte(offset, Ord(OPCode.JNZ_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1429,7 +1455,7 @@ begin
         begin
           // JNO LABEL
           Ram.WriteByte(offset, Ord(OPCode.JNO_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1466,7 +1492,7 @@ begin
         begin
           // CALL LABEL
           Ram.WriteByte(offset, Ord(OPCode.CALL_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1776,7 +1802,7 @@ begin
       end;
     end;
 
-    'IN':
+    'IN':  // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1800,7 +1826,7 @@ begin
       end;
     end;
 
-    'OUT':
+    'OUT': // 2
     begin
       if (operands.Count = 1) then
       begin
@@ -1834,7 +1860,7 @@ begin
       end;
     end;
 
-    'INC':
+    'INC': // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1858,7 +1884,7 @@ begin
       end;
     end;
 
-    'DEC':
+    'DEC': // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1882,7 +1908,7 @@ begin
       end;
     end;
 
-    'CKB':
+    'CKB': // 1
     begin
       if (operands.Count = 0) then
       begin
@@ -1897,12 +1923,27 @@ begin
       end;
     end;
 
-    'DB':
+    'DB': // 1
     begin
       if (operands.Count >= 1) then
       begin
-        //multiOPList := GetAllOperandsAsBytes(operandsString);
-
+        dbBytes := GetAllOperandsAsBytes(operandsString, NumberInputMode);
+        if dbBytes = NIL then
+        begin
+          // Fehler
+          ReportInvalidOperands();
+          exit(FALSE);
+        end
+        else
+        begin
+          rBytesWritten:=0;
+          for i := 0 to dbBytes.Count-1 do
+          begin
+            Ram.WriteByte(offset + i, dbBytes[i]);
+            Inc(rBytesWritten);
+          end;
+          exit(TRUE);
+        end;
       end
       else
       begin
@@ -2052,7 +2093,7 @@ begin
     zeile := Trim(zeile); // Entfernt alle vorhergehenden und nachfolgenden Leerzeichen.
     if zeile <> EmptyStr then
       // Zeile ist nicht leer
-      commandLines.Add(CrTCodeLineNr(UpperCase(zeile), zNr));
+      commandLines.Add(CrTCodeLineNr(zeile, zNr));
 
     cpos += zlen + 1; // wegen \n
     Inc(zNr);

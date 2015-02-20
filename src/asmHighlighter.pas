@@ -12,6 +12,8 @@ type
   { TSynDemoHl }
 
 
+  { TAsmHighlighter }
+
   TAsmHighlighter = class(TSynCustomHighlighter)
   private
     fOPCodeAttri: TSynHighlighterAttributes;
@@ -19,6 +21,7 @@ type
     fNumberAttri: TSynHighlighterAttributes;
     fAdressAttri: TSynHighlighterAttributes;
     fCommentAttri: TSynHighlighterAttributes;
+    fStringAttri: TSynHighlighterAttributes;
     fNormalAttri: TSynHighlighterAttributes;
     FCurRange: integer;
     procedure SetOPCodeAttri(AValue: TSynHighlighterAttributes);
@@ -26,6 +29,7 @@ type
     procedure SetNumberAttri(AValue: TSynHighlighterAttributes);
     procedure SetAdressAttri(AValue: TSynHighlighterAttributes);
     procedure SetCommentAttri(AValue: TSynHighlighterAttributes);
+    procedure SetStringAttri(AValue: TSynHighlighterAttributes);
     procedure SetNormalAttri(AValue: TSynHighlighterAttributes);
   protected
     // accesible for the other examples
@@ -58,6 +62,8 @@ type
       read fAdressAttri write SetAdressAttri;
     property CommentAttri: TSynHighlighterAttributes
       read fCommentAttri write SetCommentAttri;
+    property StringAttri: TSynHighlighterAttributes
+      read fStringAttri write SetStringAttri;
     property NormalAttri: TSynHighlighterAttributes
       read fNormalAttri write SetNormalAttri;
   end;
@@ -83,12 +89,16 @@ begin
 
   fAdressAttri := TSynHighlighterAttributes.Create('adress', 'adress');
   AddAttribute(fAdressAttri);
-  fAdressAttri.Foreground := clGreen;
+  fAdressAttri.Foreground := TColor($0099FF);
 
   fCommentAttri := TSynHighlighterAttributes.Create('comment', 'comment');
   AddAttribute(fCommentAttri);
   fCommentAttri.Style := [fsItalic];
   fCommentAttri.Foreground := clGray;
+
+  fStringAttri := TSynHighlighterAttributes.Create('string', 'string');
+  AddAttribute(fStringAttri);
+  fStringAttri.Foreground := clGreen;
 
   fNormalAttri := TSynHighlighterAttributes.Create('normal', 'normal');
   AddAttribute(fNormalAttri);
@@ -118,6 +128,11 @@ end;
 procedure TAsmHighlighter.SetCommentAttri(AValue: TSynHighlighterAttributes);
 begin
   fCommentAttri.Assign(AValue);
+end;
+
+procedure TAsmHighlighter.SetStringAttri(AValue: TSynHighlighterAttributes);
+begin
+  fStringAttri.Assign(AValue);
 end;
 
 procedure TAsmHighlighter.SetNormalAttri(AValue: TSynHighlighterAttributes);
@@ -165,6 +180,14 @@ begin
       Inc(FTokenEnd);
     Inc(FTokenEnd);
   end
+  else if FLineText[FTokenEnd] = '"' then
+  begin
+    Inc(FTokenEnd);
+    // At String? Find end "
+    while (FTokenEnd <= l) and (FLineText[FTokenEnd] <> '"') do
+      Inc(FTokenEnd);
+    Inc(FTokenEnd);
+  end
   else if FLineText[FTokenEnd] = ';' then
     // At Comment? Find end of line
     while (FTokenEnd <= l) do
@@ -206,11 +229,13 @@ begin
     Result := CommentAttri
   else if FLineText[FTokenEnd - 1] = ':' then
     Result := AdressAttri
+  else if FLineText[FTokenPos] = '"' then
+    Result := StringAttri
   else
     case LowerCase(copy(FLineText, FTokenPos, FTokenEnd - FTokenPos)) of
       'mov', 'movb', 'movw', 'add', 'sub', 'mul', 'div', 'mod', 'cmp',
       'jmp', 'jz', 'jnz', 'je', 'jne', 'js', 'jns', 'jo', 'jno', 'call', 'ret',
-      'push', 'pop', 'not', 'and', 'or', 'xor', 'in', 'out', 'inc', 'dec', 'org', 'end':
+      'push', 'pop', 'not', 'and', 'or', 'xor', 'in', 'out', 'inc', 'dec', 'org', 'end', 'db', 'ckb':
         Result := OPCodeAttri;
       'ax', 'bx', 'cx', 'dx', 'al', 'bl', 'cl', 'dl', 'ah', 'bh', 'ch', 'dh',
       'ip', 'sp', 'bp', 'vp', 'flags':
@@ -257,6 +282,8 @@ begin
     Result := 4;
   if a = fCommentAttri then
     Result := 5;
+  if a = fStringAttri then
+    Result := 6;
 end;
 
 procedure TAsmHighlighter.SetRange(Value: Pointer);

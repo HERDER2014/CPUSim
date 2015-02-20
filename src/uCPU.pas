@@ -1095,6 +1095,7 @@ end;
 procedure TCPU.Run_CKB;
 begin
   KeyInputs.Clear;
+  Reg.IP += 1;
 end;
 
 function TCPU.Step(): OPCode;

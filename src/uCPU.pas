@@ -25,7 +25,8 @@ type
     KeyInputs: TStringList;
 
     OPCodeProcedures: array[0..integer(OPCode.Count) - 1] of TProc;
-    Terminated: ^Boolean;
+    Terminated: Boolean;
+    wMessage: String;
 
     procedure push(w: word); overload;
     function pop(): word;
@@ -68,8 +69,38 @@ type
    }
   public
     function Step(): OPCode;
+
+   {
+   Vor.: -
+   Eff.: i wird an Input queue angefuegt
+   Erg.: -
+   }
+   public
     procedure SendKeyInput(i : Char);
-    procedure SetTerminateFlag(t : TBoolPointer);
+
+   {
+   Vor.: -
+   Eff.: -
+   Erg.: gibt aktuelle Waiting Message aus
+   }
+  public
+    function waitingMessage():String;
+
+   {
+   Vor.: -
+   Eff.: Keyboard Buffer wird geleert
+   Erg.: -
+   }
+  public
+    procedure clearKeyboardBuffer();
+
+   {
+   Vor.: -
+   Eff.: moegliche Wartevorgaenge werden abgebrochen
+   Erg.: -
+   }
+  public
+    procedure Terminate();
 
   private
    {
@@ -179,6 +210,7 @@ begin
   Reg.BX := 0;
   Reg.CX := 0;
   Reg.DX := 0;
+  Terminated := false;
 
   KeyInputs := TStringList.Create;
   //   Reg := TRegRecord.Create();
@@ -1039,12 +1071,13 @@ begin
   b := (KeyInputs.Count = 0);
   LeaveCriticalSection(cs);
   while (b) do begin
-    if (not Terminated^) then begin
+    if (Terminated) then begin
       EnterCriticalSection(cs);
       exit;
     end;
-
     EnterCriticalSection(cs);
+
+    wMessage:='Waiting for Keyboard Input';
     try
       b := (KeyInputs.Count = 0);
     finally
@@ -1052,7 +1085,10 @@ begin
     end;
   end;
   EnterCriticalSection(cs);
+
+  wMessage:='';
   WR(Ram.ReadByte(Reg.IP + 1), Byte(KeyInputs[0][1]));
+  Reg.IP += 2;
   KeyInputs.Delete(0);
 end;
 
@@ -1094,9 +1130,19 @@ begin
   end;
 end;
 
-procedure TCPU.SetTerminateFlag(t: TBoolPointer);
+procedure TCPU.Terminate;
 begin
-  Terminated:=@t;
+  Terminated:=true;
+end;
+
+function TCPU.waitingMessage: String;
+begin
+  result:= wMessage;
+end;
+
+procedure TCPU.clearKeyboardBuffer;
+begin
+  Run_CKB;
 end;
 
 end.

@@ -34,6 +34,7 @@ type
     H_Menu_CodeSplitter: TSplitter;
     IP2: TEdit;
     IP1: TEdit;
+    WaitingMessageLbl: TLabel;
     Label9: TLabel;
     MainFrm_Menu_Options: TMenuItem;
     Panel1: TPanel;
@@ -104,6 +105,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
@@ -375,6 +377,8 @@ begin
       IntToHex(cpu.ReadRegister(IP), 4) + '): ' + Thread.getException());
   end;
 
+  WaitingMessageLbl.Caption:='';
+
   InputSynEdit.ReadOnly := False;
   assembled := False;
 
@@ -454,6 +458,8 @@ procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
   updateREG;
 
+  WaitingMessageLbl.Caption:=CPU.waitingMessage();
+
   if Thread.Suspended then
   begin
     Timer1.Enabled := False;
@@ -476,7 +482,7 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  Thread.terminate;
+  Thread.term;
 
   assembled := False;
   InputSynEdit.ReadOnly := False;
@@ -702,6 +708,11 @@ begin
     if assembled then
       StepBtnClick(nil);
   end;
+end;
+
+procedure TmainFrm.FormKeyPress(Sender: TObject; var Key: char);
+begin
+  if assembled then CPU.SendKeyInput(Key);
 end;
 
 procedure TmainFrm.FormResize(Sender: TObject);

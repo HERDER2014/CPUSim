@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 177
+  Left = 285
   Height = 584
-  Top = 115
+  Top = 149
   Width = 935
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 565
@@ -14,6 +14,7 @@ object mainFrm: TmainFrm
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
@@ -1116,6 +1117,17 @@ object mainFrm: TmainFrm
       TabOrder = 3
       Text = '00000000 00000000'
     end
+  end
+  object WaitingMessageLbl: TLabel
+    Left = 23
+    Height = 14
+    Top = 110
+    Width = 393
+    Alignment = taCenter
+    AutoSize = False
+    Font.Color = clRed
+    ParentColor = False
+    ParentFont = False
   end
   object MainFrm_Menu: TMainMenu
     left = 872

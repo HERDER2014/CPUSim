@@ -42,6 +42,9 @@ type
       }
     procedure setVel(v: extended);
 
+
+    procedure term();
+
       {
       Vor.: Der Thread wurde beendet (Terminated = True)
       Eff.: -
@@ -79,7 +82,6 @@ implementation
 constructor TCPUThread.Create(sim: TCPU);
 begin
   cpu := sim;
-  sim.SetTerminateFlag(@Terminated);
   FreeOnTerminate := True;
   InitCriticalSection(cs);
   inherited Create(True);
@@ -93,6 +95,12 @@ begin
   finally
     LeaveCriticalSection(cs);
   end;
+end;
+
+procedure TCPUThread.term;
+begin
+  Terminate();
+  cpu.Terminate();
 end;
 
 

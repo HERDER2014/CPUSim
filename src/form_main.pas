@@ -194,6 +194,7 @@ begin
   Saved := True; // Don't ask for save when program just started
   assembled := False;
   InputSynEdit.ReadOnly := False;
+  InputSynEdit.Color:=clWhite;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -220,6 +221,7 @@ begin
     trackTime := True;
     drawCodeIPHighlighting := True;
     InputSynEdit.ReadOnly := True;
+    InputSynEdit.Color:=clSilver;
 
     oldIP := CPU.ReadRegister(RegisterIndex.IP);
     oldBP := CPU.ReadRegister(RegisterIndex.BP);
@@ -380,6 +382,7 @@ begin
   WaitingMessageLbl.Caption:='';
 
   InputSynEdit.ReadOnly := False;
+  InputSynEdit.Color:=clWhite;
   assembled := False;
 
   RunPauseBtn.Enabled := False;
@@ -486,6 +489,7 @@ begin
 
   assembled := False;
   InputSynEdit.ReadOnly := False;
+  InputSynEdit.Color:=clWhite;
 
   RunPauseBtn.Enabled := False;
   speedEdt.Enabled := False;

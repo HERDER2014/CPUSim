@@ -979,10 +979,9 @@ object mainFrm: TmainFrm
     Width = 935
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
-      'Hit "Assemble" to Compile your Program'
+      'Hit "Assemble" to compile your program'
     )
     ItemHeight = 15
-    ItemIndex = 0
     MultiSelect = True
     TabOrder = 21
   end

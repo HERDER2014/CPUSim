@@ -399,6 +399,7 @@ begin
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint := 'Runs the program';
 end;
 
 //procedure TmainFrm.SearchFindActAccept(Sender: TObject);
@@ -424,6 +425,7 @@ begin
 
   Step;
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint := 'Runs the program';
   trackTime := False;
 end;
 
@@ -433,6 +435,7 @@ begin
 
   StepOver;
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint:= 'Runs the program';
   trackTime := False;
 end;
 
@@ -475,6 +478,7 @@ begin
   begin
     Timer1.Enabled := False;
     RunPauseBtn.Caption := 'Run';
+    RunPauseBtn.Hint:= 'Runs the program';
   end;
 end;
 
@@ -773,11 +777,13 @@ begin
     Timer1.Enabled := True;
     resume;
     RunPauseBtn.Caption := 'Pause';
+    RunPauseBtn.Hint:= 'Pauses program execution';
   end
   else
   begin
     Step;
     RunPauseBtn.Caption := 'Run';
+    RunPauseBtn.Hint:= 'Runs the program';
     trackTime := False;
   end;
 end;

@@ -247,40 +247,62 @@ var
   len : Integer;
   operand : String;
   s : String;
+  c : Char;
+  inString : Boolean;
 begin
   Result := TStringList.Create;
   pos := 1; // VORSICHT
   len := Length(opString);
 
+  inString := false;
+  s := EmptyStr;
 
-  while pos < len do
-  // länge > 1
+  while pos <= len do
   begin
-   kommapos := PosEx(',', opString, pos);
-   afzpos:=PosEx('"', opString, pos);
-   if (afzpos < kommapos) and (afzpos <> 0) then
-   begin
-     // " vor ,
-     afzpos := PosEx('"', opString, kommapos);
-     if afzpos = 0 then
-     begin
-       // kein zweites "
-       exit(NIL);
-     end
-     else
-     begin
-       // " [...] , [...] "
-       kommapos := PosEx(',', opString, afzpos);
-     end;
-   end;
-   if kommapos = 0 then
-   begin
-     kommapos := len+1;
-   end;
-   s := Trim(Copy(opString, pos, kommaPos - pos));
-   if not (s = EmptyStr) then
-     Result.Add(s);
-   pos:= kommapos+1;
+    c := opString[pos];
+
+    case c of
+      '"':
+      begin
+        inString := not inString;
+        s += c;
+      end;
+      ',':
+      begin
+        if not inString then
+        begin
+          s := Trim(s);
+          if s <> EmptyStr then
+          begin
+            Result.Add(s);
+            s := EmptyStr;
+          end;
+        end
+        else
+        begin
+          s += c;
+        end;
+      end
+      else
+      begin
+        s += c;
+      end;
+    end;
+
+    inc(pos);
+  end;
+
+  if not inString then
+  begin
+    s := Trim(s);
+    if s <> EmptyStr then
+    begin
+      Result.Add(s);
+    end;
+  end
+  else
+  begin
+    exit(NIL);
   end;
 end;
 
@@ -296,6 +318,11 @@ var
 begin
   Result := TByteList.Create;
   opList := ParseMultipleOperands(opString);
+
+  if opList = NIL then
+  begin
+    exit(NIL);
+  end;
 
   if opList = NIL then
     exit(NIL);

@@ -245,6 +245,7 @@ var
   kommapos : Integer;
   len : Integer;
   operand : String;
+  s : String;
 begin
   Result := TStringList.Create;
   pos := 1; // VORSICHT
@@ -257,15 +258,12 @@ begin
    kommapos := PosEx(',', opString, pos);
    if kommapos = 0 then
    begin
-     kommapos := len;
+     kommapos := len+1;
    end;
-   Result.AddText(Trim(Copy(opString, pos, kommaPos - 1)));
-   pos:= kommapos;
-  end;
-
-  if (len = 1) then
-  begin
-    Result.AddText(opString);
+   s := Trim(Copy(opString, pos, kommaPos - pos));
+   if not (s = EmptyStr) then
+     Result.Add(s);
+   pos:= kommapos+1;
   end;
 end;
 
@@ -501,6 +499,8 @@ var
   n1, n2: integer;
   a1, a2: TAddress;
   multiOPList: TStringList;
+
+  i : Integer; // Zählervariable, nur zum Testen
 
   procedure ReportOPCountError(expected: cardinal);
   begin
@@ -1908,8 +1908,11 @@ begin
     begin
       if (operands.Count >= 1) then
       begin
-        //multiOPList := GetAllOperandsAsBytes(operandsString);
-
+        multiOPList := ParseMultipleOperands(operandsString);
+        for i := 0 to multiOPList.Count-1 do
+        begin
+          ShowMessage(multiOPList[i]);
+        end;
       end
       else
       begin

@@ -242,10 +242,7 @@ end;
 function ParseMultipleOperands(opString: string) : TStringList;
 var
   pos : Integer;
-  kommapos : Integer;
-  afzpos : Integer; // "-Pos
   len : Integer;
-  operand : String;
   s : String;
   c : Char;
   inString : Boolean;
@@ -323,9 +320,6 @@ begin
   begin
     exit(NIL);
   end;
-
-  if opList = NIL then
-    exit(NIL);
 
   for i := 0 to opList.Count-1 do
   begin

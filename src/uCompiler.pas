@@ -243,7 +243,7 @@ function ParseMultipleOperands(opString: string) : TStringList;
 var
   pos : Integer;
   kommapos : Integer;
-  //afzpos : Integer; // "-Pos
+  afzpos : Integer; // "-Pos
   len : Integer;
   operand : String;
   s : String;
@@ -257,7 +257,22 @@ begin
   // länge > 1
   begin
    kommapos := PosEx(',', opString, pos);
-   //afzpos:=PosEx('"', opString, pos;
+   afzpos:=PosEx('"', opString, pos);
+   if (afzpos < kommapos) and (afzpos <> 0) then
+   begin
+     // " vor ,
+     afzpos := PosEx('"', opString, kommapos);
+     if afzpos = 0 then
+     begin
+       // kein zweites "
+       exit(NIL);
+     end
+     else
+     begin
+       // " [...] , [...] "
+       kommapos := PosEx(',', opString, afzpos);
+     end;
+   end;
    if kommapos = 0 then
    begin
      kommapos := len+1;
@@ -281,6 +296,9 @@ var
 begin
   Result := TByteList.Create;
   opList := ParseMultipleOperands(opString);
+
+  if opList = NIL then
+    exit(NIL);
 
   for i := 0 to opList.Count-1 do
   begin

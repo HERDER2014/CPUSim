@@ -13,7 +13,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
   uTypen,
   form_options,
   asmHighlighter,
-  EpikTimer;
+  EpikTimer, form_screen;
 
 {$R *.res}
 
@@ -23,5 +23,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TmainFrm, mainFrm);
   Application.CreateForm(TOptionsFrm, OptionsFrm);
+  //Application.CreateForm(TScreenForm, ScreenForm);
   Application.Run;
 end.

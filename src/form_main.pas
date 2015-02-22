@@ -9,7 +9,7 @@ uses
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
   uCompiler, form_options, uCPUThread, strutils, uTypen,
-  asmHighlighter, eventlog, types, lclintf, Math;
+  asmHighlighter, eventlog, types, lclintf, Math, form_screen;
 
 type
 
@@ -18,6 +18,7 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
+    Button1: TButton;
     FLAGS1: TEdit;
     ActionList: TActionList;
     AssembleBtn: TButton;
@@ -97,6 +98,7 @@ type
     InputSynEdit: TSynEdit;
     RAMValueList: TValueListEditor;
     procedure AssembleBtnClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
@@ -149,6 +151,7 @@ type
     procedure setVel;
     procedure OnRAMChange(addr: word);
   private
+    screenForm : TScreenForm;
   public
     { public declarations }
     RAMSize: cardinal;
@@ -184,13 +187,15 @@ implementation
 
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
+  screenForm := TScreenForm.Create(self);
+
   InputSynEdit.ClearAll;
 
   hlt := TAsmHighlighter.Create(self);
   InputSynEdit.Highlighter := hlt;
 
   RAMSize := 512;
-  VRAMSize := 64;
+  VRAMSize := 2000;
   Saved := True; // Don't ask for save when program just started
   assembled := False;
   InputSynEdit.ReadOnly := False;
@@ -283,6 +288,8 @@ begin
   begin
     RAMGrid.Cells[0, i] := IntToHex((i - 1) shl 4, 4);
   end;
+  screenForm.SetRAM(Ram);
+  screenForm.SetVRAMStart(cpu.ReadRegister(RegisterIndex.VP));
 end;
 
 procedure TmainFrm.updateREG;
@@ -460,6 +467,7 @@ end;
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
   updateREG;
+  ScreenForm.Repaint;
 
   WaitingMessageLbl.Caption:=CPU.waitingMessage();
 
@@ -498,6 +506,7 @@ begin
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
+  screenForm.Hide;
 end;
 
 procedure TmainFrm.setVel;
@@ -523,6 +532,10 @@ begin
   col := addr shr 4 + 1;
   RAMGrid.Cells[row, col] := IntToHex(Ram.ReadByte(addr), 2);
   RAMGrid.InvalidateCell(row, col);
+  if addr >= RAMSize then
+  begin
+    screenForm.Refresh(addr - RAMSize);
+  end;
  { if (col-1) + ((row-1) shl 4) = CPU.ReadRegister(IP) then
     begin
       Canvas.Brush.Color := clYellow;
@@ -792,6 +805,11 @@ begin
     Stop;
     Log_lb.Items.Insert(0, 'Simulation canceled by user');
   end;
+end;
+
+procedure TmainFrm.Button1Click(Sender: TObject);
+begin
+  screenForm.show;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);

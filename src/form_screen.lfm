@@ -1,0 +1,16 @@
+object ScreenForm: TScreenForm
+  Left = 921
+  Height = 383
+  Top = 239
+  Width = 614
+  BorderStyle = bsToolWindow
+  Caption = 'Screen'
+  Color = clBlack
+  Font.CharSet = ANSI_CHARSET
+  Font.Height = -13
+  Font.Name = 'Courier New'
+  FormStyle = fsStayOnTop
+  OnCreate = FormCreate
+  OnPaint = FormPaint
+  LCLVersion = '1.2.6.0'
+end

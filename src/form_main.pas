@@ -9,7 +9,7 @@ uses
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
   uCompiler, form_options, uCPUThread, strutils, uTypen,
-  asmHighlighter, eventlog, types, lclintf, Math, form_screen;
+  asmHighlighter, eventlog, types, lclintf, Math, form_screen, SynEditMarks, SynGutterBase;
 
 type
 
@@ -33,6 +33,7 @@ type
     FileOpenAct: TFileOpen;
     FileSaveAsAct: TFileSaveAs;
     H_Menu_CodeSplitter: TSplitter;
+    ImageList1: TImageList;
     IP2: TEdit;
     IP1: TEdit;
     WaitingMessageLbl: TLabel;
@@ -110,6 +111,8 @@ type
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
+    procedure InputSynEditGutterClick(Sender: TObject; X, Y, Line: integer;
+      mark: TSynEditMark);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
 
@@ -253,26 +256,29 @@ end;
 procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
   aRect: TRect; aState: TGridDrawState);
 begin
-  with TStringGrid(Sender) do
+  if (aCol > 0) and (aRow > 0) then
   begin
-    if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
+    with TStringGrid(Sender) do
     begin
-      Canvas.Brush.Color := clYellow;
-    end
-    else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
-    begin
-      Canvas.Brush.Color := $FF8888;
-    end
-    else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
-    begin
-      Canvas.Brush.Color := clGreen;
-    end
-    else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
-    begin
-      Canvas.Brush.Color := clLime;
+      if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
+      begin
+        Canvas.Brush.Color := clYellow;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
+      begin
+        Canvas.Brush.Color := $FF8888;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
+      begin
+        Canvas.Brush.Color := clGreen;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
+      begin
+        Canvas.Brush.Color := clLime;
+      end;
+      Canvas.FillRect(aRect);
+      Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
     end;
-    Canvas.FillRect(aRect);
-    Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
   end;
 end;
 
@@ -467,6 +473,24 @@ begin
     setVel;
 end;
 
+procedure TmainFrm.InputSynEditGutterClick(Sender: TObject; X, Y,
+  Line: integer; mark: TSynEditMark);
+var
+  m: TSynEditMark;
+begin
+  if InputSynEdit.Marks.Line[line] = nil then
+  begin
+    m := TSynEditMark.Create(InputSynEdit);
+    m.Line := line;
+    m.ImageList := ImageList1;
+    m.ImageIndex := 0;
+    m.Visible := true;
+    InputSynEdit.Marks.Add(m);
+  end
+  else
+    InputSynEdit.Marks.ClearLine(Line);
+end;
+
 procedure TmainFrm.TFindDialogFind(Sender: TObject);
 var
   findtext: string;
@@ -623,6 +647,11 @@ begin
   begin
     Special := True;
     BG := clYellow;
+  end
+  else if (InputSynEdit.Marks.Line[line] <> nil) then
+  begin
+    Special := True;
+    BG := clRed;
   end;
 end;
 

@@ -595,7 +595,7 @@ var
   function TryParseIntOrLabel(s : String; out i : Integer; addr : Word) : Boolean;
   begin
     Result := TryParseIntBase(s, i, NumberInputMode);
-    if not Result then
+    if (not Result) and IsValidLabelName(UpperCase(s)) then
     begin
       m_labelResolveList.Add(CrTLabelUse(UpperCase(s), addr, line));
       Result := True;

@@ -243,7 +243,6 @@ begin
 
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
   //WriteLn('ram created');
-  RAM.ChangeCallback := @OnRAMChange;
 
   comp := TCompiler.Create(RAM);
   //WriteLn('comp created');
@@ -270,8 +269,9 @@ begin
     oldVP := CPU.ReadRegister(RegisterIndex.VP);
 
     InputSynEdit.Invalidate;
-
     setupRAM;
+    RAM.ChangeCallback := @OnRAMChange;
+
   except
     on e: Exception do
       Log_lb.Items.Insert(0, '[error] compilation failed: ' + e.Message);

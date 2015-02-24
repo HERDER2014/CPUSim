@@ -30,6 +30,9 @@ type
 type
   TCodePositionMap = specialize TFPGMap<Word, Cardinal>;
 
+type
+  TByteList = specialize TFPGList<Byte>;
+
 {$ENDIF}
 
 type
@@ -90,15 +93,20 @@ type
   }
   private
     function WriteInstrucitonLineToRAM(instruction, operandsString: string;
-      var offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
+      var offset: word; line: cardinal;
       var rBytesWritten: word; var rErrorString: string): boolean;
+
+  function TryParseIntBase(s : String; out i : Integer; base : TNumberInputMode) : Boolean;
+  function GetAllOperandsAsBytes(opString : string) : TByteList;
+  //function ParseAddress(addressString: string; base : TNumberInputMode): TAddress;  -> in Funktion Write...toRAM
+
+
+  var m_labelResolveList: TLabelResolveList;
 
   public
     // Die Größe des letzten Images.
     LastSize: cardinal;
   end;
-
-function TryParseIntBase(s : String; out i : Integer; base : TNumberInputMode) : Boolean;
 
 implementation
 
@@ -142,7 +150,7 @@ begin
     Result := EmptyStr
   else
   begin
-    Result := Trim(UpperCase(Copy(line, i + 1, Length(line) - i)));
+    Result := Trim(Copy(line, i + 1, Length(line) - i));
   end;
 end;
 
@@ -154,6 +162,18 @@ function IsValidLabelChar(c: char): boolean;
 begin
   Result := ((c >= 'A') and (c <= 'Z')) or ((c >= '0') and (c <= '9')) or
     (c = '_') or (c = 'Ä') or (c = 'Ö') or (c = 'Ü') or (c = 'ß');
+end;
+
+function IsValidLabelName(s: string): boolean;
+var
+  i : Integer;
+begin
+  for i := 1 to length(s) do
+  begin
+    if (not IsValidLabelChar(s[i])) or ((i = 1) and (s[i] >= '0') and (s[i] <= '9')) then
+      exit(FALSE);
+  end;
+  exit(TRUE);
 end;
 
 {
@@ -182,7 +202,7 @@ begin
     begin
       if c = ':' then
       begin
-        Result := r;
+        Result := UpperCase(r);
       end;
       break;
     end;
@@ -222,7 +242,7 @@ begin
       // Komma enthalten -> min. 2 Operanden
       if PosEx(',', opString, kommaPos + 1) <> 0 then
       begin
-        // mehr als 2 Operanden. Sollte nicht vorkommen.
+        // mehr als 2 Operanden. Sollte nicht vorkommen. (siehe MultipleOp...)
         Result.Count := 3;
       end
       else
@@ -231,6 +251,125 @@ begin
         Result.Count := 2;
         Result.op1 := Trim(Copy(opString, 1, kommaPos - 1));
         Result.op2 := Trim(Copy(opString, kommaPos + 1, Length(opString) - kommaPos));
+      end;
+    end;
+  end;
+end;
+
+function ParseMultipleOperands(opString: string) : TStringList;
+var
+  pos : Integer;
+  len : Integer;
+  s : String;
+  c : Char;
+  inString : Boolean;
+begin
+  Result := TStringList.Create;
+  pos := 1; // VORSICHT
+  len := Length(opString);
+
+  inString := false;
+  s := EmptyStr;
+
+  while pos <= len do
+  begin
+    c := opString[pos];
+
+    case c of
+      '"':
+      begin
+        inString := not inString;
+        s += c;
+      end;
+      ',':
+      begin
+        if not inString then
+        begin
+          s := Trim(s);
+          if s <> EmptyStr then
+          begin
+            Result.Add(s);
+            s := EmptyStr;
+          end;
+        end
+        else
+        begin
+          s += c;
+        end;
+      end
+      else
+      begin
+        s += c;
+      end;
+    end;
+
+    inc(pos);
+  end;
+
+  if not inString then
+  begin
+    s := Trim(s);
+    if s <> EmptyStr then
+    begin
+      Result.Add(s);
+    end;
+  end
+  else
+  begin
+    exit(NIL);
+  end;
+end;
+
+{
+
+ Erg.: Wenn nicht erfolgreich: gibt NIL zurück.
+}
+function TCompiler.GetAllOperandsAsBytes(opString : string) : TByteList;
+var
+  opList : TStringList;
+  i, j, x : Integer;
+  s, ss : String;
+begin
+  Result := TByteList.Create;
+  opList := ParseMultipleOperands(opString);
+
+  if opList = NIL then
+  begin
+    exit(NIL);
+  end;
+
+  for i := 0 to opList.Count-1 do
+  begin
+    s := opList[i];
+    if TryParseIntBase(s, x, numberInputMode) then
+    begin
+      // Zahl in Operand i
+      if x > 255 then
+      begin
+        // über Byte-Größe
+        exit(NIL);
+      end
+      else
+      begin
+        Result.Add(Byte(x));
+      end;
+    end
+    else
+    begin
+      if (LeftStr(s, 1) = '"') and (RightStr(s, 1) = '"') and (Length(s) >= 2) then
+      begin
+        // "String"
+        ss := Copy(s, 2, Length(s) - 2);
+        if ss = EmptyStr then
+          Continue;
+        for j := 1 to Length(ss) do
+        begin
+          Result.Add(Byte(ss[j]));
+        end;
+      end
+      else
+      begin
+        exit(NIL);
       end;
     end;
   end;
@@ -278,7 +417,7 @@ end;
 }
 function ParseRegisterIndex(registerString: string): RegisterIndex;
 begin
-  case registerString of
+  case UpperCase(registerString) of
     'AX': Result := RegisterIndex.AX;
     'BX': Result := RegisterIndex.BX;
     'CX': Result := RegisterIndex.CX;
@@ -302,8 +441,8 @@ begin
 end;
 
 
-// TODO: überprüfen, ob Zahl > SmallInt
-function ParseAddress(addressString: string; base : TNumberInputMode): TAddress;
+{// TODO: überprüfen, ob Zahl > SmallInt
+function TCompiler.ParseAddress(addressString: string; base : TNumberInputMode): TAddress;
 var
   inbrackets: string;
   pluspos: cardinal;
@@ -408,7 +547,7 @@ begin
     Result.rFound := False;
     Result.xFound := False;
   end;
-end;
+end;}
 
 // Gibt true zurück, wenn Register nur 1B groß.
 function RegisterSmall(r : RegisterIndex) : Boolean;
@@ -426,13 +565,16 @@ end;
 // ======================= TCompiler functions =================================
 
 function TCompiler.WriteInstrucitonLineToRAM(instruction, operandsString: string;
-  var offset: word; line: cardinal; var labelResolveList: TLabelResolveList;
+  var offset: word; line: cardinal;
   var rBytesWritten: word; var rErrorString: string): boolean;
 var
   operands: TOperands;
   r1, r2: RegisterIndex;
   n1, n2: integer;
   a1, a2: TAddress;
+  dbBytes: TByteList;
+
+  i : Integer; // Zählervariable, nur zum Testen
 
   procedure ReportOPCountError(expected: cardinal);
   begin
@@ -450,10 +592,128 @@ var
     warnings.Add(s);
   end;
 
-  function TryParseInt(s : String; out i : Integer) : Boolean;
+  function TryParseIntOrLabel(s : String; out i : Integer; addr : Word) : Boolean;
+  begin
+    Result := TryParseIntBase(s, i, NumberInputMode);
+    if (not Result) and IsValidLabelName(UpperCase(s)) then
+    begin
+      m_labelResolveList.Add(CrTLabelUse(UpperCase(s), addr, line));
+      Result := True;
+    end;
+  end;
+
+  function TryParseIntOnly(s : string; out i : Integer) : Boolean;
   begin
     Result := TryParseIntBase(s, i, NumberInputMode);
   end;
+
+  // TODO: überprüfen, ob Zahl > SmallInt
+function ParseAddress(addressString: string): TAddress;
+var
+  inbrackets: string;
+  pluspos: cardinal;
+  minuspos: cardinal;
+  left, right: string;
+  longX: longint;
+begin
+  if (LeftStr(addressString, 1) = '[') and (RightStr(addressString, 1) = ']') then
+  begin
+    inbrackets := Copy(addressString, 2, Length(addressString) - 2);
+    inbrackets := Trim(inbrackets);
+    pluspos := Pos('+', inbrackets);
+    Result.rFound := True;    // sowohl X als auch R sind vorhanden, sonst
+    Result.xFound := True;    // wird das weiter unten geändert!
+    if pluspos = 0 then
+    begin
+      minuspos := Pos('-', inbrackets);
+      if minuspos = 0 then
+      begin
+        // kein + oder - => nur [R] oder [X] möglich.
+        if TryParseIntOrLabel(inbrackets, LongX, offset+1) then
+        begin
+          Result.valid := True;
+          Result.x := smallint(LongX);
+          Result.R := RegisterIndex.INVALID;
+          Result.rFound := False;
+        end
+        else
+        begin
+          Result.xFound := False;
+          Result.R := ParseRegisterIndex(inbrackets);
+          if Result.R <> RegisterIndex.INVALID then
+          begin
+            Result.valid := True;
+          end
+          else
+          begin
+            // Eingabe ungültig
+            Result.valid := False;
+          end;
+        end;
+      end
+      else
+      begin
+        // MINUS
+        left := Trim(Copy(inbrackets, 1, minuspos - 1));
+        right := Trim(Copy(inbrackets, minuspos + 1, Length(inbrackets) - minuspos));
+        if TryParseIntBase(right, LongX, NumberInputMode) then
+        begin
+          // rechtes ist Zahl => linkes muss Register sein
+          Result.x := smallint(LongX);
+          Result.R := ParseRegisterIndex(left);
+          if Result.R <> RegisterIndex.INVALID then
+          begin
+            Result.valid := True;
+            Result.x := -Result.x;
+          end
+          else
+          begin
+            // kein Register
+            Result.valid := False;
+          end;
+        end
+        else
+        begin
+          // keine Zahl
+          Result.valid := False;
+        end;
+      end;
+    end
+    else
+    begin
+      // PLUS
+      left := Trim(Copy(inbrackets, 1, pluspos - 1));
+      right := Trim(Copy(inbrackets, pluspos + 1, Length(inbrackets) - pluspos));
+      if TryParseIntBase(right, LongX, NumberInputMode) then
+      begin
+        // rechtes ist Zahl => linkes muss Register sein
+        Result.x := smallint(LongX);
+        Result.R := ParseRegisterIndex(left);
+        if Result.R <> RegisterIndex.INVALID then
+        begin
+          Result.valid := True;
+        end
+        else
+        begin
+          // kein Register
+          Result.valid := False;
+        end;
+      end
+      else
+      begin
+        // keine Zahl
+        Result.valid := False;
+      end;
+    end;
+  end
+  else
+  begin
+    // keine [ ]
+    Result.valid := False;
+    Result.rFound := False;
+    Result.xFound := False;
+  end;
+end;
 
 begin
   Result := True;
@@ -461,8 +721,8 @@ begin
   operands := ParseOperands(operandsString);
   r1 := ParseRegisterIndex(operands.op1);
   r2 := ParseRegisterIndex(operands.op2);
-  a1 := ParseAddress(operands.op1, NumberInputMode);
-  a2 := ParseAddress(operands.op2, NumberInputMode);
+  a1 := ParseAddress(operands.op1);
+  a2 := ParseAddress(operands.op2);
 
   case instruction of
     'END': // 1
@@ -501,7 +761,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // MOV R, X
           Ram.WriteByte(offset, Ord(OPCode.MOV_R_X));
@@ -576,7 +836,7 @@ begin
           exit(True);
         end
         else
-        if (a1.valid) and TryParseInt(operands.op2, n2) then
+        if (a1.valid) and TryParseIntOrLabel(operands.op2, n2, offset+4) then
         begin
           // MOV [A], X
           if a1.rFound and a1.xFound then
@@ -639,7 +899,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOnly(operands.op2, n2) then
         begin
           // MOVB R, X
           Ram.WriteByte(offset, Ord(OPCode.MOVB_R_X));
@@ -714,7 +974,7 @@ begin
           exit(True);
         end
         else
-        if (a1.valid) and TryParseInt(operands.op2, n2) then
+        if (a1.valid) and TryParseIntOnly(operands.op2, n2) then
         begin
           // MOVB [A], X
           if a1.rFound and a1.xFound then
@@ -777,7 +1037,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // ADD R, X
           Ram.WriteByte(offset, Ord(OPCode.ADD_R_X));
@@ -841,7 +1101,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // SUB R, X
           Ram.WriteByte(offset, Ord(OPCode.SUB_R_X));
@@ -905,7 +1165,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // MUL R, X
           Ram.WriteByte(offset, Ord(OPCode.MUL_R_X));
@@ -969,7 +1229,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // DIV R, X
           Ram.WriteByte(offset, Ord(OPCode.DIV_R_X));
@@ -1033,7 +1293,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // MOD R, X
           Ram.WriteByte(offset, Ord(OPCode.MOD_R_X));
@@ -1097,7 +1357,7 @@ begin
           exit(True);
         end
         else
-        if (r1 <> RegisterIndex.INVALID) and TryParseInt(operands.op2, n2) then
+        if (r1 <> RegisterIndex.INVALID) and TryParseIntOrLabel(operands.op2, n2, offset+2) then
         begin
           // CMP R, X
           Ram.WriteByte(offset, Ord(OPCode.CMP_R_X));
@@ -1134,7 +1394,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JMP X
           Ram.WriteByte(offset, Ord(OPCode.JMP_ADDR));
@@ -1146,7 +1406,7 @@ begin
         begin
           // JMP LABEL
           Ram.WriteByte(offset, Ord(OPCode.JMP_ADDR));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1171,7 +1431,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JS X
           Ram.WriteByte(offset, Ord(OPCode.JS_X));
@@ -1183,7 +1443,7 @@ begin
         begin
           // JS LABEL
           Ram.WriteByte(offset, Ord(OPCode.JS_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1208,7 +1468,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JZ X
           Ram.WriteByte(offset, Ord(OPCode.JZ_X));
@@ -1220,7 +1480,7 @@ begin
         begin
           // JZ LABEL
           Ram.WriteByte(offset, Ord(OPCode.JZ_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1245,7 +1505,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JO X
           Ram.WriteByte(offset, Ord(OPCode.JO_X));
@@ -1257,7 +1517,7 @@ begin
         begin
           // JO LABEL
           Ram.WriteByte(offset, Ord(OPCode.JO_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1282,7 +1542,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JNS X
           Ram.WriteByte(offset, Ord(OPCode.JNS_X));
@@ -1294,7 +1554,7 @@ begin
         begin
           // JNS LABEL
           Ram.WriteByte(offset, Ord(OPCode.JNS_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1319,7 +1579,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JNZ X
           Ram.WriteByte(offset, Ord(OPCode.JNZ_X));
@@ -1331,7 +1591,7 @@ begin
         begin
           // JNZ LABEL
           Ram.WriteByte(offset, Ord(OPCode.JNZ_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1356,7 +1616,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // JNO X
           Ram.WriteByte(offset, Ord(OPCode.JNO_X));
@@ -1368,7 +1628,7 @@ begin
         begin
           // JNO LABEL
           Ram.WriteByte(offset, Ord(OPCode.JNO_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1393,7 +1653,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // CALL X
           Ram.WriteByte(offset, Ord(OPCode.CALL_X));
@@ -1405,7 +1665,7 @@ begin
         begin
           // CALL LABEL
           Ram.WriteByte(offset, Ord(OPCode.CALL_X));
-          labelResolveList.Add(CrTLabelUse(operands.op1, offset + 1, line));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
           rBytesWritten := 3;
           exit(True);
         end;
@@ -1445,7 +1705,7 @@ begin
           exit(True);
         end
         else
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOrLabel(operands.op1, n1, offset+1) then
         begin
           // PUSH X
           Ram.WriteByte(offset, Ord(OPCode.PUSH_X));
@@ -1535,7 +1795,7 @@ begin
       begin
         if (r1 <> RegisterIndex.INVALID) then
         begin
-          if TryParseInt(operands.op2, n2) then
+          if TryParseIntOrLabel(operands.op2, n2, offset+2) then
           begin
             // AND R, X
             Ram.WriteByte(offset, Ord(OPCode.AND_R_X));
@@ -1597,7 +1857,7 @@ begin
       begin
         if (r1 <> RegisterIndex.INVALID) then
         begin
-          if TryParseInt(operands.op2, n2) then
+          if TryParseIntOrLabel(operands.op2, n2, offset+2) then
           begin
             // OR R, X
             Ram.WriteByte(offset, Ord(OPCode.OR_R_X));
@@ -1659,7 +1919,7 @@ begin
       begin
         if (r1 <> RegisterIndex.INVALID) then
         begin
-          if TryParseInt(operands.op2, n2) then
+          if TryParseIntOrLabel(operands.op2, n2, offset+2) then
           begin
             // XOR R, X
             Ram.WriteByte(offset, Ord(OPCode.XOR_R_X));
@@ -1715,7 +1975,7 @@ begin
       end;
     end;
 
-    'IN':
+    'IN':  // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1739,7 +1999,41 @@ begin
       end;
     end;
 
-    'INC':
+    'OUT': // 2
+    begin
+      if (operands.Count = 1) then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // OUT R
+          Ram.WriteByte(offset, Ord(OPCode.OUT_R));
+          Ram.WriteByte(offset+1, Ord(r1));
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        if TryParseIntOnly(operands.op1, n1) then
+        begin
+          // OUT X (X : 1 byte)
+          Ram.WriteByte(offset, Ord(OPCode.OUT_X));
+          Ram.WriteByte(offset+1, n1);
+          rBytesWritten:=2;
+          exit(TRUE);
+        end
+        else
+        begin
+          ReportInvalidOperands();
+          exit(False);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'INC': // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1763,7 +2057,7 @@ begin
       end;
     end;
 
-    'DEC':
+    'DEC': // 1
     begin
       if (operands.Count = 1) then
       begin
@@ -1787,11 +2081,56 @@ begin
       end;
     end;
 
+    'CKB': // 1
+    begin
+      if (operands.Count = 0) then
+      begin
+        Ram.WriteByte(offset, Ord(OPCode.CKB));
+        rBytesWritten:=1;
+        exit(TRUE);
+      end
+      else
+      begin
+        ReportOPCountError(0);
+        exit(False);
+      end;
+    end;
+
+    'DB': // 1
+    begin
+      if (operands.Count >= 1) then
+      begin
+        dbBytes := GetAllOperandsAsBytes(operandsString);
+        if dbBytes = NIL then
+        begin
+          // Fehler
+          ReportInvalidOperands();
+          exit(FALSE);
+        end
+        else
+        begin
+          rBytesWritten:=0;
+          for i := 0 to dbBytes.Count-1 do
+          begin
+            Ram.WriteByte(offset + i, dbBytes[i]);
+            Inc(rBytesWritten);
+          end;
+          exit(TRUE);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+
     'ORG': // Pseudo instruction
     begin
       if (operands.Count = 1) then
       begin
-        if TryParseInt(operands.op1, n1) then
+        if TryParseIntOnly(operands.op1, n1) then
         begin
           offset := n1;
           rBytesWritten := 0;
@@ -1822,7 +2161,7 @@ begin
   Result := False;
 end;
 
-function TryParseIntBase(s: String; out i: Integer; base : TNumberInputMode): Boolean;
+function TCompiler.TryParseIntBase(s: String; out i: Integer; base : TNumberInputMode): Boolean;
 var
   o : Integer;
 begin
@@ -1859,7 +2198,6 @@ var
   i: cardinal;
 
   labelTable: TLabelMap;
-  labelResolveList: TLabelResolveList;
   opString: string;
   errString: string;
   bytepos: word;
@@ -1881,9 +2219,9 @@ var
     index: integer;
   begin
     i := 0;
-    while i < cardinal(labelResolveList.Count) do
+    while i < cardinal(m_labelResolveList.Count) do
     begin
-      item := labelResolveList[i];
+      item := m_labelResolveList[i];
       index := IndexOfLabelName(labelTable, item.labelName);
       if index = -1 then
       begin
@@ -1903,7 +2241,7 @@ begin
   warnings.Clear;
   commandLines := TCommandLineList.Create;
   labelTable := TLabelMap.Create;
-  labelResolveList := TLabelResolveList.Create;
+  m_labelResolveList := TLabelResolveList.Create;
 
   CodePosMap.Clear;
 
@@ -1927,7 +2265,7 @@ begin
     zeile := Trim(zeile); // Entfernt alle vorhergehenden und nachfolgenden Leerzeichen.
     if zeile <> EmptyStr then
       // Zeile ist nicht leer
-      commandLines.Add(CrTCodeLineNr(UpperCase(zeile), zNr));
+      commandLines.Add(CrTCodeLineNr(zeile, zNr));
 
     cpos += zlen + 1; // wegen \n
     Inc(zNr);
@@ -1983,7 +2321,7 @@ begin
       CodePosMap.Add(bytepos, commandLines[i].nr);
       // kein Label, Befehl in RAM schreiben.
       if not WriteInstrucitonLineToRAM(inst, opString, bytepos,
-        commandLines[i].nr, labelResolveList, rwritten, errString) then
+        commandLines[i].nr, rwritten, errString) then
       begin
         ReportError(errString, commandLines[i].nr);
         exit;
@@ -2024,5 +2362,4 @@ begin
     Result := 0;
   end;
 end;
-
 end.

@@ -42,6 +42,9 @@ type
       }
     procedure setVel(v: extended);
 
+
+    procedure term();
+
       {
       Vor.: Der Thread wurde beendet (Terminated = True)
       Eff.: -
@@ -92,6 +95,12 @@ begin
   finally
     LeaveCriticalSection(cs);
   end;
+end;
+
+procedure TCPUThread.term;
+begin
+  Terminate();
+  cpu.Terminate();
 end;
 
 

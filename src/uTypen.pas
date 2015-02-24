@@ -22,10 +22,10 @@ type
 
 type
   TRegRecord = record
-    AX: word;
-    BX: word;
-    CX: word;
-    DX: word;
+    AX: Smallint;
+    BX: Smallint;
+    CX: Smallint;
+    DX: Smallint;
 
     BP: word;
     SP: word;
@@ -37,6 +37,8 @@ type
 
   type TFlags = (O=2048,S=128,Z=64);
 
+
+  type TBoolPointer = ^Boolean;
 implementation
 
 end.

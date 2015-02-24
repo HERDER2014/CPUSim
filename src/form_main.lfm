@@ -1,19 +1,22 @@
 object mainFrm: TmainFrm
-  Left = 349
+  Left = 138
   Height = 584
-  Top = 151
+  Top = 143
   Width = 935
   Caption = 'CPUSimulator Herder 2014'
-  ClientHeight = 564
+  ClientHeight = 565
   ClientWidth = 935
   Constraints.MinHeight = 343
   Constraints.MinWidth = 685
+  Font.Height = 11
+  Font.Name = 'Monospace'
   KeyPreview = True
   Menu = MainFrm_Menu
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnKeyPress = FormKeyPress
   OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '1.2.6.0'
@@ -22,7 +25,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = RAMGrid
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 0
-    Height = 349
+    Height = 350
     Top = 128
     Width = 500
     Align = alCustom
@@ -492,6 +495,7 @@ object mainFrm: TmainFrm
     LineHighlightColor.Foreground = clNone
     LineHighlightColor.FrameEdges = sfeAround
     OnChange = InputSynEditChange
+    OnGutterClick = InputSynEditGutterClick
     OnSpecialLineColors = InputSynEditSpecialLineColors
     inline SynLeftGutterPartList1: TSynGutterPartList
       object SynGutterMarks1: TSynGutterMarks
@@ -539,7 +543,7 @@ object mainFrm: TmainFrm
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
     Left = 500
-    Height = 349
+    Height = 350
     Hint = 'The RAM will be displayed here'
     Top = 128
     Width = 435
@@ -600,6 +604,8 @@ object mainFrm: TmainFrm
     ScrollBars = ssVertical
     ShowHint = True
     TabOrder = 1
+    TitleFont.Height = 11
+    TitleFont.Name = 'Monospace'
     OnDrawCell = RAMGridDrawCell
     ColWidths = (
       32
@@ -674,7 +680,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 23
+    Height = 20
     Top = 38
     Width = 40
     ReadOnly = True
@@ -683,7 +689,7 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 23
+    Height = 20
     Top = 38
     Width = 112
     ReadOnly = True
@@ -692,7 +698,7 @@ object mainFrm: TmainFrm
   end
   object C2: TEdit
     Left = 161
-    Height = 23
+    Height = 20
     Top = 62
     Width = 40
     ReadOnly = True
@@ -701,7 +707,7 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 23
+    Height = 20
     Top = 62
     Width = 112
     ReadOnly = True
@@ -710,7 +716,7 @@ object mainFrm: TmainFrm
   end
   object D2: TEdit
     Left = 161
-    Height = 23
+    Height = 20
     Top = 86
     Width = 40
     ReadOnly = True
@@ -719,7 +725,7 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 23
+    Height = 20
     Top = 86
     Width = 112
     ReadOnly = True
@@ -728,7 +734,7 @@ object mainFrm: TmainFrm
   end
   object IP1: TEdit
     Left = 264
-    Height = 23
+    Height = 20
     Top = 14
     Width = 112
     ReadOnly = True
@@ -737,7 +743,7 @@ object mainFrm: TmainFrm
   end
   object BP1: TEdit
     Left = 264
-    Height = 23
+    Height = 20
     Top = 62
     Width = 112
     ReadOnly = True
@@ -746,7 +752,7 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 23
+    Height = 20
     Top = 38
     Width = 40
     ReadOnly = True
@@ -755,7 +761,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 23
+    Height = 20
     Top = 62
     Width = 40
     ReadOnly = True
@@ -764,7 +770,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 23
+    Height = 20
     Top = 14
     Width = 40
     ReadOnly = True
@@ -821,10 +827,10 @@ object mainFrm: TmainFrm
   end
   object Label1: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Hint = 'AX register'
     Top = 19
-    Width = 16
+    Width = 19
     Caption = 'AX'
     Font.Height = -13
     ParentColor = False
@@ -834,7 +840,7 @@ object mainFrm: TmainFrm
   end
   object A1: TEdit
     Left = 49
-    Height = 23
+    Height = 20
     Top = 14
     Width = 112
     ReadOnly = True
@@ -843,7 +849,7 @@ object mainFrm: TmainFrm
   end
   object A2: TEdit
     Left = 161
-    Height = 23
+    Height = 20
     Top = 14
     Width = 40
     ReadOnly = True
@@ -852,10 +858,10 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Hint = 'BX register'
     Top = 43
-    Width = 15
+    Width = 19
     Caption = 'BX'
     Font.Height = -13
     ParentColor = False
@@ -865,10 +871,10 @@ object mainFrm: TmainFrm
   end
   object Label3: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Hint = 'CX register'
     Top = 67
-    Width = 16
+    Width = 19
     Caption = 'CX'
     Font.Height = -13
     ParentColor = False
@@ -878,10 +884,10 @@ object mainFrm: TmainFrm
   end
   object Label4: TLabel
     Left = 23
-    Height = 17
+    Height = 15
     Hint = 'DX register'
     Top = 91
-    Width = 17
+    Width = 20
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -891,7 +897,7 @@ object mainFrm: TmainFrm
   end
   object B1: TEdit
     Left = 49
-    Height = 23
+    Height = 20
     Top = 38
     Width = 112
     ReadOnly = True
@@ -900,10 +906,10 @@ object mainFrm: TmainFrm
   end
   object Label5: TLabel
     Left = 240
-    Height = 17
+    Height = 15
     Hint = 'Instructionpointer'
     Top = 19
-    Width = 10
+    Width = 11
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
@@ -913,10 +919,10 @@ object mainFrm: TmainFrm
   end
   object Label6: TLabel
     Left = 240
-    Height = 17
+    Height = 15
     Hint = 'Stackpointer'
     Top = 43
-    Width = 14
+    Width = 17
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
@@ -926,10 +932,10 @@ object mainFrm: TmainFrm
   end
   object Label8: TLabel
     Left = 240
-    Height = 17
+    Height = 15
     Hint = 'Basepointer'
     Top = 67
-    Width = 14
+    Width = 17
     Caption = 'BP'
     Font.Height = -13
     ParentColor = False
@@ -943,7 +949,7 @@ object mainFrm: TmainFrm
     Cursor = crVSplit
     Left = 3
     Height = 6
-    Top = 477
+    Top = 478
     Width = 932
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -974,20 +980,19 @@ object mainFrm: TmainFrm
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 82
-    Top = 483
+    Top = 484
     Width = 935
     Anchors = [akTop, akLeft, akRight, akBottom]
     Items.Strings = (
-      'Hit "Assemble" to Compile your Program'
+      'Hit "Assemble" to compile your program'
     )
-    ItemHeight = 15
-    ItemIndex = 0
+    ItemHeight = 13
     MultiSelect = True
     TabOrder = 21
   end
   object speedEdt: TFloatSpinEdit
     Left = 488
-    Height = 23
+    Height = 20
     Top = 67
     Width = 60
     Enabled = False
@@ -1000,11 +1005,11 @@ object mainFrm: TmainFrm
   end
   object FrequencyType: TComboBox
     Left = 552
-    Height = 23
+    Height = 20
     Top = 67
     Width = 60
     Enabled = False
-    ItemHeight = 15
+    ItemHeight = 13
     ItemIndex = 3
     Items.Strings = (
       'Hz'
@@ -1019,9 +1024,9 @@ object mainFrm: TmainFrm
   end
   object Label9: TLabel
     Left = 239
-    Height = 17
+    Height = 15
     Top = 89
-    Width = 15
+    Width = 17
     Caption = 'VP'
     Font.Height = -13
     ParentColor = False
@@ -1029,7 +1034,7 @@ object mainFrm: TmainFrm
   end
   object VP1: TEdit
     Left = 264
-    Height = 23
+    Height = 20
     Top = 86
     Width = 112
     ReadOnly = True
@@ -1038,7 +1043,7 @@ object mainFrm: TmainFrm
   end
   object VP2: TEdit
     Left = 376
-    Height = 23
+    Height = 20
     Top = 86
     Width = 40
     ReadOnly = True
@@ -1049,29 +1054,32 @@ object mainFrm: TmainFrm
     Left = 457
     Height = 30
     Top = 4
-    Width = 240
+    Width = 263
     BevelOuter = bvNone
     ClientHeight = 30
-    ClientWidth = 240
+    ClientWidth = 263
     TabOrder = 26
-    OnClick = Panel1Click
     object Flag_Z: TCheckBox
-      Left = 185
-      Height = 19
+      Left = 192
+      Height = 18
       Hint = 'Z-Flag (Zero)'#13#10'The Z-Flag is true if any operation''s result is zero.'
-      Top = 5
-      Width = 20
+      Top = 4
+      Width = 32
+      Caption = 'Z'
+      Enabled = False
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
     end
     object Flag_O: TCheckBox
-      Left = 210
-      Height = 19
+      Left = 224
+      Height = 18
       Hint = 'O-Flag (Overflow)'#13#10'The O-Flag is true if any operation''s result is larger than FFFF and therefore cannot be saved in a register.'
-      Top = 5
-      Width = 20
+      Top = 4
+      Width = 32
+      Caption = 'O'
+      Enabled = False
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -1079,10 +1087,12 @@ object mainFrm: TmainFrm
     end
     object Flag_S: TCheckBox
       Left = 160
-      Height = 19
+      Height = 18
       Hint = 'S-Flag (Sign)'#13#10'The S-Flag is true if any operation''s result is negative.'
-      Top = 5
-      Width = 20
+      Top = 4
+      Width = 33
+      Caption = 'S'
+      Enabled = False
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -1090,10 +1100,10 @@ object mainFrm: TmainFrm
     end
     object Label7: TLabel
       Left = 0
-      Height = 17
+      Height = 15
       Hint = 'FLAGs register'
       Top = 6
-      Width = 36
+      Width = 42
       Caption = 'FLAGS'
       Font.Height = -13
       ParentColor = False
@@ -1103,13 +1113,33 @@ object mainFrm: TmainFrm
     end
     object FLAGS1: TEdit
       Left = 40
-      Height = 23
+      Height = 20
       Top = 4
       Width = 112
       ReadOnly = True
       TabOrder = 3
       Text = '00000000 00000000'
     end
+  end
+  object WaitingMessageLbl: TLabel
+    Left = 23
+    Height = 14
+    Top = 110
+    Width = 393
+    Alignment = taCenter
+    AutoSize = False
+    Font.Color = clRed
+    ParentColor = False
+    ParentFont = False
+  end
+  object Button1: TButton
+    Left = 696
+    Height = 25
+    Top = 38
+    Width = 83
+    Caption = 'Show Screen'
+    OnClick = Button1Click
+    TabOrder = 27
   end
   object MainFrm_Menu: TMainMenu
     left = 872
@@ -1266,5 +1296,44 @@ object mainFrm: TmainFrm
     OnTimer = Timer1Timer
     left = 944
     top = 72
+  end
+  object ImageList1: TImageList
+    left = 448
+    top = 48
+    Bitmap = {
+      4C69010000001000000010000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00001A2B77FF1A2B77FF1A2B77FF1A2B77FF1A2B77FF1A2B77FF000000000000
+      0000000000000000000000000000000000000000000000000000000000001A2B
+      77FF2C3A8DFF535BBFFF686CDFFF686CDFFF595FCCFF3A45A4FF1A2B77FF0000
+      00000000000000000000000000000000000000000000000000001A2B77FF5059
+      B9FF7979FFFF7979FFFF7979FFFF7979FFFF7979FFFF7979FFFF5C61D9FF1A2B
+      77FF00000000000000000000000000000000000000001A2B77FF4F58B9FF7171
+      FFFF7171FFFF7171FFFF7171FFFF7171FFFF7171FFFF7171FFFF7171FFFF5C5F
+      E2FF1A2B77FF0000000000000000000000001A2B77FF2D3B90FF6969FFFF6969
+      FFFF6969FFFF6969FFFF6969FFFF6969FFFF6969FFFF6969FFFF6969FFFF6969
+      FFFF4149BCFF1A2B77FF00000000000000001A2B77FF4F57BAFF5A5CEBFF5A5C
+      EBFF5A5CEBFF5A5CEBFF5A5CEBFF5A5CEBFF5A5CEBFF5A5CEBFF5A5CEBFF5A5C
+      EBFF5A5CEBFF1A2B77FF00000000000000001A2B77FF5E63CDFF5D5DEDFF5D5D
+      EDFF5D5DEDFF5D5DEDFF5D5DEDFF5D5DEDFF5D5DEDFF5D5DEDFF5D5DEDFF5D5D
+      EDFF5959EDFF213085FF00000000000000001A2B77FF595DC6FF5555DFFF5555
+      DFFF5555DFFF5555DFFF5555DFFF5555DFFF5555DFFF5555DFFF5555DFFF5555
+      DFFF5151DFFF213086FF00000000000000001A2B77FF494FAFFF4C4CD0FF4C4C
+      D0FF4C4CD0FF4C4CD0FF4C4CD0FF4C4CD0FF4C4CD0FF4C4CD0FF4C4CD0FF4C4C
+      D0FF4848D0FF1A2B77FF00000000000000001A2B77FF2E3A8EFF4242BEFF4242
+      BEFF4242BEFF4242BEFF4242BEFF4242BEFF4242BEFF4242BEFF4242BEFF4242
+      BEFF3439A7FF1A2B77FF0000000000000000000000001A2B77FF3D429AFF3D42
+      9AFF3D429AFF3D429AFF3D429AFF3D429AFF3D429AFF3D429AFF3D429AFF3D42
+      9AFF1F2D81FF00000000000000000000000000000000000000001A2B77FF2E2E
+      8EFF2E2E8EFF2E2E8EFF2E2E8EFF2E2E8EFF2E2E8EFF2E2E8EFF2E2E8EFF212B
+      7FFF000000000000000000000000000000000000000000000000000000001A2B
+      77FF222877FF222877FF222877FF222877FF222877FF222877FF1C2977FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00001A2B77FF1A2B77FF1C2B77FF1C2A77FF1A2B77FF1A2B77FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000
+    }
   end
 end

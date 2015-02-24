@@ -9,7 +9,7 @@ uses
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
   ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
   uCompiler, form_options, uCPUThread, strutils, uTypen,
-  asmHighlighter, eventlog, types, lclintf, Math;
+  asmHighlighter, eventlog, types, lclintf, Math, form_screen, SynEditMarks, SynGutterBase;
 
 type
 
@@ -18,6 +18,7 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
+    Button1: TButton;
     FLAGS1: TEdit;
     ActionList: TActionList;
     AssembleBtn: TButton;
@@ -32,8 +33,10 @@ type
     FileOpenAct: TFileOpen;
     FileSaveAsAct: TFileSaveAs;
     H_Menu_CodeSplitter: TSplitter;
+    ImageList1: TImageList;
     IP2: TEdit;
     IP1: TEdit;
+    WaitingMessageLbl: TLabel;
     Label9: TLabel;
     MainFrm_Menu_Options: TMenuItem;
     Panel1: TPanel;
@@ -96,6 +99,7 @@ type
     InputSynEdit: TSynEdit;
     RAMValueList: TValueListEditor;
     procedure AssembleBtnClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
@@ -104,11 +108,12 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
+    procedure InputSynEditGutterClick(Sender: TObject; X, Y, Line: integer;
+      mark: TSynEditMark);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
-    procedure Panel1Click(Sender: TObject);
-
     procedure RunPauseBtnClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -147,10 +152,12 @@ type
     procedure setVel;
     procedure OnRAMChange(addr: word);
   private
+    screenForm: TScreenForm;
   public
     { public declarations }
     RAMSize: cardinal;
     VRAMSize: cardinal;
+    numInMode: TNumberInputMode;
   end;
 
 var
@@ -169,11 +176,12 @@ var
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: cardinal;
-  oldIP: word;
-  oldBP: word;
-  oldSP: word;
-  oldVP: word;
-
+  oldIP: SmallInt;
+  oldBP: SmallInt;
+  oldSP: SmallInt;
+  oldVP: SmallInt;
+  CPUCreated: Boolean;
+  ThreadCreated: Boolean;
 implementation
 
 {$R *.lfm}
@@ -182,42 +190,78 @@ implementation
 
 procedure TmainFrm.FormCreate(Sender: TObject);
 begin
+  screenForm := TScreenForm.Create(self);
+
   InputSynEdit.ClearAll;
 
   hlt := TAsmHighlighter.Create(self);
   InputSynEdit.Highlighter := hlt;
 
-  RAMSize := 512;
-  VRAMSize := 64;
+  RAMSize := 128;
+  VRAMSize := 2000;
   Saved := True; // Don't ask for save when program just started
   assembled := False;
   InputSynEdit.ReadOnly := False;
+  InputSynEdit.Color := clWhite;
+  CPUCreated:=false;
+  CPUCreated:=false;
 end;
 
 procedure TmainFrm.DoCompile;
+var
+  temp_savepath : String;
 begin
+  {$IFDEF Windows}
+  temp_savepath:='temp.asm';
+  {$ELSE}
+  temp_savepath:='/tmp/temp.asm';
+  {$ENDIF}
+  InputSynEdit.Lines.SaveToFile(temp_savepath);
   if RAM <> nil then
+  begin
     RAM.Destroy;
+    //WriteLn('ram destr');
+  end;
   if comp <> nil then
+  begin
     comp.Destroy;
-  if CPU <> nil then
+    //WriteLn('comp destr');
+  end;
+  if CPUCreated then
+  begin
     CPU.Destroy;
+    CPUcreated:=false;
+    //WriteLn('cpu destr');
+  end;
+  if ThreadCreated then
+  begin
+    Thread.term();
+    Threadcreated:=false;
+    //WriteLn('cput term');
+  end;
 
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
+  //WriteLn('ram created');
   RAM.ChangeCallback := @OnRAMChange;
 
   comp := TCompiler.Create(RAM);
+  //WriteLn('comp created');
   comp.NumberInputMode := TNumberInputMode.Hexadecimal;
   try
     comp.Compile(InputSynEdit.Text);
     Log_lb.Items.Insert(0, '[success] compilation completed');
     CPU := TCPU.Create(RAM);
+    CPUcreated:=true;
+    //WriteLN('cpu created');
     Thread := TCPUThread.Create(CPU);
+    Threadcreated:=true;
+    //WriteLn('cputhread created');
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
     trackTime := True;
     drawCodeIPHighlighting := True;
     InputSynEdit.ReadOnly := True;
+    InputSynEdit.Color := clSilver;
 
     oldIP := CPU.ReadRegister(RegisterIndex.IP);
     oldBP := CPU.ReadRegister(RegisterIndex.BP);
@@ -236,26 +280,29 @@ end;
 procedure TmainFrm.RAMGridDrawCell(Sender: TObject; aCol, aRow: integer;
   aRect: TRect; aState: TGridDrawState);
 begin
-  with TStringGrid(Sender) do
+  if (aCol > 0) and (aRow > 0) then
   begin
-    if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
+    with TStringGrid(Sender) do
     begin
-      Canvas.Brush.Color := clYellow;
-    end
-    else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
-    begin
-      Canvas.Brush.Color := $FF8888;
-    end
-    else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
-    begin
-      Canvas.Brush.Color := clGreen;
-    end
-    else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
-    begin
-      Canvas.Brush.Color := clLime;
+      if (aCol - 1) + ((aRow - 1) shl 4) = oldIP then
+      begin
+        Canvas.Brush.Color := clYellow;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = oldBP then
+      begin
+        Canvas.Brush.Color := $FF8888;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = oldSP then
+      begin
+        Canvas.Brush.Color := clGreen;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
+      begin
+        Canvas.Brush.Color := clLime;
+      end;
+      Canvas.FillRect(aRect);
+      Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
     end;
-    Canvas.FillRect(aRect);
-    Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
   end;
 end;
 
@@ -279,14 +326,16 @@ begin
   begin
     RAMGrid.Cells[0, i] := IntToHex((i - 1) shl 4, 4);
   end;
+  screenForm.SetRAM(Ram);
+  screenForm.SetVRAMStart(cpu.ReadRegister(RegisterIndex.VP));
 end;
 
 procedure TmainFrm.updateREG;
 var
-  newIP: word;
-  newBP: word;
-  newSP: word;
-  newVP: word;
+  newIP: SmallInt;
+  newBP: SmallInt;
+  newSP: SmallInt;
+  newVP: SmallInt;
 begin
   newIP := CPU.ReadRegister(RegisterIndex.IP);
   newBP := CPU.ReadRegister(RegisterIndex.BP);
@@ -375,7 +424,10 @@ begin
       IntToHex(cpu.ReadRegister(IP), 4) + '): ' + Thread.getException());
   end;
 
+  WaitingMessageLbl.Caption := '';
+
   InputSynEdit.ReadOnly := False;
+  InputSynEdit.Color := clWhite;
   assembled := False;
 
   RunPauseBtn.Enabled := False;
@@ -385,6 +437,7 @@ begin
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint := 'Runs the program';
 end;
 
 //procedure TmainFrm.SearchFindActAccept(Sender: TObject);
@@ -406,24 +459,29 @@ end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
+  //WriteLn('step clk');
   Timer1.Enabled := True;
 
   Step;
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint := 'Runs the program';
   trackTime := False;
 end;
 
 procedure TmainFrm.StepOverBtnClick(Sender: TObject);
 begin
+  //WriteLn('stebO clk');
   Timer1.Enabled := True;
 
   StepOver;
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint:= 'Runs the program';
   trackTime := False;
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
+  //WriteLn('stop clk');
   Stop;
   trackTime := False;
 end;
@@ -442,6 +500,24 @@ begin
     setVel;
 end;
 
+procedure TmainFrm.InputSynEditGutterClick(Sender: TObject; X, Y,
+  Line: integer; mark: TSynEditMark);
+var
+  m: TSynEditMark;
+begin
+  if InputSynEdit.Marks.Line[line] = nil then
+  begin
+    m := TSynEditMark.Create(InputSynEdit);
+    m.Line := line;
+    m.ImageList := ImageList1;
+    m.ImageIndex := 0;
+    m.Visible := true;
+    InputSynEdit.Marks.Add(m);
+  end
+  else
+    InputSynEdit.Marks.ClearLine(Line);
+end;
+
 procedure TmainFrm.TFindDialogFind(Sender: TObject);
 var
   findtext: string;
@@ -453,11 +529,15 @@ end;
 procedure TmainFrm.Timer1Timer(Sender: TObject);
 begin
   updateREG;
+  ScreenForm.Repaint;
+
+  WaitingMessageLbl.Caption := CPU.waitingMessage();
 
   if Thread.Suspended then
   begin
     Timer1.Enabled := False;
     RunPauseBtn.Caption := 'Run';
+    RunPauseBtn.Hint:= 'Runs the program';
   end;
 end;
 
@@ -476,10 +556,13 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  Thread.terminate;
+  //Thread.term;
+  //WriteLn('thread terminated');
+
 
   assembled := False;
   InputSynEdit.ReadOnly := False;
+  InputSynEdit.Color := clWhite;
 
   RunPauseBtn.Enabled := False;
   speedEdt.Enabled := False;
@@ -488,6 +571,7 @@ begin
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
+  screenForm.Hide;
 end;
 
 procedure TmainFrm.setVel;
@@ -513,6 +597,10 @@ begin
   col := addr shr 4 + 1;
   RAMGrid.Cells[row, col] := IntToHex(Ram.ReadByte(addr), 2);
   RAMGrid.InvalidateCell(row, col);
+  if addr >= RAMSize then
+  begin
+    screenForm.Refresh(addr - RAMSize);
+  end;
  { if (col-1) + ((row-1) shl 4) = CPU.ReadRegister(IP) then
     begin
       Canvas.Brush.Color := clYellow;
@@ -588,6 +676,11 @@ begin
   begin
     Special := True;
     BG := clYellow;
+  end
+  else if (InputSynEdit.Marks.Line[line] <> nil) then
+  begin
+    Special := True;
+    BG := clRed;
   end;
 end;
 
@@ -704,6 +797,12 @@ begin
   end;
 end;
 
+procedure TmainFrm.FormKeyPress(Sender: TObject; var Key: char);
+begin
+  if assembled then
+    CPU.SendKeyInput(Key);
+end;
+
 procedure TmainFrm.FormResize(Sender: TObject);
 begin
   if (mainFrm.Width > 900) then
@@ -728,28 +827,24 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
-  OptionsFrm := TOptionsFrm.Create(mainFrm);
-  OptionsFrm.Show;
+  OptionsFrm.ShowModal;
 end;
-
-procedure TmainFrm.Panel1Click(Sender: TObject);
-begin
-
-end;
-
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin
+  //WriteLn('run clk');
   if RunPauseBtn.Caption = 'Run' then
   begin
     Timer1.Enabled := True;
     resume;
     RunPauseBtn.Caption := 'Pause';
+    RunPauseBtn.Hint:= 'Pauses program execution';
   end
   else
   begin
     Step;
     RunPauseBtn.Caption := 'Run';
+    RunPauseBtn.Hint:= 'Runs the program';
     trackTime := False;
   end;
 end;
@@ -757,6 +852,7 @@ end;
 
 procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
+  //WriteLn('assemble clk');
   if AssembleBtn.Caption = 'Assemble' then
   begin
     DoCompile;
@@ -777,6 +873,11 @@ begin
     Stop;
     Log_lb.Items.Insert(0, 'Simulation canceled by user');
   end;
+end;
+
+procedure TmainFrm.Button1Click(Sender: TObject);
+begin
+  screenForm.Show;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);

@@ -1,87 +1,122 @@
 object OptionsFrm: TOptionsFrm
-  Left = 333
-  Height = 240
-  Top = 166
+  Left = 337
+  Height = 302
+  Top = 380
   Width = 320
+  BorderIcons = []
+  BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 240
+  ClientHeight = 302
   ClientWidth = 320
   OnClose = FormClose
-  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
-  object OptionsFrm_ApplyBtn: TButton
-    Left = 232
-    Height = 25
-    Top = 200
-    Width = 75
-    Caption = 'Apply'
-    OnClick = OptionsFrm_ApplyBtnClick
-    TabOrder = 0
-  end
-  object Label1: TLabel
-    Left = 144
-    Height = 13
-    Top = 27
-    Width = 48
-    Caption = 'RAM Size:'
-    ParentColor = False
-  end
-  object OptionsFrm_RAMSizeEdt: TSpinEdit
-    Left = 216
-    Height = 21
-    Top = 24
-    Width = 50
-    MaxValue = 999999999
-    MinValue = 1
-    OnChange = OptionsFrm_RAMSizeEdtChange
-    TabOrder = 1
-    Value = 256
+  object GroupBox1: TGroupBox
+    Left = 8
+    Height = 72
+    Top = 8
+    Width = 304
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Memory sizes'
+    ClientHeight = 54
+    ClientWidth = 300
+    TabOrder = 2
+    object OptionsFrm_RAMSizeEdt: TSpinEdit
+      Left = 40
+      Height = 21
+      Top = 2
+      Width = 50
+      MaxValue = 999999999
+      MinValue = 1
+      OnChange = OptionsFrm_RAMSizeEdtChange
+      TabOrder = 0
+      Value = 256
+    end
+    object Label1: TLabel
+      Left = 8
+      Height = 13
+      Top = 6
+      Width = 26
+      Caption = 'RAM:'
+      ParentColor = False
+    end
+    object OptionsFrm_VRAMSizeEdt: TSpinEdit
+      Left = 40
+      Height = 21
+      Top = 26
+      Width = 50
+      MaxValue = 999999999
+      MinValue = 1
+      OnChange = OptionsFrm_RAMSizeEdtChange
+      TabOrder = 1
+      Value = 64
+    end
+    object Label2: TLabel
+      Left = 8
+      Height = 13
+      Top = 31
+      Width = 28
+      Caption = 'VRAM'
+      ParentColor = False
+    end
   end
   object OptionsFrm_CloseBtn: TButton
-    Left = 152
-    Height = 25
-    Top = 200
+    Left = 240
+    Height = 23
+    Top = 270
     Width = 75
-    Caption = 'Close'
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Cancel'
     OnClick = OptionsFrm_CloseBtnClick
-    TabOrder = 2
+    TabOrder = 0
   end
   object OptionsFrm_OkBtn: TButton
-    Left = 72
-    Height = 25
-    Top = 200
+    Left = 8
+    Height = 23
+    Top = 270
     Width = 75
+    Anchors = [akLeft, akBottom]
     Caption = 'OK'
+    Default = True
     OnClick = OptionsFrm_OkBtnClick
+    TabOrder = 1
+  end
+  object GroupBox2: TGroupBox
+    Left = 8
+    Height = 48
+    Top = 88
+    Width = 304
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Assembler options'
+    ClientHeight = 30
+    ClientWidth = 300
     TabOrder = 3
-  end
-  object OptionsFrm_VRAMSizeEdt: TSpinEdit
-    Left = 216
-    Height = 21
-    Top = 52
-    Width = 50
-    MaxValue = 999999999
-    MinValue = 1
-    OnChange = OptionsFrm_RAMSizeEdtChange
-    TabOrder = 4
-    Value = 64
-  end
-  object Label2: TLabel
-    Left = 144
-    Height = 13
-    Top = 55
-    Width = 58
-    Caption = 'V-RAM Size:'
-    ParentColor = False
-  end
-  object ActionList1: TActionList
-    left = 216
-    top = 120
-    object FileExitAct: TFileExit
-      Category = 'File'
-      Caption = 'E&xit'
-      Hint = 'Exit'
+    object rHex: TRadioButton
+      Left = 104
+      Height = 17
+      Top = 0
+      Width = 78
+      Caption = 'Hexadecimal'
+      Checked = True
+      TabOrder = 1
+      TabStop = True
+    end
+    object rDec: TRadioButton
+      Left = 200
+      Height = 17
+      Top = 0
+      Width = 54
+      Caption = 'Decimal'
+      TabOrder = 0
+    end
+    object Label3: TLabel
+      Left = 8
+      Height = 13
+      Top = 2
+      Width = 80
+      Caption = 'Numeral system:'
+      ParentColor = False
     end
   end
 end

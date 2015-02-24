@@ -6,34 +6,34 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Spin, ActnList, StdActns;
+  Spin, ActnList, StdActns, uCompiler;
 
 type
 
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
     Label2: TLabel;
+    Label3: TLabel;
     OptionsFrm_OkBtn: TButton;
     OptionsFrm_CloseBtn: TButton;
-    FileExitAct: TFileExit;
-    ActionList1: TActionList;
     //OptionsFrm_Step_VelEt: TEdit;
     Label1: TLabel;
-    //OptionsFrm_Step_Vel: TLabel;
-    OptionsFrm_ApplyBtn: TButton;
     OptionsFrm_RAMSizeEdt: TSpinEdit;
     OptionsFrm_VRAMSizeEdt: TSpinEdit;
+    rHex: TRadioButton;
+    rDec: TRadioButton;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
-    procedure OptionsFrm_ApplyBtnClick(Sender: TObject);
     procedure OptionsFrm_CloseBtnClick(Sender: TObject);
     procedure OptionsFrm_OkBtnClick(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     procedure OptionsFrm_RAMSizeEdtChange(Sender: TObject);
   private
     { private declarations }
+    private procedure ApplyChanges;
   public
     { public declarations }
     ramsize: cardinal;
@@ -53,13 +53,6 @@ uses
 { TOptionsFrm }
 
 
-procedure TOptionsFrm.OptionsFrm_ApplyBtnClick(Sender: TObject);
-begin
-  mainFrm.RAMSize := StrToInt(OptionsFrm_RAMSizeEdt.Text);
-  mainFrm.VRAMSize := StrToInt(OptionsFrm_VRAMSizeEdt.Text);
-  Saved := True;
-end;
-
 procedure TOptionsFrm.OptionsFrm_CloseBtnClick(Sender: TObject);
 begin
   Close;
@@ -67,7 +60,7 @@ end;
 
 procedure TOptionsFrm.OptionsFrm_OkBtnClick(Sender: TObject);
 begin
-  mainFrm.RAMSize := StrToInt(OptionsFrm_RAMSizeEdt.Text);
+  ApplyChanges;
   Saved := True;
   Close;
 end;
@@ -77,6 +70,16 @@ begin
   Saved := False;
 end;
 
+procedure TOptionsFrm.ApplyChanges;
+begin
+  mainFrm.RAMSize := StrToInt(OptionsFrm_RAMSizeEdt.Text);
+  mainFrm.VRAMSize := StrToInt(OptionsFrm_VRAMSizeEdt.Text);
+  if rHex.Checked then
+    mainFrm.numInMode := TNumberInputMode.Hexadecimal
+  else
+    mainFrm.numInMode := TNumberInputMode.Decimal;
+end;
+
 procedure TOptionsFrm.FormCreate(Sender: TObject);
 begin
   Saved := True;
@@ -84,37 +87,7 @@ end;
 
 procedure TOptionsFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  CloseAction := caFree;
-  OptionsFrm := nil;
+  CloseAction := caHide;
 end;
-
-procedure TOptionsFrm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
-var
-  answer: longint;
-begin
-  if Saved then
-  begin
-    CanClose := True;
-  end
-  else
-  begin
-    answer := MessageDlg('Do you want to save changes?', mtConfirmation,
-      mbYesNoCancel, 0);
-    if answer = mrYes then
-    begin
-      //Save
-      CanClose := True;
-    end
-    else if answer = mrNo then
-    begin
-      CanClose := True;
-    end
-    else
-    begin
-      CanClose := False;
-    end;
-  end;
-end;
-
 
 end.

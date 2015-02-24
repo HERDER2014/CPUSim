@@ -111,8 +111,6 @@ type
     procedure FormResize(Sender: TObject);
     procedure FrequencyTypeChange(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
-    procedure Panel1Click(Sender: TObject);
-
     procedure RunPauseBtnClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -151,11 +149,12 @@ type
     procedure setVel;
     procedure OnRAMChange(addr: word);
   private
-    screenForm : TScreenForm;
+    screenForm: TScreenForm;
   public
     { public declarations }
     RAMSize: cardinal;
     VRAMSize: cardinal;
+    numInMode: TNumberInputMode;
   end;
 
 var
@@ -199,7 +198,7 @@ begin
   Saved := True; // Don't ask for save when program just started
   assembled := False;
   InputSynEdit.ReadOnly := False;
-  InputSynEdit.Color:=clWhite;
+  InputSynEdit.Color := clWhite;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -215,7 +214,7 @@ begin
   RAM.ChangeCallback := @OnRAMChange;
 
   comp := TCompiler.Create(RAM);
-  comp.NumberInputMode := TNumberInputMode.Hexadecimal;
+  comp.NumberInputMode := numInMode;
   try
     comp.Compile(InputSynEdit.Text);
     Log_lb.Items.Insert(0, '[success] compilation completed');
@@ -226,7 +225,7 @@ begin
     trackTime := True;
     drawCodeIPHighlighting := True;
     InputSynEdit.ReadOnly := True;
-    InputSynEdit.Color:=clSilver;
+    InputSynEdit.Color := clSilver;
 
     oldIP := CPU.ReadRegister(RegisterIndex.IP);
     oldBP := CPU.ReadRegister(RegisterIndex.BP);
@@ -386,10 +385,10 @@ begin
       IntToHex(cpu.ReadRegister(IP), 4) + '): ' + Thread.getException());
   end;
 
-  WaitingMessageLbl.Caption:='';
+  WaitingMessageLbl.Caption := '';
 
   InputSynEdit.ReadOnly := False;
-  InputSynEdit.Color:=clWhite;
+  InputSynEdit.Color := clWhite;
   assembled := False;
 
   RunPauseBtn.Enabled := False;
@@ -469,7 +468,7 @@ begin
   updateREG;
   ScreenForm.Repaint;
 
-  WaitingMessageLbl.Caption:=CPU.waitingMessage();
+  WaitingMessageLbl.Caption := CPU.waitingMessage();
 
   if Thread.Suspended then
   begin
@@ -497,7 +496,7 @@ begin
 
   assembled := False;
   InputSynEdit.ReadOnly := False;
-  InputSynEdit.Color:=clWhite;
+  InputSynEdit.Color := clWhite;
 
   RunPauseBtn.Enabled := False;
   speedEdt.Enabled := False;
@@ -729,7 +728,8 @@ end;
 
 procedure TmainFrm.FormKeyPress(Sender: TObject; var Key: char);
 begin
-  if assembled then CPU.SendKeyInput(Key);
+  if assembled then
+    CPU.SendKeyInput(Key);
 end;
 
 procedure TmainFrm.FormResize(Sender: TObject);
@@ -758,12 +758,6 @@ procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
   OptionsFrm.ShowModal;
 end;
-
-procedure TmainFrm.Panel1Click(Sender: TObject);
-begin
-
-end;
-
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin
@@ -808,7 +802,7 @@ end;
 
 procedure TmainFrm.Button1Click(Sender: TObject);
 begin
-  screenForm.show;
+  screenForm.Show;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);

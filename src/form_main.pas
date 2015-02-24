@@ -756,8 +756,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
-  OptionsFrm := TOptionsFrm.Create(mainFrm);
-  OptionsFrm.Show;
+  OptionsFrm.ShowModal;
 end;
 
 procedure TmainFrm.Panel1Click(Sender: TObject);

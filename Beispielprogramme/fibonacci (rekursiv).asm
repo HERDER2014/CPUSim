@@ -1,49 +1,62 @@
-;fibonacci
+;Fibonacci
+;Niklas Schelten 02/24/2015
+;berechnet F(X), wobei F die Fibonacci-Folge ist x elemnt n < 24 (nur 16bit register)
 jmp begin
 var1:
-db "F(", 0
-var2:
-db ")=", 0
+db "F()="
 begin:
-;F( ausgeben
-in bx;fibonacci von
-;'ax' ausgeben
-;)= ausgeben
-sub bx,30
-push bx
-call fibonacci
+;gibt F(X)=Y aus, wobei X die Eingabe und Y das Ergebnis von Fibonacci ist
+movb al, [03]
+out al
+movb al, [04]
+out al
+call mehrstelligeEingabe;get X
+push ax;Funktionsparameter (X)
+call mehrstelligeAusgabe;X ausgeben
+movb al, [05]
+out al
+movb al, [06]
+out al
+mov dx, 0
+call fibonacci;Y berechnen
 pop
-push ax
-call mehrstelligeAusgabe
+push ax;Funktionsparameter (Y)
+call mehrstelligeAusgabe;Y ausgeben
 pop
 end
 
 
 
 
-;Voraussetzung: dx ist 0
-;Parameter von was ist gepusht
+;Parameter: F(X)
 ;Ergebnis steht in ax
 fibonacci:
+;init Register
+mov ax, 00
+mov bx, 00
+mov cx, 00
+mov dx, 00
+fib:
 push BP
 mov BP, SP
 
-  mov bx, [BP + 5]
-  cmp bx, 3
-  js ende1
+  mov bx, [BP + 5];Parameter bekommen
+  cmp bx, 3;F(2)=F(1)=1 ist definiert
+  js ende1;also keine Berechnung, wenn X 1 oder 2 ist
 
-  dec bx
+  ;sonst gilt: F(X)=F(X-1)+F(X-2)
+  dec bx;F(X-1)
   push bx
-  call fibonacci
+  call fib
   pop bx
-  dec bx
+  dec bx;F(X-2)
   push bx
-  call fibonacci
+  call fib
   pop
   jmp ende2
 
   ende1:
-  add ax, 1
+  add ax, 1;dem Ergebnis 1 hinzufügen
   ende2:
 mov SP, BP
 pop BP
@@ -55,28 +68,75 @@ push BP
 mov BP, SP
   mov ax, [BP + 5]
   ;zahl aufteilen
-  aufteilen:
+  msAaufteilen:
   cmp ax, 0A
-  js asg1  ;wenn ax kleiner als 10 ist, ax pushen und die Zahl ausgeben
+  js msAausgabe1  ;wenn ax kleiner als 10 ist, ax pushen und die Zahl ausgeben
   mov bx, ax   ;sonst ax mod 10 zum errechnen der einser stelle
   mod bx, 0A
   push bx      ;diese pushen
   sub ax, bx
   div ax, 0A   ;diese "eintfernen" und neu aufteilen
-  jmp aufteilen
+  jmp msAaufteilen
 
   ;gepushte Zahl ausgeben
-  asg1:
+  msAausgabe1:
   push ax      ;ax pushen, um alles auszugeben
-  asg:
+  msAausgabe:
   cmp SP, BP   ;wenn der stack leer ist, nichts mehr ausgeben
-  jz ende
+  jz msAende
   pop ax       ;in ax poppen
   add ax, 30
   out ax
-  jmp asg
+  jmp msAausgabe
 
-  ende:
+  msAende:
+mov SP, BP
+pop BP
+ret
+
+;Ergebnis steht in ax
+mehrstelligeEingabe:
+;initialisiert Register mit 0, damit keine Fehler auftreten
+mov ax, 00
+mov bx, 00
+mov cx, 00
+mov dx, 00
+push BP
+mov BP, SP
+  msEinput:
+  in ax ;Eingabe
+  cmp ax, 20 ;wenn 'Space' (20) eingegeben wurde, ist die eingabe beendet
+  jz msEcalc
+  sub ax, 30 ;sonst als Zahl interpretieren, also $30 abziehen
+  push ax    ;und pushen
+  jmp msEinput
+
+  msEcalc:
+  mov ax, 00 ;ax initialisieren
+  msELoop:
+  cmp SP, BP ;wenn der Stack leer ist, wurde jede Eingabe bearbeitet
+  jz msEend
+  pop bx     ;nächste Stelle poppen
+
+  ;dx ist der Zähler der Stellen, also 0 heißt, es ist die einser stelle, 1, zehnerstelle usw.
+  ;damit die Stelle stimmt muss folgendes gerechnet werden: bx*10^dx, bx ist die ziffer und dx der zähler
+  push dx ;dx speichern
+  mov cx, 01 ;in cx steht der zu bx zu multiplizierende Faktor
+  msEsum:       ;die Summe versinnbildlicht 10^dx
+  cmp dx, 00
+  jz msEsumEnd
+  mul cx, 0A
+  dec dx
+  jmp msEsum
+  msEsumEnd:
+  pop dx ;dx wiederherstellen
+
+  mul bx, cx ;in bx steht dann der entsprechende Wert der Ziffer
+  add ax, bx ;zu ax hinzufügen
+
+  inc dx ;zähler um eins erhöhen und neu anfangen
+  jmp msELoop
+  msEend:
 mov SP, BP
 pop BP
 ret

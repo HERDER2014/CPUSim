@@ -1,4 +1,4 @@
-;Dezimale Zahlenausgabe
+;Dezimale Zahlenausgabe (maximal 32767, wegen Registergröße)
 ;Niklas 2/11/2015
 ;die auszugebende Zahl ist gepusht:
 push 7B
@@ -37,4 +37,3 @@ mov BP, SP
   mov SP, BP
   pop BP
   ret
-

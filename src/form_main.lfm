@@ -8,7 +8,7 @@ object mainFrm: TmainFrm
   ClientWidth = 935
   Constraints.MinHeight = 343
   Constraints.MinWidth = 685
-  Font.Height = 11
+  Font.Height = -11
   Font.Name = 'Monospace'
   KeyPreview = True
   Menu = MainFrm_Menu
@@ -680,7 +680,7 @@ object mainFrm: TmainFrm
   end
   object B2: TEdit
     Left = 161
-    Height = 18
+    Height = 22
     Top = 38
     Width = 40
     ReadOnly = True
@@ -689,7 +689,7 @@ object mainFrm: TmainFrm
   end
   object SP1: TEdit
     Left = 264
-    Height = 18
+    Height = 22
     Top = 38
     Width = 112
     ReadOnly = True
@@ -698,7 +698,7 @@ object mainFrm: TmainFrm
   end
   object C2: TEdit
     Left = 161
-    Height = 18
+    Height = 22
     Top = 62
     Width = 40
     ReadOnly = True
@@ -707,7 +707,7 @@ object mainFrm: TmainFrm
   end
   object C1: TEdit
     Left = 49
-    Height = 18
+    Height = 22
     Top = 62
     Width = 112
     ReadOnly = True
@@ -716,7 +716,7 @@ object mainFrm: TmainFrm
   end
   object D2: TEdit
     Left = 161
-    Height = 18
+    Height = 22
     Top = 86
     Width = 40
     ReadOnly = True
@@ -725,7 +725,7 @@ object mainFrm: TmainFrm
   end
   object D1: TEdit
     Left = 49
-    Height = 18
+    Height = 22
     Top = 86
     Width = 112
     ReadOnly = True
@@ -734,7 +734,7 @@ object mainFrm: TmainFrm
   end
   object IP1: TEdit
     Left = 264
-    Height = 18
+    Height = 22
     Top = 14
     Width = 112
     ReadOnly = True
@@ -743,7 +743,7 @@ object mainFrm: TmainFrm
   end
   object BP1: TEdit
     Left = 264
-    Height = 18
+    Height = 22
     Top = 62
     Width = 112
     ReadOnly = True
@@ -752,7 +752,7 @@ object mainFrm: TmainFrm
   end
   object SP2: TEdit
     Left = 376
-    Height = 18
+    Height = 22
     Top = 38
     Width = 40
     ReadOnly = True
@@ -761,7 +761,7 @@ object mainFrm: TmainFrm
   end
   object BP2: TEdit
     Left = 376
-    Height = 18
+    Height = 22
     Top = 62
     Width = 40
     ReadOnly = True
@@ -770,7 +770,7 @@ object mainFrm: TmainFrm
   end
   object IP2: TEdit
     Left = 376
-    Height = 18
+    Height = 22
     Top = 14
     Width = 40
     ReadOnly = True
@@ -840,7 +840,7 @@ object mainFrm: TmainFrm
   end
   object A1: TEdit
     Left = 49
-    Height = 18
+    Height = 22
     Top = 14
     Width = 112
     ReadOnly = True
@@ -849,7 +849,7 @@ object mainFrm: TmainFrm
   end
   object A2: TEdit
     Left = 161
-    Height = 18
+    Height = 22
     Top = 14
     Width = 40
     ReadOnly = True
@@ -897,7 +897,7 @@ object mainFrm: TmainFrm
   end
   object B1: TEdit
     Left = 49
-    Height = 18
+    Height = 22
     Top = 38
     Width = 112
     ReadOnly = True
@@ -986,13 +986,13 @@ object mainFrm: TmainFrm
     Items.Strings = (
       'Hit "Assemble" to compile your program'
     )
-    ItemHeight = 10
+    ItemHeight = 14
     MultiSelect = True
     TabOrder = 21
   end
   object speedEdt: TFloatSpinEdit
     Left = 488
-    Height = 18
+    Height = 22
     Top = 67
     Width = 60
     Enabled = False
@@ -1009,7 +1009,7 @@ object mainFrm: TmainFrm
     Top = 67
     Width = 60
     Enabled = False
-    ItemHeight = 10
+    ItemHeight = 14
     ItemIndex = 3
     Items.Strings = (
       'Hz'
@@ -1034,7 +1034,7 @@ object mainFrm: TmainFrm
   end
   object VP1: TEdit
     Left = 264
-    Height = 18
+    Height = 22
     Top = 86
     Width = 112
     ReadOnly = True
@@ -1043,7 +1043,7 @@ object mainFrm: TmainFrm
   end
   object VP2: TEdit
     Left = 376
-    Height = 18
+    Height = 22
     Top = 86
     Width = 40
     ReadOnly = True
@@ -1113,7 +1113,7 @@ object mainFrm: TmainFrm
     end
     object FLAGS1: TEdit
       Left = 40
-      Height = 18
+      Height = 22
       Top = 4
       Width = 112
       ReadOnly = True

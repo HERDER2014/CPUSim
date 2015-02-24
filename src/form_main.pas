@@ -246,7 +246,7 @@ begin
 
   comp := TCompiler.Create(RAM);
   //WriteLn('comp created');
-  comp.NumberInputMode := TNumberInputMode.Hexadecimal;
+  comp.NumberInputMode := numInMode;
   try
     comp.Compile(InputSynEdit.Text);
     Log_lb.Items.Insert(0, '[success] compilation completed');

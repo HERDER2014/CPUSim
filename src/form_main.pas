@@ -194,7 +194,7 @@ begin
   hlt := TAsmHighlighter.Create(self);
   InputSynEdit.Highlighter := hlt;
 
-  RAMSize := 512;
+  RAMSize := 128;
   VRAMSize := 2000;
   Saved := True; // Don't ask for save when program just started
   assembled := False;
@@ -203,7 +203,15 @@ begin
 end;
 
 procedure TmainFrm.DoCompile;
+var
+  temp_savepath : String;
 begin
+  {$IFDEF Windows}
+  temp_savepath:='temp.asm';
+  {$ELSE}
+  temp_savepath:='/tmp/temp.asm';
+  {$ENDIF}
+  InputSynEdit.Lines.SaveToFile(temp_savepath);
   if RAM <> nil then
     RAM.Destroy;
   if comp <> nil then

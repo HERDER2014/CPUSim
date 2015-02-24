@@ -5,11 +5,11 @@ unit form_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, SynMemo, RTTICtrls,
+  Classes, SysUtils, FileUtil, SynEdit, SynCompletion, RTTICtrls,
   Forms, Controls, Graphics, Dialogs, StdCtrls, Menus, LCLType, ExtCtrls,
-  ValEdit, Grids, ComCtrls, ActnList, StdActns, Spin, ColorBox, uRAM, uCPU,
+  ValEdit, Grids, ActnList, StdActns, Spin, uRAM, uCPU,
   uCompiler, form_options, uCPUThread, strutils, uTypen,
-  asmHighlighter, eventlog, types, lclintf, Math, form_screen, SynEditMarks, SynGutterBase;
+  asmHighlighter, types, lclintf, Math, form_screen, SynEditMarks;
 
 type
 
@@ -18,6 +18,8 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
+    FileNew: TAction;
+    FileSave: TAction;
     Button1: TButton;
     FLAGS1: TEdit;
     ActionList: TActionList;
@@ -105,6 +107,7 @@ type
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
     function FileExitActExecute(Sender: TObject): boolean;
+    procedure FileSaveExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -114,6 +117,7 @@ type
     procedure InputSynEditGutterClick(Sender: TObject; X, Y, Line: integer;
       mark: TSynEditMark);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
+    procedure FileNewExecute(Sender: TObject);
     procedure RunPauseBtnClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -619,8 +623,21 @@ end;
 // standard actions:------------------------------------------------------------
 
 procedure TmainFrm.MainFrm_Menu_File_NewClick(Sender: TObject);
+var
+  answer: longint;
 begin
-  //TODO
+  if not saved then
+  begin
+    answer := MessageDlg('Do you want to save changes?', mtConfirmation,
+      mbYesNoCancel, 0);
+    if answer = mrYes then
+    begin
+      MainFrm_Menu_File_SaveClick(nil);
+    end;
+  end;
+  SavePath:= '';
+  InputSynEdit.ClearAll;
+  Saved:= true;
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
@@ -717,6 +734,11 @@ end;
 function TmainFrm.FileExitActExecute(Sender: TObject): boolean;
 begin
   mainFrm.Close;
+end;
+
+procedure TmainFrm.FileSaveExecute(Sender: TObject);
+begin
+  MainFrm_Menu_File_SaveClick(nil);
 end;
 
 procedure TmainFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -829,6 +851,11 @@ end;
 procedure TmainFrm.MainFrm_Menu_OptionsClick(Sender: TObject);
 begin
   OptionsFrm.ShowModal;
+end;
+
+procedure TmainFrm.FileNewExecute(Sender: TObject);
+begin
+  MainFrm_Menu_File_NewClick(nil);
 end;
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);

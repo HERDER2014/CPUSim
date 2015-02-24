@@ -1,10 +1,11 @@
 ;Dezimale Zahlenausgabe
 ;Niklas 2/11/2015
 ;die auszugebende Zahl ist gepusht:
-push 7B ;gehört nicht zum Program
+push 7B
 call mehrstelligeAusgabe
 pop ;damit stack sauber ist
 end
+;-----------------------------------------------------
 ;Programmstart
 mehrstelligeAusgabe:
 push BP
@@ -36,4 +37,4 @@ mov BP, SP
   mov SP, BP
   pop BP
   ret
-end
+

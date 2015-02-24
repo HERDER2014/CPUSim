@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Spin, ActnList, StdActns, uCompiler;
+  Spin, ActnList, uCompiler;
 
 type
 

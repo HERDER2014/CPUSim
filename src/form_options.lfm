@@ -23,7 +23,7 @@ object OptionsFrm: TOptionsFrm
     TabOrder = 2
     object OptionsFrm_RAMSizeEdt: TSpinEdit
       Left = 40
-      Height = 21
+      Height = 23
       Top = 2
       Width = 50
       MaxValue = 999999999
@@ -34,15 +34,15 @@ object OptionsFrm: TOptionsFrm
     end
     object Label1: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 6
-      Width = 26
+      Width = 29
       Caption = 'RAM:'
       ParentColor = False
     end
     object OptionsFrm_VRAMSizeEdt: TSpinEdit
       Left = 40
-      Height = 21
+      Height = 23
       Top = 26
       Width = 50
       MaxValue = 999999999
@@ -53,9 +53,9 @@ object OptionsFrm: TOptionsFrm
     end
     object Label2: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 31
-      Width = 28
+      Width = 33
       Caption = 'VRAM'
       ParentColor = False
     end
@@ -94,9 +94,9 @@ object OptionsFrm: TOptionsFrm
     TabOrder = 3
     object rHex: TRadioButton
       Left = 104
-      Height = 17
+      Height = 19
       Top = 0
-      Width = 78
+      Width = 88
       Caption = 'Hexadecimal'
       Checked = True
       TabOrder = 1
@@ -104,17 +104,17 @@ object OptionsFrm: TOptionsFrm
     end
     object rDec: TRadioButton
       Left = 200
-      Height = 17
+      Height = 19
       Top = 0
-      Width = 54
+      Width = 63
       Caption = 'Decimal'
       TabOrder = 0
     end
     object Label3: TLabel
       Left = 8
-      Height = 13
+      Height = 15
       Top = 2
-      Width = 80
+      Width = 89
       Caption = 'Numeral system:'
       ParentColor = False
     end

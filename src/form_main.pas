@@ -221,7 +221,10 @@ begin
   {$ELSE}
   temp_savepath:='/tmp/temp.asm';
   {$ENDIF}
-  InputSynEdit.Lines.SaveToFile(temp_savepath);
+  if SavePath = '' then
+    InputSynEdit.Lines.SaveToFile(temp_savepath)
+  else
+    MainFrm_Menu_File_SaveClick(nil);
   if RAM <> nil then
   begin
     RAM.Destroy;

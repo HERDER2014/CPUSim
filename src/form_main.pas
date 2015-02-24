@@ -196,6 +196,7 @@ begin
 
   hlt := TAsmHighlighter.Create(self);
   InputSynEdit.Highlighter := hlt;
+  numInMode:=Hexadecimal;
 
   RAMSize := 128;
   VRAMSize := 2000;

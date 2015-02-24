@@ -174,10 +174,10 @@ var
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: cardinal;
-  oldIP: word;
-  oldBP: word;
-  oldSP: word;
-  oldVP: word;
+  oldIP: SmallInt;
+  oldBP: SmallInt;
+  oldSP: SmallInt;
+  oldVP: SmallInt;
 
 implementation
 
@@ -194,7 +194,7 @@ begin
   hlt := TAsmHighlighter.Create(self);
   InputSynEdit.Highlighter := hlt;
 
-  RAMSize := 512;
+  RAMSize := 128;
   VRAMSize := 2000;
   Saved := True; // Don't ask for save when program just started
   assembled := False;
@@ -203,7 +203,15 @@ begin
 end;
 
 procedure TmainFrm.DoCompile;
+var
+  temp_savepath : String;
 begin
+  {$IFDEF Windows}
+  temp_savepath:='temp.asm';
+  {$ELSE}
+  temp_savepath:='/tmp/temp.asm';
+  {$ENDIF}
+  InputSynEdit.Lines.SaveToFile(temp_savepath);
   if RAM <> nil then
     RAM.Destroy;
   if comp <> nil then
@@ -294,10 +302,10 @@ end;
 
 procedure TmainFrm.updateREG;
 var
-  newIP: word;
-  newBP: word;
-  newSP: word;
-  newVP: word;
+  newIP: SmallInt;
+  newBP: SmallInt;
+  newSP: SmallInt;
+  newVP: SmallInt;
 begin
   newIP := CPU.ReadRegister(RegisterIndex.IP);
   newBP := CPU.ReadRegister(RegisterIndex.BP);
@@ -399,6 +407,7 @@ begin
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint := 'Runs the program';
 end;
 
 //procedure TmainFrm.SearchFindActAccept(Sender: TObject);
@@ -424,6 +433,7 @@ begin
 
   Step;
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint := 'Runs the program';
   trackTime := False;
 end;
 
@@ -433,6 +443,7 @@ begin
 
   StepOver;
   RunPauseBtn.Caption := 'Run';
+  RunPauseBtn.Hint:= 'Runs the program';
   trackTime := False;
 end;
 
@@ -475,6 +486,7 @@ begin
   begin
     Timer1.Enabled := False;
     RunPauseBtn.Caption := 'Run';
+    RunPauseBtn.Hint:= 'Runs the program';
   end;
 end;
 
@@ -773,11 +785,13 @@ begin
     Timer1.Enabled := True;
     resume;
     RunPauseBtn.Caption := 'Pause';
+    RunPauseBtn.Hint:= 'Pauses program execution';
   end
   else
   begin
     Step;
     RunPauseBtn.Caption := 'Run';
+    RunPauseBtn.Hint:= 'Runs the program';
     trackTime := False;
   end;
 end;

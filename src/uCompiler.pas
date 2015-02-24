@@ -98,7 +98,7 @@ type
 
   function TryParseIntBase(s : String; out i : Integer; base : TNumberInputMode) : Boolean;
   function GetAllOperandsAsBytes(opString : string) : TByteList;
-  function ParseAddress(addressString: string; base : TNumberInputMode): TAddress;
+  //function ParseAddress(addressString: string; base : TNumberInputMode): TAddress;  -> in Funktion Write...toRAM
 
 
   var m_labelResolveList: TLabelResolveList;
@@ -441,7 +441,7 @@ begin
 end;
 
 
-// TODO: überprüfen, ob Zahl > SmallInt
+{// TODO: überprüfen, ob Zahl > SmallInt
 function TCompiler.ParseAddress(addressString: string; base : TNumberInputMode): TAddress;
 var
   inbrackets: string;
@@ -547,7 +547,7 @@ begin
     Result.rFound := False;
     Result.xFound := False;
   end;
-end;
+end;}
 
 // Gibt true zurück, wenn Register nur 1B groß.
 function RegisterSmall(r : RegisterIndex) : Boolean;
@@ -607,14 +607,122 @@ var
     Result := TryParseIntBase(s, i, NumberInputMode);
   end;
 
+  // TODO: überprüfen, ob Zahl > SmallInt
+function ParseAddress(addressString: string): TAddress;
+var
+  inbrackets: string;
+  pluspos: cardinal;
+  minuspos: cardinal;
+  left, right: string;
+  longX: longint;
+begin
+  if (LeftStr(addressString, 1) = '[') and (RightStr(addressString, 1) = ']') then
+  begin
+    inbrackets := Copy(addressString, 2, Length(addressString) - 2);
+    inbrackets := Trim(inbrackets);
+    pluspos := Pos('+', inbrackets);
+    Result.rFound := True;    // sowohl X als auch R sind vorhanden, sonst
+    Result.xFound := True;    // wird das weiter unten geändert!
+    if pluspos = 0 then
+    begin
+      minuspos := Pos('-', inbrackets);
+      if minuspos = 0 then
+      begin
+        // kein + oder - => nur [R] oder [X] möglich.
+        if TryParseIntOrLabel(inbrackets, LongX, offset+1) then
+        begin
+          Result.valid := True;
+          Result.x := smallint(LongX);
+          Result.R := RegisterIndex.INVALID;
+          Result.rFound := False;
+        end
+        else
+        begin
+          Result.xFound := False;
+          Result.R := ParseRegisterIndex(inbrackets);
+          if Result.R <> RegisterIndex.INVALID then
+          begin
+            Result.valid := True;
+          end
+          else
+          begin
+            // Eingabe ungültig
+            Result.valid := False;
+          end;
+        end;
+      end
+      else
+      begin
+        // MINUS
+        left := Trim(Copy(inbrackets, 1, minuspos - 1));
+        right := Trim(Copy(inbrackets, minuspos + 1, Length(inbrackets) - minuspos));
+        if TryParseIntBase(right, LongX, NumberInputMode) then
+        begin
+          // rechtes ist Zahl => linkes muss Register sein
+          Result.x := smallint(LongX);
+          Result.R := ParseRegisterIndex(left);
+          if Result.R <> RegisterIndex.INVALID then
+          begin
+            Result.valid := True;
+            Result.x := -Result.x;
+          end
+          else
+          begin
+            // kein Register
+            Result.valid := False;
+          end;
+        end
+        else
+        begin
+          // keine Zahl
+          Result.valid := False;
+        end;
+      end;
+    end
+    else
+    begin
+      // PLUS
+      left := Trim(Copy(inbrackets, 1, pluspos - 1));
+      right := Trim(Copy(inbrackets, pluspos + 1, Length(inbrackets) - pluspos));
+      if TryParseIntBase(right, LongX, NumberInputMode) then
+      begin
+        // rechtes ist Zahl => linkes muss Register sein
+        Result.x := smallint(LongX);
+        Result.R := ParseRegisterIndex(left);
+        if Result.R <> RegisterIndex.INVALID then
+        begin
+          Result.valid := True;
+        end
+        else
+        begin
+          // kein Register
+          Result.valid := False;
+        end;
+      end
+      else
+      begin
+        // keine Zahl
+        Result.valid := False;
+      end;
+    end;
+  end
+  else
+  begin
+    // keine [ ]
+    Result.valid := False;
+    Result.rFound := False;
+    Result.xFound := False;
+  end;
+end;
+
 begin
   Result := True;
   rBytesWritten := 0;
   operands := ParseOperands(operandsString);
   r1 := ParseRegisterIndex(operands.op1);
   r2 := ParseRegisterIndex(operands.op2);
-  a1 := ParseAddress(operands.op1, NumberInputMode);
-  a2 := ParseAddress(operands.op2, NumberInputMode);
+  a1 := ParseAddress(operands.op1);
+  a2 := ParseAddress(operands.op2);
 
   case instruction of
     'END': // 1

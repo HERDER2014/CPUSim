@@ -66,7 +66,7 @@ type
 implementation
 
 var
-  ram: array of Shortint;
+  ram: array of word;
   size_RAM: word;
   cs: Trtlcriticalsection;
   vRamStart: word;

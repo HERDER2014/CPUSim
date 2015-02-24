@@ -12,28 +12,28 @@ push BP
 mov BP, SP
   mov ax, [BP + 5]
   ;zahl aufteilen
-  aufteilen:
+  msAaufteilen:
   cmp ax, 0A
-  js ausgabe1  ;wenn ax kleiner als 10 ist, ax pushen und die Zahl ausgeben
+  js msAausgabe1  ;wenn ax kleiner als 10 ist, ax pushen und die Zahl ausgeben
   mov bx, ax   ;sonst ax mod 10 zum errechnen der einser stelle
   mod bx, 0A
   push bx      ;diese pushen
   sub ax, bx
   div ax, 0A   ;diese "eintfernen" und neu aufteilen
-  jmp aufteilen
+  jmp msAaufteilen
 
   ;gepushte Zahl ausgeben
-  ausgabe1:
+  msAausgabe1:
   push ax      ;ax pushen, um alles auszugeben
-  ausgabe:
+  msAausgabe:
   cmp SP, BP   ;wenn der stack leer ist, nichts mehr ausgeben
-  jz ende
+  jz msAende
   pop ax       ;in ax poppen
   add ax, 30
   out ax
-  jmp ausgabe
+  jmp msAausgabe
 
-  ende:
+  msAende:
   mov SP, BP
   pop BP
   ret

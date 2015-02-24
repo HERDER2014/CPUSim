@@ -6,14 +6,14 @@ var2:
 db ")=", 0
 begin:
 ;F( ausgeben
-in ax;fibonacci von
+in bx;fibonacci von
 ;'ax' ausgeben
 ;)= ausgeben
-sub ax,30
-push ax
+sub bx,30
+push bx
 call fibonacci
 pop
-push dx
+push ax
 call mehrstelligeAusgabe
 pop
 end
@@ -23,27 +23,27 @@ end
 
 ;Voraussetzung: dx ist 0
 ;Parameter von was ist gepusht
-;Ergebnis steht in dx
+;Ergebnis steht in ax
 fibonacci:
 push BP
 mov BP, SP
 
-  mov ax, [BP + 5]
-  cmp ax, 3
+  mov bx, [BP + 5]
+  cmp bx, 3
   js ende1
 
-  dec ax
-  push ax
+  dec bx
+  push bx
   call fibonacci
-  pop ax
-  dec ax
-  push ax
+  pop bx
+  dec bx
+  push bx
   call fibonacci
   pop
   jmp ende2
 
   ende1:
-  add dx, 1
+  add ax, 1
   ende2:
 mov SP, BP
 pop BP

@@ -18,6 +18,7 @@ mov BP, SP
   in ax ;Eingabe
   cmp ax, 20 ;wenn 'Space' (20) eingegeben wurde, ist die eingabe beendet
   jz msEcalc
+  out ax     ;Ausgabe der eingabe
   sub ax, 30 ;sonst als Zahl interpretieren, also $30 abziehen
   push ax    ;und pushen
   jmp msEinput

@@ -12,12 +12,10 @@ movb al, [04]
 out al
 call mehrstelligeEingabe;get X
 push ax;Funktionsparameter (X)
-call mehrstelligeAusgabe;X ausgeben
 movb al, [05]
 out al
 movb al, [06]
 out al
-mov dx, 0
 call fibonacci;Y berechnen
 pop
 push ax;Funktionsparameter (Y)
@@ -107,6 +105,7 @@ mov BP, SP
   in ax ;Eingabe
   cmp ax, 20 ;wenn 'Space' (20) eingegeben wurde, ist die eingabe beendet
   jz msEcalc
+  out ax ;Ausgabe der Eingabe
   sub ax, 30 ;sonst als Zahl interpretieren, also $30 abziehen
   push ax    ;und pushen
   jmp msEinput

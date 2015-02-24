@@ -6,8 +6,8 @@ object mainFrm: TmainFrm
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 564
   ClientWidth = 935
-  Constraints.MinHeight = 343
-  Constraints.MinWidth = 685
+  Constraints.MinHeight = 340
+  Constraints.MinWidth = 780
   Font.Height = -11
   Font.Name = 'Monospace'
   KeyPreview = True

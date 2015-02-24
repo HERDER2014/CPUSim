@@ -22,10 +22,10 @@ type
 
 type
   TRegRecord = record
-    AX: word;
-    BX: word;
-    CX: word;
-    DX: word;
+    AX: Smallint;
+    BX: Smallint;
+    CX: Smallint;
+    DX: Smallint;
 
     BP: word;
     SP: word;

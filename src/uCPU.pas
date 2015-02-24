@@ -25,19 +25,19 @@ type
     KeyInputs: TStringList;
 
     OPCodeProcedures: array[0..integer(OPCode.Count) - 1] of TProc;
-    Terminated: Boolean;
-    wMessage: String;
+    Terminated: boolean;
+    wMessage: string;
 
     procedure push(w: word); overload;
     function pop(): word;
     procedure setFlag(f: TFlags; b: boolean);
     function getFlag(f: TFlags): boolean;
 
-    procedure WR(index: byte; w: word; flags: boolean); overload;
-    procedure WR(index: byte; w: word); overload;
-    procedure WR(force: boolean; index: byte; w: integer; flags: boolean); overload;
-    procedure WR(force: boolean; index: byte; w: word); overload;
-    function RR(index: byte): word;
+    procedure WR(index: byte; w: longint; flags: boolean); overload;
+    procedure WR(index: byte; w: smallint); overload;
+    procedure WR(force: boolean; index: byte; w: longint; flags: boolean); overload;
+    procedure WR(force: boolean; index: byte; w: smallint); overload;
+    function RR(index: byte): smallint;
 
   public
     constructor Create(var r: TRam);
@@ -75,8 +75,8 @@ type
    Eff.: i wird an Input queue angefuegt
    Erg.: -
    }
-   public
-    procedure SendKeyInput(i : Char);
+  public
+    procedure SendKeyInput(i: char);
 
    {
    Vor.: -
@@ -84,7 +84,7 @@ type
    Erg.: gibt aktuelle Waiting Message aus
    }
   public
-    function waitingMessage():String;
+    function waitingMessage(): string;
 
    {
    Vor.: -
@@ -210,7 +210,7 @@ begin
   Reg.BX := 0;
   Reg.CX := 0;
   Reg.DX := 0;
-  Terminated := false;
+  Terminated := False;
 
   KeyInputs := TStringList.Create;
   //   Reg := TRegRecord.Create();
@@ -304,7 +304,7 @@ begin
 
 end;
 
-function TCPU.RR(index: byte): word;
+function TCPU.RR(index: byte): smallint;
 begin
   case index of
     integer(AX): Result := Reg.AX;
@@ -335,28 +335,31 @@ begin
 end;
 
 
-procedure TCPU.WR(index: byte; w: word);
+procedure TCPU.WR(index: byte; w: smallint);
 begin
   WR(False, index, w);
 end;
 
-procedure TCPU.WR(index: byte; w: word; flags: boolean);
+procedure TCPU.WR(index: byte; w: longint; flags: boolean);
 begin
   WR(False, index, w, flags);
 end;
 
-procedure TCPU.WR(force: boolean; index: byte; w: integer; flags: boolean);
+procedure TCPU.WR(force: boolean; index: byte; w: longint; flags: boolean);
 begin
-  WR(force, index, word(w));
+  WR(force, index, smallint(w));
   if flags then
   begin
-    setFlag(TFlags.O, w > 65535);
+    setFlag(TFlags.O, ((((index = byte(AL)) or (index = byte(BL)) or
+      (index = byte(CL)) or (index = byte(DL)) or (index = byte(AH)) or
+      (index = byte(BH)) or (index = byte(CH)) or (index = byte(DH))) and (w > 255)) or
+      (w > 65535)));
     setFlag(TFlags.S, w < 0);
-    setFlag(TFlags.Z, word(w) = 0);
+    setFlag(TFlags.Z, smallint(w) = 0);
   end;
 end;
 
-procedure TCPU.WR(force: boolean; index: byte; w: word);
+procedure TCPU.WR(force: boolean; index: byte; w: smallint);
 begin
   case index of
     integer(AX): Reg.AX := w;
@@ -506,20 +509,20 @@ end;//mov R,R
 procedure TCPU.Run_MOV_R_ADDR_RX();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2)) +
-    Smallint(Ram.ReadWord(Reg.IP + 3))));
+    smallint(Ram.ReadWord(Reg.IP + 3))));
   Reg.IP += 5;
 end; //mov R,[R+x]
 
 procedure TCPU.Run_MOV_ADDR_RX_R();
 begin
-  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
+  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     RR(Ram.ReadByte(Reg.IP + 4)));
   Reg.IP += 5;
 end; //mov [R+x],R
 
 procedure TCPU.Run_MOV_ADDR_RX_X;
 begin
-  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
+  Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     Ram.ReadWord(Reg.IP + 4));
   Reg.IP += 6;
 end;
@@ -576,20 +579,20 @@ end;//movb R,R
 procedure TCPU.Run_MOVB_R_ADDR_RX();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(RR(Ram.ReadByte(Reg.IP + 2)) +
-    Smallint(Ram.ReadWord(Reg.IP + 3))));
+    smallint(Ram.ReadWord(Reg.IP + 3))));
   Reg.IP += 5;
 end; //movb R,[R+x]
 
 procedure TCPU.Run_MOVB_ADDR_RX_R();
 begin
-  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
+  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     RR(Ram.ReadByte(Reg.IP + 4)));
   Reg.IP += 5;
 end; //movb [R+x],R
 
 procedure TCPU.Run_MOVB_ADDR_RX_X;
 begin
-  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + Smallint(Ram.ReadWord(Reg.IP + 2)),
+  Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     Ram.ReadByte(Reg.IP + 4));
   Reg.IP += 5;
 end;
@@ -1066,18 +1069,20 @@ end;
 
 procedure TCPU.Run_IN_R;
 var
-  b : Boolean;
+  b: boolean;
 begin
   b := (KeyInputs.Count = 0);
   LeaveCriticalSection(cs);
-  while (b) do begin
-    if (Terminated) then begin
+  while (b) do
+  begin
+    if (Terminated) then
+    begin
       EnterCriticalSection(cs);
       exit;
     end;
     EnterCriticalSection(cs);
 
-    wMessage:='Waiting for Keyboard Input';
+    wMessage := 'Waiting for Keyboard Input';
     try
       b := (KeyInputs.Count = 0);
     finally
@@ -1086,8 +1091,8 @@ begin
   end;
   EnterCriticalSection(cs);
 
-  wMessage:='';
-  WR(Ram.ReadByte(Reg.IP + 1), Byte(KeyInputs[0][1]));
+  wMessage := '';
+  WR(Ram.ReadByte(Reg.IP + 1), byte(KeyInputs[0][1]));
   Reg.IP += 2;
   KeyInputs.Delete(0);
 end;
@@ -1118,10 +1123,9 @@ begin
     LeaveCriticalSection(cs);
   end;
 
-
 end;
 
-procedure TCPU.SendKeyInput(i: Char);
+procedure TCPU.SendKeyInput(i: char);
 begin
   EnterCriticalSection(cs);
   try
@@ -1133,12 +1137,12 @@ end;
 
 procedure TCPU.Terminate;
 begin
-  Terminated:=true;
+  Terminated := True;
 end;
 
-function TCPU.waitingMessage: String;
+function TCPU.waitingMessage: string;
 begin
-  result:= wMessage;
+  Result := wMessage;
 end;
 
 procedure TCPU.clearKeyboardBuffer;

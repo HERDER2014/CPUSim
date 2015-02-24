@@ -25,25 +25,25 @@ type
     Effekt: -
     Ergebnis: Liefert das Byte an Adresse addr.
   }
-    function ReadByte(addr: cardinal): byte;
+    function ReadByte(addr: cardinal): Shortint;
 
   { Vor.: addr < size
     Effekt: -
     Ergebnis: Setzt das Byte an Adresse addr auf b.
   }
-    procedure WriteByte(addr: cardinal; b: byte);
+    procedure WriteByte(addr: cardinal; b: Shortint);
 
   { Vor.: addr < size-1
     Effekt: -
     Ergebnis: Liefert das Wort ab Adresse addr.
   }
-    function ReadWord(addr: cardinal): word;
+    function ReadWord(addr: cardinal): Smallint;
 
   { Vor.: addr < size-1
     Effekt: -
     Ergebnis: Setzt das Wort ab Adresse addr auf w.
   }
-    procedure WriteWord(addr: cardinal; w: word);
+    procedure WriteWord(addr: cardinal; w: Smallint);
 
   { Vor.: RAM ist kreiert
     Effekt: -
@@ -66,7 +66,7 @@ type
 implementation
 
 var
-  ram: array of byte;
+  ram: array of Shortint;
   size_RAM: word;
   cs: Trtlcriticalsection;
   vRamStart: word;
@@ -84,7 +84,7 @@ begin
   vRamStart := vStart;
 end;
 
-function TRAM.ReadByte(addr: cardinal): byte;
+function TRAM.ReadByte(addr: cardinal): Shortint;
 begin
   if addr < size_RAM then
     Result := ram[addr]
@@ -92,7 +92,7 @@ begin
     raise TCompilerException.Create('Error: invalid RAM address');
 end;
 
-procedure TRAM.WriteByte(addr: cardinal; b: byte);
+procedure TRAM.WriteByte(addr: cardinal; b: Shortint);
 begin
   entercriticalsection(cs);
   try
@@ -107,7 +107,7 @@ begin
   end;
 end;
 
-function TRAM.ReadWord(addr: cardinal): word;
+function TRAM.ReadWord(addr: cardinal): Smallint;
 begin
   if addr < (size_RAM - 1) then
     Result := ((ram[addr] * 256) + ram[addr + 1])
@@ -115,7 +115,7 @@ begin
     raise TCompilerException.Create('Error: invalid RAM address');
 end;
 
-procedure TRAM.WriteWord(addr: cardinal; w: word);
+procedure TRAM.WriteWord(addr: cardinal; w: Smallint);
 var
   x, sum: cardinal;
 begin

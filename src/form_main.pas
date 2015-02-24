@@ -202,8 +202,8 @@ begin
   InputSynEdit.Highlighter := hlt;
   numInMode:=Hexadecimal;
 
-  RAMSize := 128;
-  VRAMSize := 2000;
+  RAMSize := 1024;
+  VRAMSize := 128;
   Saved := True; // Don't ask for save when program just started
   assembled := False;
   InputSynEdit.ReadOnly := False;

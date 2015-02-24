@@ -60,6 +60,11 @@ end;
 
 procedure TOptionsFrm.OptionsFrm_OkBtnClick(Sender: TObject);
 begin
+  if (OptionsFrm_RAMSizeEdt.Value + OptionsFrm_VRAMSizeEdt.Value > 65535) then
+  begin
+    ShowMessage('The RAM size plus the VRAM size may not be greater then 65535.');
+    exit;
+  end;
   ApplyChanges;
   Saved := True;
   Close;

@@ -174,10 +174,10 @@ var
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: cardinal;
-  oldIP: word;
-  oldBP: word;
-  oldSP: word;
-  oldVP: word;
+  oldIP: SmallInt;
+  oldBP: SmallInt;
+  oldSP: SmallInt;
+  oldVP: SmallInt;
 
 implementation
 
@@ -302,10 +302,10 @@ end;
 
 procedure TmainFrm.updateREG;
 var
-  newIP: word;
-  newBP: word;
-  newSP: word;
-  newVP: word;
+  newIP: SmallInt;
+  newBP: SmallInt;
+  newSP: SmallInt;
+  newVP: SmallInt;
 begin
   newIP := CPU.ReadRegister(RegisterIndex.IP);
   newBP := CPU.ReadRegister(RegisterIndex.BP);

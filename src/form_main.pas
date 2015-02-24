@@ -178,7 +178,8 @@ var
   oldBP: SmallInt;
   oldSP: SmallInt;
   oldVP: SmallInt;
-
+  CPUCreated: Boolean;
+  ThreadCreated: Boolean;
 implementation
 
 {$R *.lfm}
@@ -200,6 +201,8 @@ begin
   assembled := False;
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color:=clWhite;
+  CPUCreated:=false;
+  CPUCreated:=false;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -213,22 +216,44 @@ begin
   {$ENDIF}
   InputSynEdit.Lines.SaveToFile(temp_savepath);
   if RAM <> nil then
+  begin
     RAM.Destroy;
+    //WriteLn('ram destr');
+  end;
   if comp <> nil then
+  begin
     comp.Destroy;
-  if CPU <> nil then
+    //WriteLn('comp destr');
+  end;
+  if CPUCreated then
+  begin
     CPU.Destroy;
+    CPUcreated:=false;
+    //WriteLn('cpu destr');
+  end;
+  if ThreadCreated then
+  begin
+    Thread.term();
+    Threadcreated:=false;
+    //WriteLn('cput term');
+  end;
 
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
+  //WriteLn('ram created');
   RAM.ChangeCallback := @OnRAMChange;
 
   comp := TCompiler.Create(RAM);
+  //WriteLn('comp created');
   comp.NumberInputMode := TNumberInputMode.Hexadecimal;
   try
     comp.Compile(InputSynEdit.Text);
     Log_lb.Items.Insert(0, '[success] compilation completed');
     CPU := TCPU.Create(RAM);
+    CPUcreated:=true;
+    //WriteLN('cpu created');
     Thread := TCPUThread.Create(CPU);
+    Threadcreated:=true;
+    //WriteLn('cputhread created');
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
     trackTime := True;
@@ -429,6 +454,7 @@ end;
 
 procedure TmainFrm.StepBtnClick(Sender: TObject);
 begin
+  //WriteLn('step clk');
   Timer1.Enabled := True;
 
   Step;
@@ -439,6 +465,7 @@ end;
 
 procedure TmainFrm.StepOverBtnClick(Sender: TObject);
 begin
+  //WriteLn('stebO clk');
   Timer1.Enabled := True;
 
   StepOver;
@@ -449,6 +476,7 @@ end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
+  //WriteLn('stop clk');
   Stop;
   trackTime := False;
 end;
@@ -505,7 +533,9 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  Thread.term;
+  //Thread.term;
+  //WriteLn('thread terminated');
+
 
   assembled := False;
   InputSynEdit.ReadOnly := False;
@@ -780,6 +810,7 @@ end;
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);
 begin
+  //WriteLn('run clk');
   if RunPauseBtn.Caption = 'Run' then
   begin
     Timer1.Enabled := True;
@@ -799,6 +830,7 @@ end;
 
 procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
+  //WriteLn('assemble clk');
   if AssembleBtn.Caption = 'Assemble' then
   begin
     DoCompile;

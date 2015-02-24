@@ -1,5 +1,5 @@
 object mainFrm: TmainFrm
-  Left = 151
+  Left = 152
   Height = 584
   Top = 118
   Width = 935
@@ -1061,10 +1061,10 @@ object mainFrm: TmainFrm
     OnClick = Panel1Click
     object Flag_Z: TCheckBox
       Left = 192
-      Height = 23
+      Height = 17
       Hint = 'Z-Flag (Zero)'#13#10'The Z-Flag is true if any operation''s result is zero.'
       Top = 4
-      Width = 32
+      Width = 30
       Caption = 'Z'
       Enabled = False
       ParentFont = False
@@ -1074,10 +1074,10 @@ object mainFrm: TmainFrm
     end
     object Flag_O: TCheckBox
       Left = 224
-      Height = 23
+      Height = 17
       Hint = 'O-Flag (Overflow)'#13#10'The O-Flag is true if any operation''s result is larger than FFFF and therefore cannot be saved in a register.'
       Top = 4
-      Width = 35
+      Width = 30
       Caption = 'O'
       Enabled = False
       ParentFont = False
@@ -1087,10 +1087,10 @@ object mainFrm: TmainFrm
     end
     object Flag_S: TCheckBox
       Left = 160
-      Height = 23
+      Height = 17
       Hint = 'S-Flag (Sign)'#13#10'The S-Flag is true if any operation''s result is negative.'
       Top = 4
-      Width = 31
+      Width = 30
       Caption = 'S'
       Enabled = False
       ParentFont = False

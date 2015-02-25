@@ -571,7 +571,7 @@ begin
   //Thread.term;
   //WriteLn('thread terminated');
 
-
+  Thread.setVel(-1);//temporärer Fix sollte sinvoll werden, weiß aber grad nicht wie das am besten geht
   assembled := False;
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;
@@ -662,7 +662,7 @@ var
   AboutStr: PChar;
 begin
   AboutStr := 'CPU Simulator Herder 14' + sLineBreak +
-    'by Informatik-LK 14/15 (3.Sem) of the Herder-Gymnasium Berlin';
+    'by Informatik-LK 14/15 (4.Sem) of the Herder-Gymnasium Berlin';
   MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 

@@ -11,6 +11,7 @@ object ScreenForm: TScreenForm
   Font.Name = 'Courier New'
   FormStyle = fsStayOnTop
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnPaint = FormPaint
   LCLVersion = '1.2.6.0'

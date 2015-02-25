@@ -29,7 +29,7 @@ object mainFrm: TmainFrm
     Left = 0
     Height = 349
     Top = 128
-    Width = 500
+    Width = 499
     Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Height = -15
@@ -540,11 +540,11 @@ object mainFrm: TmainFrm
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = H_Menu_CodeSplitter
-    Left = 500
+    Left = 499
     Height = 349
     Hint = 'The RAM will be displayed here'
     Top = 128
-    Width = 435
+    Width = 436
     Anchors = [akTop, akRight, akBottom]
     ColCount = 17
     Columns = <    

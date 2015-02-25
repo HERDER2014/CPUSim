@@ -568,10 +568,7 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  //Thread.term;
-  //WriteLn('thread terminated');
-
-  Thread.setVel(-1);//temporärer Fix sollte sinvoll werden, weiß aber grad nicht wie das am besten geht
+  Thread.term();
   assembled := False;
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;

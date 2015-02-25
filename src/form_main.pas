@@ -110,6 +110,7 @@ type
     procedure FileSaveExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
+    procedure FormDropFiles(Sender: TObject; const FileNames: array of String);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormResize(Sender: TObject);
@@ -787,6 +788,13 @@ begin
       CanClose := False;
     end;
   end;
+end;
+
+procedure TmainFrm.FormDropFiles(Sender: TObject;
+  const FileNames: array of String);
+begin
+  if Low(FileNames) = High(FileNames) then
+    InputSynEdit.Lines.LoadFromFile(FileNames[Low(FileNames)]);
 end;
 
 procedure TmainFrm.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);

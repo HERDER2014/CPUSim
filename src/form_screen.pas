@@ -15,6 +15,7 @@ type
 
   TScreenForm = class(TForm)
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: char);
     procedure FormPaint(Sender: TObject);
   private
     { private declarations }
@@ -32,6 +33,9 @@ type
   end;
 
 implementation
+
+uses
+  form_main;
 
 {$R *.lfm}
 
@@ -58,6 +62,12 @@ begin
   bitmap.Canvas.Brush.Color := clBlack;
   bitmap.Canvas.Font.Color := clWhite;
   bitmap.Canvas.Font.Quality := TFontQuality.fqNonAntialiased;
+end;
+
+procedure TScreenForm.FormKeyPress(Sender: TObject; var Key: char);
+begin
+  if mainFrm.assembled then
+    mainFrm.CPU.SendKeyInput(Key);
 end;
 
 procedure TScreenForm.FormPaint(Sender: TObject);

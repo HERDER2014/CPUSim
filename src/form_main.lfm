@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 138
+  Left = 173
   Height = 584
-  Top = 143
+  Top = 191
   Width = 935
   Caption = 'CPUSimulator Herder 2014'
   ClientHeight = 564
@@ -823,7 +823,7 @@ object mainFrm: TmainFrm
   end
   object Label1: TLabel
     Left = 23
-    Height = 17
+    Height = 16
     Hint = 'AX register'
     Top = 19
     Width = 16
@@ -854,7 +854,7 @@ object mainFrm: TmainFrm
   end
   object Label2: TLabel
     Left = 23
-    Height = 17
+    Height = 16
     Hint = 'BX register'
     Top = 43
     Width = 15
@@ -867,7 +867,7 @@ object mainFrm: TmainFrm
   end
   object Label3: TLabel
     Left = 23
-    Height = 17
+    Height = 16
     Hint = 'CX register'
     Top = 67
     Width = 16
@@ -880,10 +880,10 @@ object mainFrm: TmainFrm
   end
   object Label4: TLabel
     Left = 23
-    Height = 17
+    Height = 16
     Hint = 'DX register'
     Top = 91
-    Width = 17
+    Width = 16
     Caption = 'DX'
     Font.Height = -13
     ParentColor = False
@@ -902,10 +902,10 @@ object mainFrm: TmainFrm
   end
   object Label5: TLabel
     Left = 240
-    Height = 17
+    Height = 16
     Hint = 'Instructionpointer'
     Top = 19
-    Width = 10
+    Width = 11
     Caption = 'IP'
     Font.Height = -13
     ParentColor = False
@@ -915,10 +915,10 @@ object mainFrm: TmainFrm
   end
   object Label6: TLabel
     Left = 240
-    Height = 17
+    Height = 16
     Hint = 'Stackpointer'
     Top = 43
-    Width = 14
+    Width = 15
     Caption = 'SP'
     Font.Height = -13
     ParentColor = False
@@ -928,7 +928,7 @@ object mainFrm: TmainFrm
   end
   object Label8: TLabel
     Left = 240
-    Height = 17
+    Height = 16
     Hint = 'Basepointer'
     Top = 67
     Width = 14
@@ -1021,7 +1021,7 @@ object mainFrm: TmainFrm
   end
   object Label9: TLabel
     Left = 239
-    Height = 17
+    Height = 16
     Top = 89
     Width = 15
     Caption = 'VP'
@@ -1058,10 +1058,10 @@ object mainFrm: TmainFrm
     TabOrder = 26
     object Flag_Z: TCheckBox
       Left = 192
-      Height = 19
+      Height = 17
       Hint = 'Z-Flag (Zero)'#13#10'The Z-Flag is true if any operation''s result is zero.'
       Top = 4
-      Width = 27
+      Width = 24
       Caption = 'Z'
       Enabled = False
       ParentFont = False
@@ -1071,10 +1071,10 @@ object mainFrm: TmainFrm
     end
     object Flag_O: TCheckBox
       Left = 224
-      Height = 19
+      Height = 17
       Hint = 'O-Flag (Overflow)'#13#10'The O-Flag is true if any operation''s result is larger than FFFF and therefore cannot be saved in a register.'
       Top = 4
-      Width = 29
+      Width = 26
       Caption = 'O'
       Enabled = False
       ParentFont = False
@@ -1084,10 +1084,10 @@ object mainFrm: TmainFrm
     end
     object Flag_S: TCheckBox
       Left = 160
-      Height = 19
+      Height = 17
       Hint = 'S-Flag (Sign)'#13#10'The S-Flag is true if any operation''s result is negative.'
       Top = 4
-      Width = 26
+      Width = 24
       Caption = 'S'
       Enabled = False
       ParentFont = False
@@ -1097,10 +1097,10 @@ object mainFrm: TmainFrm
     end
     object Label7: TLabel
       Left = 0
-      Height = 17
+      Height = 16
       Hint = 'FLAGs register'
       Top = 6
-      Width = 36
+      Width = 37
       Caption = 'FLAGS'
       Font.Height = -13
       ParentColor = False

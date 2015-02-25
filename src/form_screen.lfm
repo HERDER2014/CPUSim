@@ -1,7 +1,7 @@
 object ScreenForm: TScreenForm
-  Left = 921
+  Left = 658
   Height = 383
-  Top = 239
+  Top = 319
   Width = 614
   BorderStyle = bsToolWindow
   Caption = 'Screen'
@@ -11,6 +11,7 @@ object ScreenForm: TScreenForm
   Font.Name = 'Courier New'
   FormStyle = fsStayOnTop
   OnCreate = FormCreate
+  OnKeyPress = FormKeyPress
   OnPaint = FormPaint
   LCLVersion = '1.2.6.0'
 end

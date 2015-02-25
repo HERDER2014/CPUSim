@@ -162,6 +162,8 @@ type
     RAMSize: cardinal;
     VRAMSize: cardinal;
     numInMode: TNumberInputMode;
+    assembled: boolean;
+    CPU: TCPU;
   end;
 
 var
@@ -170,13 +172,11 @@ var
   SavePath: string;
   Saved: boolean;
   startTime: QWord;
-  assembled: boolean;
   trackTime: boolean;
   drawCodeIPHighlighting: boolean;
   Thread: TCPUThread;
   hlt: TAsmHighlighter;
   RAM: TRAM;
-  CPU: TCPU;
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: cardinal;
@@ -328,7 +328,7 @@ begin
   RAMGrid.RowCount := (RAMSize + VRAMSize - 1) div 16 + 2;
   for i := 0 to RAMSize + VRAMSize - 1 do
   begin
-    RAMGrid.Cells[i and 15 + 1, i shr 4 + 1] := IntToHex(Ram.ReadByte(i), 2);
+    RAMGrid.Cells[i and 15 + 1, i shr 4 + 1] := IntToHex(Byte(Ram.ReadByte(i)), 2);
   end;
   for i := 1 to RAMGrid.RowCount - 1 do
   begin
@@ -540,12 +540,15 @@ begin
   ScreenForm.Repaint;
 
   WaitingMessageLbl.Caption := CPU.waitingMessage();
+  if WaitingMessageLbl.Caption <> '' then
+    InputSynEdit.CaretY:= comp.GetCodePosition(CPU.ReadRegister(IP));
 
   if Thread.Suspended then
   begin
     Timer1.Enabled := False;
     RunPauseBtn.Caption := 'Run';
     RunPauseBtn.Hint:= 'Runs the program';
+    InputSynEdit.CaretY:= comp.GetCodePosition(CPU.ReadRegister(IP));
   end;
 end;
 
@@ -603,7 +606,7 @@ var
 begin
   row := addr and 15 + 1;
   col := addr shr 4 + 1;
-  RAMGrid.Cells[row, col] := IntToHex(Ram.ReadByte(addr), 2);
+  RAMGrid.Cells[row, col] := IntToHex(Byte(Ram.ReadByte(addr)), 2);
   RAMGrid.InvalidateCell(row, col);
   if addr >= RAMSize then
   begin

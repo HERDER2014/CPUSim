@@ -164,12 +164,16 @@ type
     procedure Run_JZ_X();
     procedure Run_JO_R();
     procedure Run_JO_X();
+    procedure Run_JK_R();
+    procedure Run_JK_X();
     procedure Run_JNS_R();
     procedure Run_JNS_X();
     procedure Run_JNZ_R();
     procedure Run_JNZ_X();
     procedure Run_JNO_R();
     procedure Run_JNO_X();
+    procedure Run_JNK_R();
+    procedure Run_JNK_X();
     procedure Run_CALL_X();
     procedure Run_CALL_R();
     procedure Run_RET();
@@ -271,10 +275,14 @@ begin
   OPCodeProcedures[integer(JZ_X)] := @Run_JZ_X;
   OPCodeProcedures[integer(JO_R)] := @Run_JO_R;
   OPCodeProcedures[integer(JO_X)] := @Run_JO_X;
+  OPCodeProcedures[integer(JK_R)] := @Run_JK_R;
+  OPCodeProcedures[integer(JK_X)] := @Run_JK_X;
   OPCodeProcedures[integer(JNS_R)] := @Run_JNS_R;
   OPCodeProcedures[integer(JNS_X)] := @Run_JNS_X;
   OPCodeProcedures[integer(JNZ_R)] := @Run_JNZ_R;
   OPCodeProcedures[integer(JNZ_X)] := @Run_JNZ_X;
+  OPCodeProcedures[integer(JNK_R)] := @Run_JNK_R;
+  OPCodeProcedures[integer(JNK_X)] := @Run_JNK_X;
   OPCodeProcedures[integer(CALL_X)] := @Run_CALL_X;
   OPCodeProcedures[integer(CALL_R)] := @Run_CALL_R;
   OPCodeProcedures[integer(CMP_R_R)] := @Run_CMP_R_R;
@@ -872,6 +880,22 @@ begin
     Reg.IP += 3;
 end; // jo X
 
+procedure TCPU.Run_JK_R;
+begin
+  if (getFlag(K)) then
+    Reg.IP := RR(Ram.ReadByte(Reg.IP + 1))
+  else
+    Reg.IP += 2;
+end;
+
+procedure TCPU.Run_JK_X;
+begin
+  if (getFlag(K)) then
+    Reg.IP := Ram.ReadWord(Reg.IP + 1)
+  else
+    Reg.IP += 3;
+end;
+
 
 procedure TCPU.Run_JNS_R();
 begin
@@ -920,6 +944,22 @@ begin
   else
     Reg.IP += 3;
 end; // jno X
+
+procedure TCPU.Run_JNK_R;
+begin
+  if (not getFlag(K)) then
+    Reg.IP := RR(Ram.ReadByte(Reg.IP + 1))
+  else
+    Reg.IP += 2;
+end;
+
+procedure TCPU.Run_JNK_X;
+begin
+  if (not getFlag(K)) then
+    Reg.IP := Ram.ReadWord(Reg.IP + 1)
+  else
+    Reg.IP += 3;
+end;
 
 
 
@@ -1098,6 +1138,7 @@ begin
   WR(Ram.ReadByte(Reg.IP + 1), byte(KeyInputs[0][1]));
   Reg.IP += 2;
   KeyInputs.Delete(0);
+  setFlag(K,KeyInputs.Count > 0);
 end;
 
 procedure TCPU.Run_CKB;
@@ -1133,6 +1174,7 @@ begin
   EnterCriticalSection(cs);
   try
     KeyInputs.Append(i);
+    setFlag(K,true);
   finally
     LeaveCriticalSection(cs);
   end;
@@ -1156,6 +1198,7 @@ end;
 procedure TCPU.clearKeyboardBuffer;
 begin
   Run_CKB;
+  setFlag(K, false);
 end;
 
 end.

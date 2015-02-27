@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 323
+  Left = 241
   Height = 584
-  Top = 112
+  Top = 360
   Width = 935
   AllowDropFiles = True
   Caption = 'CPUSimulator Herder 2014'
@@ -1056,10 +1056,10 @@ object mainFrm: TmainFrm
     Left = 457
     Height = 30
     Top = 4
-    Width = 263
+    Width = 295
     BevelOuter = bvNone
     ClientHeight = 30
-    ClientWidth = 263
+    ClientWidth = 295
     TabOrder = 26
     object Flag_Z: TCheckBox
       Left = 192
@@ -1121,6 +1121,19 @@ object mainFrm: TmainFrm
       ReadOnly = True
       TabOrder = 3
       Text = '00000000 00000000'
+    end
+    object Flag_K: TCheckBox
+      Left = 256
+      Height = 18
+      Hint = 'K-Flag (Keyboard-Buffer)'#13#10'The K-Flag is true if a key was pressed and is still in the Keyboard buffer'
+      Top = 4
+      Width = 33
+      Caption = 'K'
+      Enabled = False
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object WaitingMessageLbl: TLabel
@@ -1270,12 +1283,14 @@ object mainFrm: TmainFrm
       Category = 'Edit'
       Caption = '&Copy'
       Hint = 'Copy'
+      OnExecute = EditCopyActExecute
       ShortCut = 16451
     end
     object EditPasteAct: TEditPaste
       Category = 'Edit'
       Caption = '&Paste'
       Hint = 'Paste'
+      OnExecute = EditPasteActExecute
       ShortCut = 16470
     end
     object EditUndoAct: TEditUndo

@@ -3,27 +3,25 @@
 ;berechnet F(X), wobei F die Fibonacci-Folge ist x elemnt n < 24 (nur 16bit register)
 jmp begin
 var1:
-db "F()="
+db "Fibonacci(", 0
+var2:
+db ")=", 0
 begin:
 ;gibt F(X)=Y aus, wobei X die Eingabe und Y das Ergebnis von Fibonacci ist
-movb al, [03]
-out al
-movb al, [04]
-out al
+push var1;Ausgabe von 'Fibonacci('
+call db_Ausgabe
+pop
 call mehrstelligeEingabe;get X
-push ax;Funktionsparameter (X)
-movb al, [05]
-out al
-movb al, [06]
-out al
+push ax;Funktionsparameter (X) (vor db_Ausgabe pushen, weil dort ax verändert wird)
+push var2;Ausgabe von ')='
+call db_Ausgabe
+pop
 call fibonacci;Y berechnen
 pop
 push ax;Funktionsparameter (Y)
 call mehrstelligeAusgabe;Y ausgeben
 pop
 end
-
-
 
 
 ;Parameter: F(X)
@@ -142,4 +140,23 @@ mov BP, SP
   msEend:
 mov SP, BP
 pop BP
+ret
+
+;Parameter sind gepusht (Adresse der Auszugebenden Variable
+db_Ausgabe:
+  push BP
+  mov BP, SP
+
+  mov ax, [BP + 5];Adresse bekommen
+  dbAusgabe:
+  movb bl, [ax];Byte an Adresse in bl schreiben
+  cmp bl, 0;Wenn die Ausgabe beendet ist (das Byte 0 hat im Ascii-Code kein Zeichen,
+  jz dbaEnde;weil es immer das Ende der Variable kennzeichnet
+  out bl;das Zeichen ausgeben
+  inc ax;nächste Adresse ausgeben
+  jmp dbAusgabe
+  dbAEnde:
+
+  mov SP, BP
+  pop BP
 ret

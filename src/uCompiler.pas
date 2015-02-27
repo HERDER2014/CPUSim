@@ -1658,6 +1658,81 @@ begin
       end;
     end;
 
+    'JK': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JK R
+          Ram.WriteByte(offset, Ord(OPCode.JK_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryParseIntOrLabel(operands.op1, n1, offset + 1) then
+        begin
+          // JK X
+          Ram.WriteByte(offset, Ord(OPCode.JK_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JK LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JK_X));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+    'JNK': // 2
+    begin
+      if operands.Count = 1 then
+      begin
+        if (r1 <> RegisterIndex.INVALID) then
+        begin
+          // JNK R
+          Ram.WriteByte(offset, Ord(OPCode.JNK_R));
+          Ram.WriteByte(offset + 1, Ord(r1));
+          rBytesWritten := 2;
+          exit(True);
+        end
+        else
+        if TryParseIntOrLabel(operands.op1, n1, offset + 1) then
+        begin
+          // JNK X
+          Ram.WriteByte(offset, Ord(OPCode.JNK_X));
+          Ram.WriteWord(offset + 1, n1);
+          rBytesWritten := 3;
+          exit(True);
+        end
+        else
+        begin
+          // JNK LABEL
+          Ram.WriteByte(offset, Ord(OPCode.JNK_X));
+          m_labelResolveList.Add(CrTLabelUse(UpperCase(operands.op1), offset + 1, line));
+          rBytesWritten := 3;
+          exit(True);
+        end;
+      end
+      else
+      begin
+        ReportOPCountError(1);
+        exit(False);
+      end;
+    end;
+
+
     'CALL': // 2
     begin
       if operands.Count = 1 then

@@ -119,22 +119,37 @@ type
     JS_R,
     // JS X
     JS_X,
-    // JZ R
-    JZ_R,
-    // JZ X
-    JZ_X,
-    // JO R
-    JO_R,
-    // JO X
-    JO_X,
     // JNS R
     JNS_R,
     // JNS X
     JNS_X,
+
+    // JZ R
+    JZ_R,
+    // JZ X
+    JZ_X,
     // JNZ R
     JNZ_R,
     // JNZ X
     JNZ_X,
+
+    // JO R
+    JO_R,
+    // JO X
+    JO_X,
+    // JNO R
+    JNO_R,
+    // JNO X
+    JNO_X,
+
+    // JO R
+    JK_R,
+    // JO X
+    JK_X,
+    // JNO R
+    JNK_R,
+    // JNO X
+    JNK_X,
 
     // CALL X
     CALL_X,
@@ -170,10 +185,6 @@ type
     XOR_R_X,
     // XOR R, R
     XOR_R_R,
-    // JNO R
-    JNO_R,
-    // JNO X
-    JNO_X,
     // AND R, [X]
     AND_R_ADDR_X,
     // AND R, [R]

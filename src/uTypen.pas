@@ -35,7 +35,7 @@ type
     FLAGS: word;
   end;
 
-  type TFlags = (O=2048,S=128,Z=64);
+  type TFlags = (S=8,Z=4,O=2,K=1);
 
 
   type TBoolPointer = ^Boolean;

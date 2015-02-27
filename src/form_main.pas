@@ -27,6 +27,7 @@ type
     AssembleBtn: TButton;
     B1: TEdit;
     Flag_O: TCheckBox;
+    Flag_K: TCheckBox;
     Flag_S: TCheckBox;
     Flag_Z: TCheckBox;
     EditCopyAct: TEditCopy;
@@ -104,6 +105,8 @@ type
     procedure Button1Click(Sender: TObject);
     procedure ClearLogBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
+    procedure EditCopyActExecute(Sender: TObject);
+    procedure EditPasteActExecute(Sender: TObject);
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
@@ -407,6 +410,7 @@ begin
   Flag_S.Checked := (CPU.ReadRegister(FLAGS) and integer(S)) > 0;
   Flag_Z.Checked := (CPU.ReadRegister(FLAGS) and integer(Z)) > 0;
   Flag_O.Checked := (CPU.ReadRegister(FLAGS) and integer(O)) > 0;
+  Flag_K.Checked := (CPU.ReadRegister(FLAGS) and integer(K)) > 0;
 
   //  F1.Text := IntTOBin(CPU.ReadRegister(FLAGS), 16, 8);
   //   F2.Text := IntToHex(CPU.ReadRegister(FLAGS), 4);
@@ -760,6 +764,16 @@ end;
 procedure TmainFrm.compileClick(Sender: TObject);
 begin
   MainFrm.DoCompile;
+end;
+
+procedure TmainFrm.EditCopyActExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TmainFrm.EditPasteActExecute(Sender: TObject);
+begin
+
 end;
 
 procedure TmainFrm.FileOpenActAccept(Sender: TObject);

@@ -41,6 +41,10 @@ type
      Zeile der Verwendung in der Eingabe.
     }
     line: cardinal;
+    {
+     Vorzeichen
+    }
+    isNegative: Boolean;
     class operator Equal(l1, l2: TLabelUse): boolean;
   end;
 
@@ -70,6 +74,7 @@ type
 
 function CrTCodeLineNr(line: string; nr: cardinal): TCodeLineNr;
 function CrTLabelUse(labelName: string; addrRAM: word; line: cardinal): TLabelUse;
+function CrTLabelUseN(labelName: string; addrRAM: word; line: cardinal; isNegative: Boolean): TLabelUse;
 
 implementation
 
@@ -84,6 +89,15 @@ begin
   Result.labelName := labelName;
   Result.addrRAM := addrRAM;
   Result.line := line;
+end;
+
+function CrTLabelUseN(labelName: string; addrRAM: word; line: cardinal;
+  isNegative: Boolean): TLabelUse;
+begin
+  Result.labelName := labelName;
+  Result.addrRAM := addrRAM;
+  Result.line := line;
+  Result.isNegative := isNegative;
 end;
 
 class operator TCodeLineNr.Equal(l1, l2: TCodeLineNr): boolean;

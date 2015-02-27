@@ -12,6 +12,9 @@ type
   { TCPUThread }
 
   TCPUThread = class(TThread)
+  public
+    procedure Fortsetzen;
+    procedure Pausieren;
   private
     cpu: TCPU;
     cs: TRTLCriticalSection;
@@ -20,7 +23,9 @@ type
     FException: string;
     countBefehle: int64;
     elapsedTime: extended;
+    ET: TEpikTimer;
   public
+
 
       {
       Vor.: sim ist kreiert
@@ -32,7 +37,7 @@ type
       {
       Vor.: -
       Eff.: Die Frequenz der Ausführung wird auf v (in Hz) gesetzt. Ist v = 0,
-            so wird so schenlle simuliert, wie möglich. Ist v = -1 so wird beim
+            so wird sMOo schenlle simuliert, wie möglich. Ist v = -1 so wird beim
             Aufruf von resume nur ein Schritt ausgefuehrt. Ist v = -2 und der
             naechste auszufuehrende Befehl CALL ist, so werden beim Aufruf von
             resume genau soviele schritte ausgefuehrt, dass die aufgerufenen
@@ -78,10 +83,22 @@ type
 
 implementation
 
+procedure TCPUThread.Fortsetzen;
+begin
+  ET.Start;
+  Resume;
+end;
+
+procedure TCPUThread.Pausieren;
+begin
+  ET.Stop;
+  Suspend;
+end;
 
 constructor TCPUThread.Create(sim: TCPU);
 begin
   cpu := sim;
+  ET := TEpikTimer.Create(nil);
   FreeOnTerminate := True;
   InitCriticalSection(cs);
   inherited Create(True);
@@ -109,11 +126,9 @@ var
   t: extended;
   op_code: OPCode;
   StackPointer: word;
-  ET: TEpikTimer;
 begin
   stopAtSP := High(word); // at start do not stop at any specific Stack-Pointer
   FException := '';
-  ET := TEpikTimer.Create(nil);
   countBefehle := 0;
   ET.Start;
   while (not Terminated) do
@@ -124,7 +139,7 @@ begin
     if (StackPointer = stopAtSP) then
     begin
       stopAtSP := High(word);
-      suspend;
+      Pausieren;
       continue;
     end;
     try
@@ -153,14 +168,15 @@ begin
     end;
 
     Inc(countBefehle);
+
     // suspend or sleep depending on t and other parameters
     if ((op_code = CALL_X) or (op_code = CALL_R)) and (stopAtSP = High(word)) and
       (t = -2) then
       stopAtSP := StackPointer
-    else if ((t < 0) and (stopAtSP = High(word))) then
+    else if (((t < 0) and (stopAtSP = High(word))) or cpu.getRam().getBreakpoint(cpu.ReadRegister(IP))) then
     begin
       stopAtSP := High(word);
-      suspend;
+      Pausieren;
       continue;
     end
     else if (t > 0) then

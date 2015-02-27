@@ -102,6 +102,9 @@ type
   public
     procedure Terminate();
 
+  public
+    function getRam():TRAM;
+
   private
    {
    OP-Code befehle
@@ -1138,6 +1141,11 @@ end;
 procedure TCPU.Terminate;
 begin
   Terminated := True;
+end;
+
+function TCPU.getRam: TRAM;
+begin
+  result:=Ram;
 end;
 
 function TCPU.waitingMessage: string;

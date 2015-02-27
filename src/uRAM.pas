@@ -57,6 +57,8 @@ type
   }
     function GetVRAMStart: cardinal;
 
+    procedure setBreakpoint(addr: word; b:boolean);
+    function getBreakpoint(addr: word):boolean;
 
   end;
 
@@ -67,6 +69,7 @@ implementation
 
 var
   ram: array of word;
+  breakpoints: array of boolean;
   size_RAM: word;
   cs: Trtlcriticalsection;
   vRamStart: word;
@@ -77,8 +80,11 @@ var
 begin
   ChangeCallback := nil;
   SetLength(ram, size);
-  for i := 0 to size - 1 do
+  SetLength(breakpoints, size);
+  for i := 0 to size - 1 do begin
     ram[i] := 0;
+    breakpoints[i] := false;
+  end;
   size_RAM := size;
   initcriticalsection(cs);
   vRamStart := vStart;
@@ -149,6 +155,16 @@ end;
 function TRAM.GetVRAMStart: cardinal;
 begin
   Result := vRamStart;
+end;
+
+procedure TRAM.setBreakpoint(addr: word; b: boolean);
+begin
+  breakpoints[addr]:=b;
+end;
+
+function TRAM.getBreakpoint(addr: word): boolean;
+begin
+  result:=breakpoints[addr];
 end;
 
 end.

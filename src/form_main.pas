@@ -221,6 +221,7 @@ end;
 procedure TmainFrm.DoCompile;
 var
   temp_savepath : String;
+  i : word;
 begin
   {$IFDEF Windows}
   temp_savepath:='temp.asm';
@@ -272,6 +273,10 @@ begin
     InputSynEdit.Invalidate;
     setupRAM;
     RAM.ChangeCallback := @OnRAMChange;
+
+    for i := 0 to RAM.GetSize() - 1 do begin
+      RAM.setBreakpoint(i,InputSynEdit.Marks.Line[comp.GetCodePosition(i)] <> nil);
+    end;
 
   except
     on e: Exception do
@@ -404,7 +409,7 @@ end;
 procedure TmainFrm.resume;
 begin
   setVel;
-  Thread.resume;
+  Thread.Fortsetzen;
 end;
 
 procedure TmainFrm.OnCPUTerminate(Sender: TObject);
@@ -557,13 +562,13 @@ end;
 procedure TmainFrm.Step;
 begin
   Thread.setVel(-1);
-  Thread.resume;
+  Thread.Fortsetzen;
 end;
 
 procedure TmainFrm.StepOver;
 begin
   Thread.setVel(-2);
-  Thread.resume;
+  Thread.Fortsetzen;
 end;
 
 procedure TmainFrm.Stop;

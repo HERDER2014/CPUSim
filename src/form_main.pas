@@ -237,18 +237,6 @@ begin
     comp.Destroy;
     //WriteLn('comp destr');
   end;
-  if CPUCreated then
-  begin
-    CPU.Destroy;
-    CPUcreated:=false;
-    //WriteLn('cpu destr');
-  end;
-  if ThreadCreated then
-  begin
-    Thread.term();
-    Threadcreated:=false;
-    //WriteLn('cput term');
-  end;
 
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
   //WriteLn('ram created');
@@ -576,7 +564,18 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  Thread.term();
+  if CPUCreated then
+  begin
+    CPU.Destroy;
+    CPUcreated:=false;
+    //WriteLn('cpu destr');
+  end;
+  if ThreadCreated then
+  begin
+    Thread.term();
+    Threadcreated:=false;
+    //WriteLn('cput term');
+  end;
   assembled := False;
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;

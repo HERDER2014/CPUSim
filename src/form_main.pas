@@ -117,6 +117,7 @@ type
     procedure FrequencyTypeChange(Sender: TObject);
     procedure InputSynEditGutterClick(Sender: TObject; X, Y, Line: integer;
       mark: TSynEditMark);
+    procedure MainFrm_Menu_Help_TutorialClick(Sender: TObject);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure FileNewExecute(Sender: TObject);
     procedure RunPauseBtnClick(Sender: TObject);
@@ -525,6 +526,13 @@ begin
   end
   else
     InputSynEdit.Marks.ClearLine(Line);
+end;
+
+procedure TmainFrm.MainFrm_Menu_Help_TutorialClick(Sender: TObject);
+begin
+  FileOpenAct.Dialog.InitialDir:='../Beispielprogramme';
+  FileOpenAct.Execute;
+  FileOpenAct.Dialog.InitialDir:='';
 end;
 
 procedure TmainFrm.TFindDialogFind(Sender: TObject);

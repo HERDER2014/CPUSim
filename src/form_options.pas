@@ -86,6 +86,12 @@ begin
         Close;
       end;
     end;
+  end
+  else
+  begin
+    ApplyChanges;
+    Saved := True;
+    Close;
   end;
   exit;
   Close;

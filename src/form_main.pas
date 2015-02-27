@@ -18,6 +18,7 @@ type
   TmainFrm = class(TForm)
     A1: TEdit;
     A2: TEdit;
+    ClearLogBtn: TButton;
     FileNew: TAction;
     FileSave: TAction;
     Button1: TButton;
@@ -102,6 +103,7 @@ type
     RAMValueList: TValueListEditor;
     procedure AssembleBtnClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure ClearLogBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
@@ -166,6 +168,7 @@ type
     numInMode: TNumberInputMode;
     assembled: boolean;
     CPU: TCPU;
+    trackTime: boolean;    // true when elapsed time should be printed; the time will *always* be tracked
   end;
 
 var
@@ -174,7 +177,6 @@ var
   SavePath: string;
   Saved: boolean;
   startTime: QWord;
-  trackTime: boolean;
   drawCodeIPHighlighting: boolean;
   Thread: TCPUThread;
   hlt: TAsmHighlighter;
@@ -924,6 +926,12 @@ end;
 procedure TmainFrm.Button1Click(Sender: TObject);
 begin
   screenForm.Show;
+end;
+
+procedure TmainFrm.ClearLogBtnClick(Sender: TObject);
+begin
+  Log_lb.Items.Clear;
+  Log_lb.Items.Insert(0,'Hit "Assemble" to compile your program');
 end;
 
 procedure TmainFrm.MainFrm_Menu_Edit_CutClick(Sender: TObject);

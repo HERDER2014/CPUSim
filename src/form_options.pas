@@ -13,8 +13,10 @@ type
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
+    PrintTimeChkBx: TCheckBox;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
+    MiscGrpBx: TGroupBox;
     Label2: TLabel;
     Label3: TLabel;
     OptionsFrm_OkBtn: TButton;
@@ -53,28 +55,6 @@ uses
 { TOptionsFrm }
 
 
-procedure TOptionsFrm.OptionsFrm_CloseBtnClick(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TOptionsFrm.OptionsFrm_OkBtnClick(Sender: TObject);
-begin
-  if (OptionsFrm_RAMSizeEdt.Value + OptionsFrm_VRAMSizeEdt.Value > 65535) then
-  begin
-    ShowMessage('The RAM size plus the VRAM size may not be greater then 65535.');
-    exit;
-  end;
-  ApplyChanges;
-  Saved := True;
-  Close;
-end;
-
-procedure TOptionsFrm.OptionsFrm_RAMSizeEdtChange(Sender: TObject);
-begin
-  Saved := False;
-end;
-
 procedure TOptionsFrm.ApplyChanges;
 begin
   mainFrm.RAMSize := StrToInt(OptionsFrm_RAMSizeEdt.Text);
@@ -83,6 +63,27 @@ begin
     mainFrm.numInMode := TNumberInputMode.Hexadecimal
   else
     mainFrm.numInMode := TNumberInputMode.Decimal;
+  mainFrm.trackTime:=PrintTimeChkBx.Checked;
+end;
+
+{* ------------------------------------------------------------------------ *}
+
+procedure TOptionsFrm.OptionsFrm_OkBtnClick(Sender: TObject);
+begin
+  if (OptionsFrm_RAMSizeEdt.Value + OptionsFrm_VRAMSizeEdt.Value > 65535) then
+  begin
+    ShowMessage('The RAM size plus the VRAM size may not be greater then 65535.');
+    exit;
+  end;
+  // TODO: ignore?
+  ApplyChanges;
+  Saved := True;
+  Close;
+end;
+
+procedure TOptionsFrm.OptionsFrm_RAMSizeEdtChange(Sender: TObject);
+begin
+  Saved := False;
 end;
 
 procedure TOptionsFrm.FormCreate(Sender: TObject);
@@ -94,5 +95,11 @@ procedure TOptionsFrm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   CloseAction := caHide;
 end;
+
+procedure TOptionsFrm.OptionsFrm_CloseBtnClick(Sender: TObject);
+begin
+  Close;
+end;
+
 
 end.

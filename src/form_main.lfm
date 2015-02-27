@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 236
+  Left = 205
   Height = 584
-  Top = 147
+  Top = 67
   Width = 935
   AllowDropFiles = True
   Caption = 'CPUSimulator Herder 2014'
@@ -1140,6 +1140,16 @@ object mainFrm: TmainFrm
     Caption = 'Show Screen'
     OnClick = Button1Click
     TabOrder = 27
+  end
+  object ClearLogBtn: TButton
+    Left = 696
+    Height = 25
+    Hint = 'Cleares log'
+    Top = 67
+    Width = 75
+    Caption = 'Clear Log'
+    OnClick = ClearLogBtnClick
+    TabOrder = 28
   end
   object MainFrm_Menu: TMainMenu
     left = 872

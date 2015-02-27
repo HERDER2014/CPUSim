@@ -1,7 +1,7 @@
 object OptionsFrm: TOptionsFrm
-  Left = 564
+  Left = 844
   Height = 302
-  Top = 484
+  Top = 319
   Width = 320
   BorderIcons = []
   BorderStyle = bsDialog
@@ -18,12 +18,12 @@ object OptionsFrm: TOptionsFrm
     Width = 304
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Memory sizes'
-    ClientHeight = 54
+    ClientHeight = 49
     ClientWidth = 300
     TabOrder = 2
     object OptionsFrm_RAMSizeEdt: TSpinEdit
       Left = 40
-      Height = 21
+      Height = 25
       Top = 2
       Width = 50
       MaxValue = 65535
@@ -34,15 +34,15 @@ object OptionsFrm: TOptionsFrm
     end
     object Label1: TLabel
       Left = 8
-      Height = 13
+      Height = 19
       Top = 6
-      Width = 26
+      Width = 34
       Caption = 'RAM:'
       ParentColor = False
     end
     object OptionsFrm_VRAMSizeEdt: TSpinEdit
       Left = 40
-      Height = 21
+      Height = 25
       Top = 26
       Width = 50
       MaxValue = 65535
@@ -53,9 +53,9 @@ object OptionsFrm: TOptionsFrm
     end
     object Label2: TLabel
       Left = 8
-      Height = 13
+      Height = 19
       Top = 31
-      Width = 28
+      Width = 40
       Caption = 'VRAM'
       ParentColor = False
     end
@@ -89,34 +89,56 @@ object OptionsFrm: TOptionsFrm
     Width = 304
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Assembler options'
-    ClientHeight = 30
+    ClientHeight = 25
     ClientWidth = 300
     TabOrder = 3
     object rHex: TRadioButton
       Left = 104
-      Height = 17
+      Height = 23
       Top = 0
-      Width = 78
+      Width = 103
       Caption = 'Hexadecimal'
       Checked = True
+      OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 1
       TabStop = True
     end
     object rDec: TRadioButton
       Left = 200
-      Height = 17
+      Height = 23
       Top = 0
-      Width = 54
+      Width = 74
       Caption = 'Decimal'
+      OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 0
     end
     object Label3: TLabel
       Left = 8
-      Height = 13
+      Height = 19
       Top = 2
-      Width = 80
+      Width = 104
       Caption = 'Numeral system:'
       ParentColor = False
+    end
+  end
+  object MiscGrpBx: TGroupBox
+    Left = 8
+    Height = 120
+    Top = 136
+    Width = 305
+    Caption = 'Misc.'
+    ClientHeight = 97
+    ClientWidth = 301
+    TabOrder = 4
+    object PrintTimeChkBx: TCheckBox
+      Left = 8
+      Height = 23
+      Hint = 'Print elapsed time on end'
+      Top = 8
+      Width = 83
+      Caption = 'Print time'
+      OnChange = OptionsFrm_RAMSizeEdtChange
+      TabOrder = 0
     end
   end
 end

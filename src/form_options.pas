@@ -76,13 +76,24 @@ procedure TOptionsFrm.OptionsFrm_OkBtnClick(Sender: TObject);
 begin
   if (OptionsFrm_RAMSizeEdt.Value + OptionsFrm_VRAMSizeEdt.Value > 65535) then
   begin
-    ShowMessage('The RAM size plus the VRAM size may not be greater then 65535.');
-    exit;
+    //ShowMessage('The RAM size plus the VRAM size may not be greater then 65535.');
+    //exit;
+    begin
+      if MessageDlg('Warning', 'The RAM size plus the VRAM size may not be greater then 65535.', mtConfirmation, [mbCancel, mbIgnore],0) = mrIgnore then
+      begin
+        ApplyChanges;
+        Saved := True;
+        Close;
+      end;
+    end;
   end;
-  // TODO: ignore?
-  ApplyChanges;
-  Saved := True;
+  exit;
   Close;
+  // TODO: ignore?
+//
+//  ApplyChanges;
+//  Saved := True;
+//  Close;
 end;
 
 procedure TOptionsFrm.OptionsFrm_RAMSizeEdtChange(Sender: TObject);

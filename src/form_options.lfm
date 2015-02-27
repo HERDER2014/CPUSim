@@ -25,7 +25,7 @@ object OptionsFrm: TOptionsFrm
       Left = 40
       Height = 25
       Top = 2
-      Width = 50
+      Width = 82
       MaxValue = 65535
       MinValue = 1
       OnChange = OptionsFrm_RAMSizeEdtChange
@@ -44,7 +44,7 @@ object OptionsFrm: TOptionsFrm
       Left = 40
       Height = 25
       Top = 26
-      Width = 50
+      Width = 79
       MaxValue = 65535
       MinValue = 1
       OnChange = OptionsFrm_RAMSizeEdtChange

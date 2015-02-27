@@ -591,7 +591,7 @@ var
 
   procedure ReportWarning(s: string);
   begin
-    warnings.Add(s);
+    warnings.Add('Line ' + IntToStr(line) + ': ' + s);
   end;
 
   function TryParseIntOrLabel(s: string; out i: integer; addr: word): boolean;

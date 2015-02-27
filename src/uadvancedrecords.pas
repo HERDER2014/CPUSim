@@ -89,6 +89,7 @@ begin
   Result.labelName := labelName;
   Result.addrRAM := addrRAM;
   Result.line := line;
+  Result.isNegative:=False;
 end;
 
 function CrTLabelUseN(labelName: string; addrRAM: word; line: cardinal;

@@ -169,6 +169,7 @@ type
     assembled: boolean;
     CPU: TCPU;
     ClearLog :Boolean;
+    ShowBreakpoints : Boolean; //unimplemented
     trackTime: boolean;    // true when elapsed time should be printed; the time will *always* be tracked
   end;
 

@@ -1,7 +1,7 @@
 object OptionsFrm: TOptionsFrm
-  Left = 765
+  Left = 700
   Height = 302
-  Top = 296
+  Top = 297
   Width = 320
   BorderIcons = []
   BorderStyle = bsDialog
@@ -149,6 +149,16 @@ object OptionsFrm: TOptionsFrm
       Caption = 'Clear Log'
       OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 1
+    end
+    object ShowBreakpointsChkBx: TCheckBox
+      Left = 8
+      Height = 23
+      Hint = 'Show Breakpoints in RAM'
+      Top = 56
+      Width = 135
+      Caption = 'Show Breakpoints'
+      OnChange = OptionsFrm_RAMSizeEdtChange
+      TabOrder = 2
     end
   end
 end

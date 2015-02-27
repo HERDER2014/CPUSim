@@ -13,6 +13,7 @@ type
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
+    ShowBreakpointsChkBx: TCheckBox;
     ClearLogOnAsm: TCheckBox;
     PrintTimeChkBx: TCheckBox;
     GroupBox1: TGroupBox;
@@ -66,6 +67,7 @@ begin
     mainFrm.numInMode := TNumberInputMode.Decimal;
   mainFrm.trackTime:=PrintTimeChkBx.Checked;
   mainFrm.ClearLog:=ClearLogOnAsm.Checked;
+  mainFrm.ShowBreakpoints:=ShowBreakpointsChkBx.Checked;
 end;
 
 {* ------------------------------------------------------------------------ *}
@@ -87,6 +89,8 @@ procedure TOptionsFrm.OptionsFrm_RAMSizeEdtChange(Sender: TObject);
 begin
   Saved := False;
 end;
+
+
 
 procedure TOptionsFrm.FormCreate(Sender: TObject);
 begin

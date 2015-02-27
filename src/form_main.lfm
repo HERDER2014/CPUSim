@@ -1167,10 +1167,6 @@ object mainFrm: TmainFrm
       object MainFrm_Menu_File_Open: TMenuItem
         Action = FileOpenAct
       end
-      object MainFrm_Menu_File_OpenRecent: TMenuItem
-        Caption = 'Open Recent'
-        OnClick = MainFrm_Menu_File_OpenRecentClick
-      end
       object MainFrm_Menu_File_Save: TMenuItem
         Caption = 'Save'
         ShortCut = 16467

@@ -88,7 +88,6 @@ type
     MainFrm_Menu_Help_Spacer1: TMenuItem;
     MainFrm_Menu_Help_About: TMenuItem;
     MainFrm_Menu_File_Open: TMenuItem;
-    MainFrm_Menu_File_OpenRecent: TMenuItem;
     MainFrm_Menu_File_Save: TMenuItem;
     MainFrm_Menu_File_SaveAs: TMenuItem;
     MainFrm_Menu_File_Spacer2: TMenuItem;

@@ -629,26 +629,22 @@ begin
       if minuspos = 0 then
       begin
         // kein + oder - => nur [R] oder [X] möglich.
+        Result.R := ParseRegisterIndex(inbrackets);
+        if Result.R <> RegisterIndex.INVALID then
+        begin
+          Result.xFound := False;
+          Result.valid := True;
+        end
+        else
         if TryParseIntOrLabel(inbrackets, LongX, offset+1) then
         begin
           Result.valid := True;
           Result.x := smallint(LongX);
-          Result.R := RegisterIndex.INVALID;
           Result.rFound := False;
         end
         else
         begin
-          Result.xFound := False;
-          Result.R := ParseRegisterIndex(inbrackets);
-          if Result.R <> RegisterIndex.INVALID then
-          begin
-            Result.valid := True;
-          end
-          else
-          begin
-            // Eingabe ungültig
-            Result.valid := False;
-          end;
+          Result.valid := false;
         end;
       end
       else

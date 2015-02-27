@@ -168,6 +168,7 @@ type
     numInMode: TNumberInputMode;
     assembled: boolean;
     CPU: TCPU;
+    ClearLog :Boolean;
     trackTime: boolean;    // true when elapsed time should be printed; the time will *always* be tracked
   end;
 
@@ -214,6 +215,7 @@ begin
   InputSynEdit.Color := clWhite;
   CPUCreated:=false;
   CPUCreated:=false;
+  trackTime:=false;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -257,7 +259,7 @@ begin
     //WriteLn('cputhread created');
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
-    trackTime := True;
+    //trackTime := True;
     drawCodeIPHighlighting := True;
     InputSynEdit.ReadOnly := True;
     InputSynEdit.Color := clSilver;
@@ -410,7 +412,7 @@ begin
   //TODO
   if (Thread.getException() = '') then
   begin
-    if (trackTime) then
+    if mainFrm.trackTime then
       Log_lb.Items.Insert(0, '[success] simulation ended in ' +
         FloatToStr(round(Thread.getElapsedTime() * 100000) / 100) +
         ' ms and executed ' + IntToStr(Thread.getBefehlCount()) + ' OP-codes.')
@@ -465,7 +467,7 @@ begin
   Step;
   RunPauseBtn.Caption := 'Run';
   RunPauseBtn.Hint := 'Runs the program';
-  trackTime := False;
+  //trackTime := False;
 end;
 
 procedure TmainFrm.StepOverBtnClick(Sender: TObject);
@@ -476,14 +478,14 @@ begin
   StepOver;
   RunPauseBtn.Caption := 'Run';
   RunPauseBtn.Hint:= 'Runs the program';
-  trackTime := False;
+  //trackTime := False;
 end;
 
 procedure TmainFrm.StopBtnClick(Sender: TObject);
 begin
   //WriteLn('stop clk');
   Stop;
-  trackTime := False;
+  //trackTime := False;
 end;
 
 procedure TmainFrm.FrequencyTypeChange(Sender: TObject);
@@ -603,7 +605,7 @@ begin
     Thread.setVel(speedEdt.Value * power(1000, FrequencyType.ItemIndex));
   end;
 
-  trackTime := False;
+  //trackTime := False;
 
 end;
 
@@ -893,7 +895,7 @@ begin
     Step;
     RunPauseBtn.Caption := 'Run';
     RunPauseBtn.Hint:= 'Runs the program';
-    trackTime := False;
+    //trackTime := False;
   end;
 end;
 
@@ -901,6 +903,7 @@ end;
 procedure TmainFrm.AssembleBtnClick(Sender: TObject);
 begin
   //WriteLn('assemble clk');
+  if ClearLog then ClearLogBtn.Click;
   if AssembleBtn.Caption = 'Assemble' then
   begin
     DoCompile;

@@ -1,7 +1,7 @@
 object OptionsFrm: TOptionsFrm
-  Left = 844
+  Left = 765
   Height = 302
-  Top = 319
+  Top = 296
   Width = 320
   BorderIcons = []
   BorderStyle = bsDialog
@@ -139,6 +139,16 @@ object OptionsFrm: TOptionsFrm
       Caption = 'Print time'
       OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 0
+    end
+    object ClearLogOnAsm: TCheckBox
+      Left = 8
+      Height = 23
+      Hint = 'Clear Log On Assemble'
+      Top = 32
+      Width = 82
+      Caption = 'Clear Log'
+      OnChange = OptionsFrm_RAMSizeEdtChange
+      TabOrder = 1
     end
   end
 end

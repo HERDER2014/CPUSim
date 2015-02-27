@@ -13,6 +13,7 @@ type
   { TOptionsFrm }
 
   TOptionsFrm = class(TForm)
+    ClearLogOnAsm: TCheckBox;
     PrintTimeChkBx: TCheckBox;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
@@ -64,6 +65,7 @@ begin
   else
     mainFrm.numInMode := TNumberInputMode.Decimal;
   mainFrm.trackTime:=PrintTimeChkBx.Checked;
+  mainFrm.ClearLog:=ClearLogOnAsm.Checked;
 end;
 
 {* ------------------------------------------------------------------------ *}

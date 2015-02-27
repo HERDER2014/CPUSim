@@ -117,6 +117,8 @@ type
     procedure FrequencyTypeChange(Sender: TObject);
     procedure InputSynEditGutterClick(Sender: TObject; X, Y, Line: integer;
       mark: TSynEditMark);
+    procedure Log_lbDrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure FileNewExecute(Sender: TObject);
     procedure RunPauseBtnClick(Sender: TObject);
@@ -217,6 +219,7 @@ procedure TmainFrm.DoCompile;
 var
   temp_savepath : String;
   i : word;
+  warning : string;
 begin
   {$IFDEF Windows}
   temp_savepath:='temp.asm';
@@ -258,6 +261,9 @@ begin
   comp.NumberInputMode := numInMode;
   try
     comp.Compile(InputSynEdit.Text);
+    for warning in comp.GetWarnings() do begin
+      Log_lb.Items.Insert(0, '[warning] ' + warning);
+    end;
     Log_lb.Items.Insert(0, '[success] compilation completed');
     CPU := TCPU.Create(RAM);
     CPUcreated:=true;
@@ -530,6 +536,35 @@ begin
   end
   else
     InputSynEdit.Marks.ClearLine(Line);
+end;
+
+procedure TmainFrm.Log_lbDrawItem(Control: TWinControl; Index: Integer;
+  ARect: TRect; State: TOwnerDrawState);
+var
+  myColor: TColor;
+  myBrush: TBrush;
+begin
+  myBrush := TBrush.Create;
+  with (Control as TListBox).Canvas do // draw on control canvas, not on the form
+  begin
+
+    if LeftStr(Log_lb.Items[Index],9) = '[success]' then
+      myColor := clGreen
+    else if LeftStr(Log_lb.Items[Index],9) = '[warning]' then
+      myColor := TColor($0066FF)
+    else if LeftStr(Log_lb.Items[Index],7) = '[error]' then
+      myColor := clRed;
+
+    Brush.Color:=TColor($FFFFFF);
+    Font.Color:=mycolor;
+
+    FillRect(ARect);
+
+    Brush.Style := TBrushStyle.bsSolid;
+    // display the text
+    TextOut(ARect.Left, ARect.Top, (Control as TListBox).Items[Index]);
+    MyBrush.Free;
+  end;
 end;
 
 procedure TmainFrm.TFindDialogFind(Sender: TObject);

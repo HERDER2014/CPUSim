@@ -40,6 +40,7 @@ type
     ImageList1: TImageList;
     IP2: TEdit;
     IP1: TEdit;
+    WaitingMessageLbl: TLabel;
     Label9: TLabel;
     MainFrm_Menu_Options: TMenuItem;
     Panel1: TPanel;

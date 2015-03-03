@@ -27,6 +27,7 @@ type
     OPCodeProcedures: array[0..integer(OPCode.Count) - 1] of TProc;
     Terminated: boolean;
     wMessage: string;
+    highlightAddress: longint;
 
     procedure push(w: word); overload;
     function pop(): word;
@@ -104,6 +105,9 @@ type
 
   public
     function getRam():TRAM;
+
+  public
+    function getHighlightAddress():longint;
 
   private
    {
@@ -218,6 +222,7 @@ begin
   Reg.CX := 0;
   Reg.DX := 0;
   Terminated := False;
+  highlightAddress:=-1;
 
   KeyInputs := TStringList.Create;
   //   Reg := TRegRecord.Create();
@@ -477,39 +482,44 @@ end; // MOV R,X
 procedure TCPU.Run_MOV_R_ADDR_R();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
 end; // MOV R,[R]
 
 procedure TCPU.Run_MOV_R_ADDR_X();
 begin
-  WR(
-    Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)));
+  WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)));
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
 end; // MOV R,[x]
 
 procedure TCPU.Run_MOV_ADDR_R_R();
 begin
   Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)), RR(Ram.ReadByte(Reg.IP + 2)));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1));
   Reg.IP += 3;
 end; // MOV [R],R
 
 procedure TCPU.Run_MOV_ADDR_X_R();
 begin
   Ram.WriteWord(Ram.ReadWord(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 3)));
+  highlightAddress:=Ram.ReadWord(Reg.IP + 1);
   Reg.IP += 4;
 end; // mov [x],R
 
 procedure TCPU.Run_MOV_ADDR_X_X;
 begin
   Ram.WriteWord(Ram.ReadWord(Reg.IP + 1), Ram.ReadWord(Reg.IP + 3));
+  highlightAddress:=Ram.ReadWord(Reg.IP + 1);
   Reg.IP += 5;
-end;
+end; // mov [X],X
 
 procedure TCPU.Run_MOV_ADDR_R_X;
 begin
   Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)), Ram.ReadWord(Reg.IP + 2));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1));
   Reg.IP += 4;
-end;
+end; //mov [R],X
 
 procedure TCPU.Run_MOV_R_R();
 begin
@@ -521,6 +531,7 @@ procedure TCPU.Run_MOV_R_ADDR_RX();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2)) +
     smallint(Ram.ReadWord(Reg.IP + 3))));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2)) + smallint(Ram.ReadWord(Reg.IP + 3));
   Reg.IP += 5;
 end; //mov R,[R+x]
 
@@ -528,6 +539,7 @@ procedure TCPU.Run_MOV_ADDR_RX_R();
 begin
   Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     RR(Ram.ReadByte(Reg.IP + 4)));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2));
   Reg.IP += 5;
 end; //mov [R+x],R
 
@@ -535,8 +547,9 @@ procedure TCPU.Run_MOV_ADDR_RX_X;
 begin
   Ram.WriteWord(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     Ram.ReadWord(Reg.IP + 4));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2));
   Reg.IP += 6;
-end;
+end; //mov [R+x],X
 
 procedure TCPU.Run_MOVB_R_X();
 begin
@@ -547,37 +560,42 @@ end; // MOVB R,X
 procedure TCPU.Run_MOVB_R_ADDR_R();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(RR(Ram.ReadByte(Reg.IP + 2))));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
 end; // MOVB R,[R]
 
 procedure TCPU.Run_MOVB_R_ADDR_X();
 begin
-  WR(
-    Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(Ram.ReadWord(Reg.IP + 2)));
+  WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(Ram.ReadWord(Reg.IP + 2)));
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
 end; // MOVB R,[x]
 
 procedure TCPU.Run_MOVB_ADDR_R_R();
 begin
   Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)), RR(Ram.ReadByte(Reg.IP + 2)));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1));
   Reg.IP += 3;
 end; // MOVB [R],R
 
 procedure TCPU.Run_MOVB_ADDR_X_R();
 begin
   Ram.WriteByte(Ram.ReadWord(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 3)));
+  highlightAddress:=Ram.ReadWord(Reg.IP + 1);
   Reg.IP += 4;
 end; // movb [x],R
 
 procedure TCPU.Run_MOVB_ADDR_X_X;
 begin
   Ram.WriteByte(Ram.ReadWord(Reg.IP + 1), Ram.ReadByte(Reg.IP + 3));
+  highlightAddress:=Ram.ReadWord(Reg.IP + 1);
   Reg.IP += 4;
 end; // movb [x],x
 
 procedure TCPU.Run_MOVB_ADDR_R_X;
 begin
   Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)), Ram.ReadByte(Reg.IP + 2));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1));
   Reg.IP += 3;
 end; //movb [R],x
 
@@ -591,6 +609,7 @@ procedure TCPU.Run_MOVB_R_ADDR_RX();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadByte(RR(Ram.ReadByte(Reg.IP + 2)) +
     smallint(Ram.ReadWord(Reg.IP + 3))));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2)) + smallint(Ram.ReadWord(Reg.IP + 3));
   Reg.IP += 5;
 end; //movb R,[R+x]
 
@@ -598,6 +617,7 @@ procedure TCPU.Run_MOVB_ADDR_RX_R();
 begin
   Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     RR(Ram.ReadByte(Reg.IP + 4)));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2));
   Reg.IP += 5;
 end; //movb [R+x],R
 
@@ -605,8 +625,9 @@ procedure TCPU.Run_MOVB_ADDR_RX_X;
 begin
   Ram.WriteByte(RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2)),
     Ram.ReadByte(Reg.IP + 4));
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 1)) + smallint(Ram.ReadWord(Reg.IP + 2));
   Reg.IP += 5;
-end;
+end; //movb [R+x],x
 
 procedure TCPU.Run_INC_R();
 begin
@@ -631,6 +652,7 @@ procedure TCPU.Run_ADD_R_ADDR_R();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))) +
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
 end; //add R,[R]
 
@@ -638,6 +660,7 @@ procedure TCPU.Run_ADD_R_ADDR_X();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)) +
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
 end; //add R,[x]
 
@@ -660,6 +683,7 @@ procedure TCPU.Run_SUB_R_ADDR_X();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), -Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)) +
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
 end; //sub R,[x]
 
@@ -667,6 +691,7 @@ procedure TCPU.Run_SUB_R_ADDR_R();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), -Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))) +
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
 end; //sub R,[R]
 
@@ -689,6 +714,7 @@ procedure TCPU.Run_MUL_R_ADDR_X();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)) *
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
 end; //mul R,[x]
 
@@ -696,6 +722,7 @@ procedure TCPU.Run_MUL_R_ADDR_R();
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))) *
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
 end; //mul R,[R]
 
@@ -725,6 +752,7 @@ begin
   begin
     WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 1)) div
       Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)), True);
+    highlightAddress:=Ram.ReadWord(Reg.IP + 2);
     Reg.IP += 4;
   end
   else
@@ -737,6 +765,7 @@ begin
   begin
     WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 1)) div
       Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))), True);
+    highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
     Reg.IP += 3;
   end
   else
@@ -774,6 +803,7 @@ begin
   begin
     WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 1)) mod
       Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)), True);
+    highlightAddress:=Ram.ReadWord(Reg.IP + 2);
     Reg.IP += 4;
   end
   else
@@ -786,6 +816,7 @@ begin
   begin
     WR(Ram.ReadByte(Reg.IP + 1), RR(Ram.ReadByte(Reg.IP + 1)) mod
       Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))), True);
+    highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
     Reg.IP += 3;
   end
   else
@@ -967,13 +998,13 @@ procedure TCPU.Run_CALL_X();
 begin
   push(Reg.IP + 3);
   Reg.IP := Ram.ReadWord(Reg.IP + 1);
-end; //call [X]
+end; //call X
 
 procedure TCPU.Run_CALL_R();
 begin
   push(Reg.IP + 2);
   Reg.IP := RR(Ram.ReadByte(Reg.IP + 1));
-end; //call [R]
+end; //call R
 
 procedure TCPU.Run_RET();
 begin
@@ -1030,15 +1061,17 @@ procedure TCPU.Run_AND_R_ADDR_X;
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)) and
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
-end;
+end; //and R,[x]
 
 procedure TCPU.Run_AND_R_ADDR_R;
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))) and
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
-end;
+end; //and R,[R]
 
 procedure TCPU.Run_OR_R_X();
 begin
@@ -1058,15 +1091,17 @@ procedure TCPU.Run_OR_R_ADDR_X;
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)) or
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=Ram.ReadWord(Reg.IP + 2);
   Reg.IP += 4;
-end;
+end; //or R,[x]
 
 procedure TCPU.Run_OR_R_ADDR_R;
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))) or
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
-end;
+end; //or R,[R]
 
 procedure TCPU.Run_XOR_R_X();
 begin
@@ -1086,15 +1121,17 @@ procedure TCPU.Run_XOR_R_ADDR_X;
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(Ram.ReadWord(Reg.IP + 2)) xor
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 4;
-end;
+end; //xor R,[X]
 
 procedure TCPU.Run_XOR_R_ADDR_R;
 begin
   WR(Ram.ReadByte(Reg.IP + 1), Ram.ReadWord(RR(Ram.ReadByte(Reg.IP + 2))) xor
     RR(Ram.ReadByte(Reg.IP + 1)), True);
+  highlightAddress:=RR(Ram.ReadByte(Reg.IP + 2));
   Reg.IP += 3;
-end;
+end; //xor R,[R]
 
 procedure TCPU.Run_OUT_R;
 begin
@@ -1153,6 +1190,7 @@ var
 begin
   OPCodeNum := Ram.ReadByte(Reg.IP);
   EnterCriticalSection(cs);
+  highlightAddress:=-1;
   try
     if OPCodeNum < integer(OPCode.Count) then
     begin
@@ -1188,6 +1226,16 @@ end;
 function TCPU.getRam: TRAM;
 begin
   result:=Ram;
+end;
+
+function TCPU.getHighlightAddress: longint;
+begin
+  EnterCriticalSection(cs);
+  try
+    result:=highlightAddress;
+  finally
+    LeaveCriticalSection(cs);
+  end;
 end;
 
 function TCPU.waitingMessage: string;

@@ -190,10 +190,11 @@ var
   // 0, wenn nicht bereit für Play/StepBtn -- 1, wenn kompiliert und initialisiert,
   // bereit für Play/StepBtn -- 2, wenn play aktiv, bereit für StopBtn
   RAMSize: cardinal;
-  oldIP: SmallInt;
-  oldBP: SmallInt;
-  oldSP: SmallInt;
-  oldVP: SmallInt;
+  oldIP: word;
+  oldBP: word;
+  oldSP: word;
+  oldVP: word;
+  oldHl: longInt;
   CPUCreated: Boolean;
   ThreadCreated: Boolean;
 implementation
@@ -278,6 +279,7 @@ begin
     oldBP := CPU.ReadRegister(RegisterIndex.BP);
     oldSP := CPU.ReadRegister(RegisterIndex.SP);
     oldVP := CPU.ReadRegister(RegisterIndex.VP);
+    oldHl := -1;
 
     InputSynEdit.Invalidate;
     setupRAM;
@@ -315,6 +317,12 @@ begin
       else if (aCol - 1) + ((aRow - 1) shl 4) = oldVP then
       begin
         Canvas.Brush.Color := clLime;
+      end
+      else if assembled then begin
+        if ((aCol - 1) + ((aRow - 1) shl 4) = CPU.getHighlightAddress()) then
+        begin
+          Canvas.Brush.Color := $33FF33;
+        end;
       end;
       Canvas.FillRect(aRect);
       Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
@@ -348,15 +356,17 @@ end;
 
 procedure TmainFrm.updateREG;
 var
-  newIP: SmallInt;
-  newBP: SmallInt;
-  newSP: SmallInt;
-  newVP: SmallInt;
+  newIP: word;
+  newBP: word;
+  newSP: word;
+  newVP: word;
+  newHl: longint;
 begin
   newIP := CPU.ReadRegister(RegisterIndex.IP);
   newBP := CPU.ReadRegister(RegisterIndex.BP);
   newSP := CPU.ReadRegister(RegisterIndex.SP);
   newVP := CPU.ReadRegister(RegisterIndex.VP);
+  newHl := CPU.getHighlightAddress();
 
   if (newIP <> oldIP) then
   begin
@@ -387,6 +397,15 @@ begin
     RAMGrid.InvalidateCell(oldVP and 15 + 1, oldVP shr 4 + 1);
     oldVP := newVP;
     RAMGrid.InvalidateCell(oldVP and 15 + 1, oldVP shr 4 + 1);
+  end;
+
+  if (newHl <> oldHl) then
+  begin
+    if oldHl <> -1 then
+       RAMGrid.InvalidateCell(oldHl and 15 + 1, oldHl shr 4 + 1);
+    oldHl:=newHl;
+    if oldHl <> -1 then
+       RAMGrid.InvalidateCell(oldHl and 15 + 1, oldHl shr 4 + 1);
   end;
 
 

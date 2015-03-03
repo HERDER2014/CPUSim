@@ -31,6 +31,7 @@ type
     rDec: TRadioButton;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure OptionsFrm_CloseBtnClick(Sender: TObject);
     procedure OptionsFrm_OkBtnClick(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
@@ -39,8 +40,8 @@ type
     { private declarations }
     private procedure ApplyChanges;
   public
-    procedure setRAMSize(ramSize: Word);
-    procedure setVRAMSize(vramSize: Word);
+    //procedure setRAMSize(ramSize: Word);
+    //procedure setVRAMSize(vramSize: Word);
 
   end;
 
@@ -71,14 +72,22 @@ begin
   mainFrm.ShowBreakpoints:=ShowBreakpointsChkBx.Checked;
 end;
 
-procedure TOptionsFrm.setRAMSize(ramSize: Word);
+procedure TOptionsFrm.FormShow(Sender: TObject);
 begin
-  OptionsFrm_RAMSizeEdt.Value:=ramSize;
-end;
-
-procedure TOptionsFrm.setVRAMSize(vramSize: Word);
-begin
-  OptionsFrm_VRAMSizeEdt.Value:=vramSize;
+  OptionsFrm_RAMSizeEdt.Text:= IntToStr(mainFrm.RAMSize);
+  OptionsFrm_VRAMSizeEdt.Text:=IntToStr(mainFrm.VRAMSize);
+  if mainFrm.numInMode=TNumberInputMode.Hexadecimal then
+  begin
+    rHex.Checked:=True;
+    rDec.Checked:=False;
+  end else
+  begin
+    rDec.Checked:=True;
+    rHex.Checked:=False;
+  end;
+  PrintTimeChkBx.Checked:=mainFrm.trackTime;
+  ClearLogOnAsm.Checked:=mainFrm.ClearLog;
+  ShowBreakpointsChkBx.Checked:=mainFrm.ShowBreakpoints;
 end;
 
 {* ------------------------------------------------------------------------ *}

@@ -220,6 +220,7 @@ begin
   CPUCreated:=false;
   CPUCreated:=false;
   trackTime:=false;
+  InputSynEdit.TabWidth:=4;
 end;
 
 procedure TmainFrm.DoCompile;
@@ -260,10 +261,10 @@ begin
   begin
     if (LeftStr(InputSynEdit.Lines[i], 6) = ';#RAM:') then begin
       RAMSize:=StrToInt(Trim(MidStr(InputSynEdit.Lines[i],7,20)));
-      OptionsFrm.setRAMSize(RAMSize);
+      //OptionsFrm.setRAMSize(RAMSize);
     end else if (LeftStr(InputSynEdit.Lines[i], 7) = ';#VRAM:') then begin
       VRAMSize:=StrToInt(Trim(MidStr(InputSynEdit.Lines[i],8,20)));
-      OptionsFrm.setVRAMSize(VRAMSize);
+      //OptionsFrm.setVRAMSize(VRAMSize);
     end else if (LeftStr(InputSynEdit.Lines[i], 8) = ';#CLOCK:') then begin
       speedEdt.Value:=StrToFloat(Trim(MidStr(InputSynEdit.Lines[i],9,20)));
     end else if (LeftStr(InputSynEdit.Lines[i], 13) = ';#CLOCK_UNIT:') then begin

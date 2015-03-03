@@ -10,6 +10,7 @@ object OptionsFrm: TOptionsFrm
   ClientWidth = 320
   OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   LCLVersion = '1.2.6.0'
   object GroupBox1: TGroupBox
     Left = 8
@@ -18,12 +19,12 @@ object OptionsFrm: TOptionsFrm
     Width = 304
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Memory sizes'
-    ClientHeight = 49
+    ClientHeight = 41
     ClientWidth = 300
     TabOrder = 2
     object OptionsFrm_RAMSizeEdt: TSpinEdit
       Left = 40
-      Height = 25
+      Height = 33
       Top = 2
       Width = 82
       MaxValue = 65535
@@ -36,13 +37,13 @@ object OptionsFrm: TOptionsFrm
       Left = 8
       Height = 19
       Top = 6
-      Width = 34
+      Width = 41
       Caption = 'RAM:'
       ParentColor = False
     end
     object OptionsFrm_VRAMSizeEdt: TSpinEdit
       Left = 40
-      Height = 25
+      Height = 33
       Top = 26
       Width = 79
       MaxValue = 65535
@@ -55,7 +56,7 @@ object OptionsFrm: TOptionsFrm
       Left = 8
       Height = 19
       Top = 31
-      Width = 40
+      Width = 48
       Caption = 'VRAM'
       ParentColor = False
     end
@@ -89,14 +90,14 @@ object OptionsFrm: TOptionsFrm
     Width = 304
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Assembler options'
-    ClientHeight = 25
+    ClientHeight = 17
     ClientWidth = 300
     TabOrder = 3
     object rHex: TRadioButton
       Left = 104
       Height = 23
       Top = 0
-      Width = 103
+      Width = 134
       Caption = 'Hexadecimal'
       Checked = True
       OnChange = OptionsFrm_RAMSizeEdtChange
@@ -107,7 +108,7 @@ object OptionsFrm: TOptionsFrm
       Left = 200
       Height = 23
       Top = 0
-      Width = 74
+      Width = 96
       Caption = 'Decimal'
       OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 0
@@ -116,7 +117,7 @@ object OptionsFrm: TOptionsFrm
       Left = 8
       Height = 19
       Top = 2
-      Width = 104
+      Width = 132
       Caption = 'Numeral system:'
       ParentColor = False
     end
@@ -127,7 +128,7 @@ object OptionsFrm: TOptionsFrm
     Top = 136
     Width = 305
     Caption = 'Misc.'
-    ClientHeight = 97
+    ClientHeight = 89
     ClientWidth = 301
     TabOrder = 4
     object PrintTimeChkBx: TCheckBox
@@ -135,7 +136,7 @@ object OptionsFrm: TOptionsFrm
       Height = 23
       Hint = 'Print elapsed time on end'
       Top = 8
-      Width = 83
+      Width = 108
       Caption = 'Print time'
       OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 0
@@ -145,7 +146,7 @@ object OptionsFrm: TOptionsFrm
       Height = 23
       Hint = 'Clear Log On Assemble'
       Top = 32
-      Width = 82
+      Width = 107
       Caption = 'Clear Log'
       OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 1
@@ -155,7 +156,7 @@ object OptionsFrm: TOptionsFrm
       Height = 23
       Hint = 'Show Breakpoints in RAM'
       Top = 56
-      Width = 135
+      Width = 172
       Caption = 'Show Breakpoints'
       OnChange = OptionsFrm_RAMSizeEdtChange
       TabOrder = 2

@@ -105,8 +105,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure ClearLogBtnClick(Sender: TObject);
     procedure compileClick(Sender: TObject);
-    procedure EditCopyActExecute(Sender: TObject);
-    procedure EditPasteActExecute(Sender: TObject);
     procedure FileOpenActAccept(Sender: TObject);
     procedure FileSaveAsActAccept(Sender: TObject);
     //function FileSave_ExitActExecute(Sender: TObject) : Boolean;
@@ -249,9 +247,14 @@ begin
     //WriteLn('comp destr');
   end;
 
+  if (Trim(UpperCase(InputSynEdit.Lines[0])) = 'SNAKE') then
+  begin
+    if FileExists('../Beispielprogramme/snake.asm') then
+      InputSynEdit.Lines.LoadFromFile('../Beispielprogramme/snake.asm');
+  end;
+
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
   //WriteLn('ram created');
-
   comp := TCompiler.Create(RAM);
   //WriteLn('comp created');
   comp.NumberInputMode := numInMode;
@@ -764,16 +767,6 @@ end;
 procedure TmainFrm.compileClick(Sender: TObject);
 begin
   MainFrm.DoCompile;
-end;
-
-procedure TmainFrm.EditCopyActExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TmainFrm.EditPasteActExecute(Sender: TObject);
-begin
-
 end;
 
 procedure TmainFrm.FileOpenActAccept(Sender: TObject);

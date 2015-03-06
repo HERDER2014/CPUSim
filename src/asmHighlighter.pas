@@ -23,6 +23,7 @@ type
     fCommentAttri: TSynHighlighterAttributes;
     fStringAttri: TSynHighlighterAttributes;
     fNormalAttri: TSynHighlighterAttributes;
+    fSettingsAttri: TSynHighlighterAttributes;
     FCurRange: integer;
     procedure SetOPCodeAttri(AValue: TSynHighlighterAttributes);
     procedure SetRegisterAttri(AValue: TSynHighlighterAttributes);
@@ -31,6 +32,7 @@ type
     procedure SetCommentAttri(AValue: TSynHighlighterAttributes);
     procedure SetStringAttri(AValue: TSynHighlighterAttributes);
     procedure SetNormalAttri(AValue: TSynHighlighterAttributes);
+    procedure SetSettingsAttri(AValue: TSynHighlighterAttributes);
   protected
     // accesible for the other examples
     FTokenPos, FTokenEnd: integer;
@@ -51,7 +53,7 @@ type
     procedure ResetRange; override;
     function GetRange: Pointer; override;
   published
-    (* Define 4 Attributes, for the different highlights. *)
+    (* Define Attributes, for the different highlights. *)
     property OPCodeAttri: TSynHighlighterAttributes
       read fOPCodeAttri write SetOPCodeAttri;
     property RegisterAttri: TSynHighlighterAttributes
@@ -66,6 +68,8 @@ type
       read fStringAttri write SetStringAttri;
     property NormalAttri: TSynHighlighterAttributes
       read fNormalAttri write SetNormalAttri;
+    property SettingsAttri: TSynHighlighterAttributes
+      read fSettingsAttri write SetSettingsAttri;
   end;
 
 implementation
@@ -99,6 +103,11 @@ begin
   fStringAttri := TSynHighlighterAttributes.Create('string', 'string');
   AddAttribute(fStringAttri);
   fStringAttri.Foreground := clGreen;
+
+  fSettingsAttri := TSynHighlighterAttributes.Create('settings', 'settings');
+  AddAttribute(fSettingsAttri);
+  fSettingsAttri.Style := [fsItalic];
+  fSettingsAttri.Foreground := TColor($FF0000);
 
   fNormalAttri := TSynHighlighterAttributes.Create('normal', 'normal');
   AddAttribute(fNormalAttri);
@@ -138,6 +147,11 @@ end;
 procedure TAsmHighlighter.SetNormalAttri(AValue: TSynHighlighterAttributes);
 begin
   fNormalAttri.Assign(AValue);
+end;
+
+procedure TAsmHighlighter.SetSettingsAttri(AValue: TSynHighlighterAttributes);
+begin
+  fSettingsAttri.Assign(AValue);
 end;
 
 procedure TAsmHighlighter.SetLine(const NewValue: string; LineNumber: integer);
@@ -225,6 +239,8 @@ begin
     Result := NormalAttri
   else if FLineText[FTokenPos] = '[' then
     Result := AdressAttri
+  else if (FLineText[FTokenPos] = ';') and (FLineText[FTokenPos + 1] = '#') then
+    Result := SettingsAttri
   else if FLineText[FTokenPos] = ';' then
     Result := CommentAttri
   else if FLineText[FTokenEnd - 1] = ':' then
@@ -285,6 +301,8 @@ begin
     Result := 5;
   if a = fStringAttri then
     Result := 6;
+  if a = fSettingsAttri then
+    Result := 7;
 end;
 
 procedure TAsmHighlighter.SetRange(Value: Pointer);

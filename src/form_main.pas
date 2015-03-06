@@ -248,11 +248,20 @@ begin
     //WriteLn('comp destr');
   end;
 
+
   if (Trim(UpperCase(InputSynEdit.Lines[0])) = 'SNAKE') then
   begin
     if FileExists('../Beispielprogramme/snake.asm') then
       InputSynEdit.Lines.LoadFromFile('../Beispielprogramme/snake.asm');
   end;
+
+  i:= 0;
+  while (InputSynEdit.Lines[i][1] = ';') and (InputSynEdit.Lines[i][2] = '#') do
+  begin
+    inc(i);
+    // TODO
+  end;
+
 
   RAM := TRAM.Create(RAMSize + VRAMSize, RAMSize);
   //WriteLn('ram created');
@@ -324,7 +333,7 @@ begin
       else if assembled then begin
         if ((aCol - 1) + ((aRow - 1) shl 4) = CPU.getHighlightAddress()) then
         begin
-          Canvas.Brush.Color := $33FF33;
+          Canvas.Brush.Color := $FF69FF;
         end;
       end;
       Canvas.FillRect(aRect);

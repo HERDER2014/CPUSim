@@ -1182,6 +1182,7 @@ procedure TCPU.Run_CKB;
 begin
   KeyInputs.Clear;
   Reg.IP += 1;
+  setFlag(K, false);
 end;
 
 function TCPU.Step(): OPCode;

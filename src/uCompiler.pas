@@ -31,6 +31,9 @@ type
   TCodePositionMap = specialize TFPGMap<Word, Cardinal>;
 
 type
+  TCodeLineAddrMap = specialize TFPGMap<Cardinal, Word>;
+
+type
   TByteList = specialize TFPGList<Byte>;
 
 {$ENDIF}
@@ -50,6 +53,7 @@ type
   var
     Ram: TRAM;
     CodePosMap: TCodePositionMap;
+    CodeLineAddrMap: TCodeLineAddrMap;
     warnings: TStringList;
 
   public
@@ -79,6 +83,8 @@ type
    Erg.: Liefert die Zeile in der Eingabe, die an Adresse addr kompiliert wurde. Wenn diese ungültig ist, wird 0 zurückgegeben.
    }
     function GetCodePosition(addr: word): cardinal;
+
+    function GetCodeAddrOfLine(line: Cardinal) : Word;
 
   {
    Schreibt die Instruktion mit ihren Operanden in den RAM.
@@ -2343,6 +2349,7 @@ begin
   m_labelResolveList := TLabelResolveList.Create;
 
   CodePosMap.Clear;
+  CodeLineAddrMap.Clear;
 
   cpos := 0;
   zNr := 1;    // Zeilennummer
@@ -2418,6 +2425,7 @@ begin
     else
     begin
       CodePosMap.Add(bytepos, commandLines[i].nr);
+      CodeLineAddrMap.Add(commandLines[i].nr, bytepos);
       // kein Label, Befehl in RAM schreiben.
       if not WriteInstrucitonLineToRAM(inst, opString, bytepos,
         commandLines[i].nr, rwritten, errString) then
@@ -2455,6 +2463,20 @@ begin
   if CodePosMap.Find(addr, i) then
   begin
     exit(CodePosMap.Data[i]);
+  end
+  else
+  begin
+    Result := 0;
+  end;
+end;
+
+function TCompiler.GetCodeAddrOfLine(line: Cardinal): Word;
+var
+  i: integer;
+begin
+  if CodeLineAddrMap.Find(line, i) then
+  begin
+    exit(CodeLineAddrMap.Data[i]);
   end
   else
   begin

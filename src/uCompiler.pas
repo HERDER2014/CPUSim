@@ -123,6 +123,7 @@ begin
   Ram := r;
   NumberInputMode := TNumberInputMode.Decimal;
   CodePosMap := TCodePositionMap.Create;
+  CodeLineAddrMap := TCodeLineAddrMap.Create;
   warnings := TStringList.Create;
 end;
 

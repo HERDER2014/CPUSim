@@ -256,10 +256,25 @@ begin
   end;
 
   i:= 0;
-  while (InputSynEdit.Lines[i][1] = ';') and (InputSynEdit.Lines[i][2] = '#') do
+  while (LeftStr(InputSynEdit.Lines[i],2) = ';#') do
   begin
+    if (LeftStr(InputSynEdit.Lines[i], 6) = ';#RAM:') then begin
+      RAMSize:=StrToInt(Trim(MidStr(InputSynEdit.Lines[i],7,20)));
+      OptionsFrm.setRAMSize(RAMSize);
+    end else if (LeftStr(InputSynEdit.Lines[i], 7) = ';#VRAM:') then begin
+      VRAMSize:=StrToInt(Trim(MidStr(InputSynEdit.Lines[i],8,20)));
+      OptionsFrm.setVRAMSize(VRAMSize);
+    end else if (LeftStr(InputSynEdit.Lines[i], 8) = ';#CLOCK:') then begin
+      speedEdt.Value:=StrToFloat(Trim(MidStr(InputSynEdit.Lines[i],9,20)));
+    end else if (LeftStr(InputSynEdit.Lines[i], 13) = ';#CLOCK_UNIT:') then begin
+      case UpperCase(Trim(MidStr(InputSynEdit.Lines[i],14,20))) of
+        'HZ' : FrequencyType.ItemIndex:=0;
+        'KHZ': FrequencyType.ItemIndex:=1;
+        'MHZ': FrequencyType.ItemIndex:=2;
+        'MAX': FrequencyType.ItemIndex:=3;
+      end;
+    end;
     inc(i);
-    // TODO
   end;
 
 

@@ -1,3 +1,9 @@
+;#RAM: 1024
+;#VRAM: 2000
+;#CLOCK: 2
+;#CLOCK_UNIT: kHz
+
+
 ; VRAM Size: 2000
 ; Taktung: 1 KHz
 

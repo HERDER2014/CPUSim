@@ -23,10 +23,10 @@ type
     Label3: TLabel;
     OptionsFrm_OkBtn: TButton;
     OptionsFrm_CloseBtn: TButton;
-    //OptionsFrm_Step_VelEt: TEdit;
-    Label1: TLabel;
     OptionsFrm_RAMSizeEdt: TSpinEdit;
     OptionsFrm_VRAMSizeEdt: TSpinEdit;
+    //OptionsFrm_Step_VelEt: TEdit;
+    Label1: TLabel;
     rHex: TRadioButton;
     rDec: TRadioButton;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -39,8 +39,9 @@ type
     { private declarations }
     private procedure ApplyChanges;
   public
-    { public declarations }
-    ramsize: cardinal;
+    procedure setRAMSize(ramSize: Word);
+    procedure setVRAMSize(vramSize: Word);
+
   end;
 
 var
@@ -68,6 +69,16 @@ begin
   mainFrm.trackTime:=PrintTimeChkBx.Checked;
   mainFrm.ClearLog:=ClearLogOnAsm.Checked;
   mainFrm.ShowBreakpoints:=ShowBreakpointsChkBx.Checked;
+end;
+
+procedure TOptionsFrm.setRAMSize(ramSize: Word);
+begin
+  OptionsFrm_RAMSizeEdt.Value:=ramSize;
+end;
+
+procedure TOptionsFrm.setVRAMSize(vramSize: Word);
+begin
+  OptionsFrm_VRAMSizeEdt.Value:=vramSize;
 end;
 
 {* ------------------------------------------------------------------------ *}

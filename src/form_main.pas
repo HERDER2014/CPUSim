@@ -576,9 +576,14 @@ begin
     m.ImageIndex := 0;
     m.Visible := true;
     InputSynEdit.Marks.Add(m);
+    if (assembled) then
+       RAM.setBreakpoint(comp.GetCodeAddrOfLine(Line),true);
   end
-  else
+  else begin
     InputSynEdit.Marks.ClearLine(Line);
+    if (assembled) then
+       RAM.setBreakpoint(comp.GetCodeAddrOfLine(Line),false);
+  end;
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_TutorialClick(Sender: TObject);

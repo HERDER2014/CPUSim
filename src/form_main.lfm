@@ -11,6 +11,7 @@ object mainFrm: TmainFrm
   Constraints.MinWidth = 780
   Font.Height = -11
   Font.Name = 'Monospace'
+  Font.Quality = fqAntialiased
   KeyPreview = True
   Menu = MainFrm_Menu
   OnClose = FormClose

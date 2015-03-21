@@ -215,6 +215,9 @@ begin
   VRAMSize := 128;
   Saved := True; // Don't ask for save when program just started
   assembled := False;
+  MainFrm_Menu_File_New.Enabled:= true;
+  MainFrm_Menu_File_Open.Enabled:= true;
+
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;
   CPUCreated:=false;
@@ -298,6 +301,8 @@ begin
     //WriteLn('cputhread created');
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
+    MainFrm_Menu_File_New.Enabled:= false;
+    MainFrm_Menu_File_Open.Enabled:= false;
     //trackTime := True;
     drawCodeIPHighlighting := True;
     InputSynEdit.ReadOnly := True;
@@ -493,6 +498,8 @@ begin
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;
   assembled := False;
+  MainFrm_Menu_File_New.Enabled:= true;
+  MainFrm_Menu_File_Open.Enabled:= true;
 
   RunPauseBtn.Enabled := False;
   speedEdt.Enabled := False;
@@ -677,6 +684,9 @@ begin
     //WriteLn('cput term');
   end;
   assembled := False;
+  MainFrm_Menu_File_New.Enabled:= true;
+  MainFrm_Menu_File_Open.Enabled:= true;
+
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;
 

@@ -766,7 +766,8 @@ var
   AboutStr: PChar;
 begin
   AboutStr := 'CPU Simulator Herder 14' + sLineBreak +
-    'by Informatik-LK 14/15 (4.Sem) of the Herder-Gymnasium Berlin';
+    'by Informatik-LK 14/15 (4.Sem) of the Herder-Gymnasium Berlin' + sLineBreak +
+    'E-Mail: HerderLK2015@gmx.de';
   MessageDlg('About', AboutStr, mtInformation, [mbClose], '0');
 end;
 

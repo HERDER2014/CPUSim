@@ -26,7 +26,7 @@ Binary releases together with the corresponding source code can be found in the 
 
 ### ArchLinux Users
 
-There's already an (incomplete) PKGBUILD available in the AUR ([upstream URL](https://github.com/LeonardKoenig/PKGBUILDs))
+There's already an (incomplete) [PKGBUILD available in the AUR](https://aur.archlinux.org/packages/herder-cpusim-git/) ([upstream URL](https://github.com/LeonardKoenig/PKGBUILDs))
 
 ## Building & Contributing
 

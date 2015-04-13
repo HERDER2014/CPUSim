@@ -121,6 +121,8 @@ type
       ARect: TRect; State: TOwnerDrawState);
     procedure MainFrm_Menu_OptionsClick(Sender: TObject);
     procedure FileNewExecute(Sender: TObject);
+    procedure RAMGridSelectCell(Sender: TObject; aCol, aRow: Integer;
+      var CanSelect: Boolean);
     procedure RunPauseBtnClick(Sender: TObject);
     procedure InputSynEditChange(Sender: TObject);
     procedure InputSynEditSpecialLineColors(Sender: TObject; Line: integer;
@@ -190,6 +192,8 @@ var
   oldSP: word;
   oldVP: word;
   oldHl: longInt;
+  SelectedLineFromRam: Cardinal;
+  SelectedCellFromRam: word;
   CPUCreated: Boolean;
   ThreadCreated: Boolean;
 implementation
@@ -453,6 +457,14 @@ begin
         begin
           Canvas.Brush.Color := $FF69FF;
         end;
+      end
+      else if (aCol - 1) + ((aRow - 1) shl 4) = SelectedCellFromRam then
+      begin
+        Canvas.Brush.Color:= $FF9933;
+      end
+      else
+      begin
+        Canvas.Brush.Color:= $FFFFFF;
       end;
       Canvas.FillRect(aRect);
       Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, Cells[ACol, ARow]);
@@ -911,6 +923,11 @@ begin
     Special := True;
     BG := clYellow;
   end
+  else if (Line = SelectedLineFromRam) and (SelectedLineFromRam <> 0) then
+  begin
+    Special := True;
+    BG := $FF9933;
+  end
   else if (InputSynEdit.Marks.Line[line] <> nil) then
   begin
     Special := True;
@@ -1079,6 +1096,33 @@ end;
 procedure TmainFrm.FileNewExecute(Sender: TObject);
 begin
   MainFrm_Menu_File_NewClick(nil);
+end;
+
+procedure TmainFrm.RAMGridSelectCell(Sender: TObject; aCol, aRow: Integer;
+  var CanSelect: Boolean);
+var
+  i: integer;
+  oldCell: word;
+begin
+  if (RAMGrid.Cells[aCol, 0] <> '') and (RAMGrid.Cells[0, aRow] <> '') then
+  begin
+    oldCell := SelectedCellFromRam;
+     SelectedCellFromRam := StrToInt('$' + RAMGrid.Cells[aCol, 0]) + StrToInt('$' + RAMGrid.Cells[0, aRow]);
+     i := 0;
+     SelectedLineFromRam:= 0;
+     while (i < SelectedCellFromRam) and (SelectedLineFromRam = 0) do
+     begin
+       SelectedLineFromRam:= comp.GetCodePosition(SelectedCellFromRam - i);
+       inc(i);
+     end;
+     if SelectedLineFromRam <> 0 then
+     begin
+       RamGrid.InvalidateCell(oldCell and 15 + 1, oldCell shr 4 + 1);
+       RamGrid.InvalidateCell(SelectedCellFromRam and 15 + 1, SelectedCellFromRam shr 4 + 1);
+       InputSynEdit.CaretY:= SelectedLineFromRam;
+     end;
+     InputSynEdit.Invalidate;
+  end;
 end;
 
 procedure TmainFrm.RunPauseBtnClick(Sender: TObject);

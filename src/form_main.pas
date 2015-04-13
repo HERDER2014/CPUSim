@@ -222,6 +222,11 @@ begin
   CPUCreated:=false;
   trackTime:=false;
   InputSynEdit.TabWidth:=4;
+  if (Paramcount > 0) and (FileExists(ParamStr(1))) then
+  begin
+    InputSynEdit.Lines.LoadFromFile(ParamStr(1));
+    SavePath:=ParamStr(1);
+  end;
 end;
 
 procedure TmainFrm.DoCompile;

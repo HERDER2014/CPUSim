@@ -79,9 +79,6 @@ type
     MainFrm_Menu_Edit_Cut: TMenuItem;
     MainFrm_Menu_Edit_Copy: TMenuItem;
     MainFrm_Menu_Edit_Paste: TMenuItem;
-    MainFrm_Menu_Edit_Spacer2: TMenuItem;
-    MainFrm_Menu_Edit_Find: TMenuItem;
-    MainFrm_Menu_Edit_FindNext: TMenuItem;
     MainFrm_Menu_File_Spacer1: TMenuItem;
     MainFrm_Menu_Help: TMenuItem;
     MainFrm_Menu_Help_Wiki: TMenuItem;
@@ -252,8 +249,113 @@ begin
 
   if (Trim(UpperCase(InputSynEdit.Lines[0])) = 'SNAKE') then
   begin
-    if FileExists('../Beispielprogramme/snake.asm') then
-      InputSynEdit.Lines.LoadFromFile('../Beispielprogramme/snake.asm');
+    //this is the snake source code but just hard coded...
+    InputSynEdit.Text := ';#RAM: 1024' + sLineBreak + ';#VRAM: 2000' + sLineBreak + ';#CLOCK: 2' +
+    sLineBreak + ';#CLOCK_UNIT: kHz' + sLineBreak + '' + sLineBreak + '' + sLineBreak +
+    '; VRAM Size: 2000' + sLineBreak + '; Taktung: 1 KHz' + sLineBreak + '' +
+    sLineBreak + 'jmp start' + sLineBreak + '' + sLineBreak + 'spawnpoints:' +
+    sLineBreak + 'db 1,0F, 5,80, 7,41, 5,b8, 2,16, 3,e0, 4,67, 5,7d, 6,b1, 2,8d,5,bf,6,83' +
+    sLineBreak + 'db 2,a5,2,2d,2,d7,5,22,2,7c,0,66,0,35,6,13, 0, 0' + sLineBreak +
+    '' + sLineBreak + 'snakepos:  ;pos, dir, len' + sLineBreak + 'db 0, 0' +
+    sLineBreak + '' + sLineBreak + 'snakedir:' + sLineBreak + 'db 0, 1' + sLineBreak +
+    '' + sLineBreak + 'snakelen:' + sLineBreak + 'db 5' + sLineBreak + '' + sLineBreak +
+    'queuepos:' + sLineBreak + 'db 0' + sLineBreak + '' + sLineBreak + 'randompos:' +
+    sLineBreak + 'db 0, 0' + sLineBreak + '' + sLineBreak + 'gameovermessage:' +
+    sLineBreak + 'db "GAME OVER", 0' + sLineBreak + 'db "Points: ", 0' + sLineBreak + '' +
+    sLineBreak + 'start:' + sLineBreak + '' + sLineBreak + 'MOV AX,VP' + sLineBreak +
+    'ADD AX,7D0' + sLineBreak + '' + sLineBreak + 'initloop0:' + sLineBreak + '  DEC AX' +
+    sLineBreak + '  MOVB [AX],20' + sLineBreak + '  CMP AX,VP' + sLineBreak +
+    'JNZ initloop0' + sLineBreak + '' + sLineBreak + 'MOV AX, 4F' + sLineBreak +
+    'initloop1:' + sLineBreak + '  MOV BX,AX' + sLineBreak + '  ADD BX,VP' +
+    sLineBreak + '  MOVB [BX],23' + sLineBreak + '  ADD BX, 780' + sLineBreak +
+    '  MOVB [BX],23' + sLineBreak + '  DEC AX' + sLineBreak + 'JNS initloop1' +
+    sLineBreak + '' + sLineBreak + 'MOV AX,780' + sLineBreak + 'initloop2:' + sLineBreak +
+    '  MOV BX,AX' + sLineBreak + '  ADD BX,VP' + sLineBreak + '  MOVB [BX],23' +
+    sLineBreak + '  ADD BX, 4F' + sLineBreak + '  MOVB [BX],23' + sLineBreak +
+    '  SUB AX, 50' + sLineBreak + 'JNZ initloop2' + sLineBreak + '' + sLineBreak +
+    '' + sLineBreak + 'MOV AX, VP   ; \ Start' + sLineBreak + 'ADD AX, 3E8  ; / Position' +
+    sLineBreak + 'MOV [snakepos], AX' + sLineBreak + '' + sLineBreak + 'MOV AX, randompos' +
+    sLineBreak + 'MOV AX, [AX]' + sLineBreak + 'MOV BX, spawnpoints' + sLineBreak +
+    'ADD AX,BX' + sLineBreak + 'MOV AX, [AX]' + sLineBreak + 'ADD AX, VP' + sLineBreak +
+    'MOVB [AX], 4F' + sLineBreak + '' + sLineBreak + 'loop:' + sLineBreak + '' +
+    sLineBreak + '  ;---- collision detection' + sLineBreak + '  MOV AX, snakepos' +
+    sLineBreak + '  MOV AX, [AX]' + sLineBreak + '  MOVB BL,[AX]' + sLineBreak +
+    '  CMP BL, 4F' + sLineBreak + '  JNZ noCoin' + sLineBreak + '' + sLineBreak +
+    '  ;---- coin' + sLineBreak + '  coin:' + sLineBreak + '  MOV BX, randompos' +
+    sLineBreak + '  MOV AX, [BX]' + sLineBreak + '  ADD AX, 02' + sLineBreak +
+    '  MOV [BX],AX' + sLineBreak + '  MOV BX, spawnpoints' + sLineBreak +
+    '  ADD AX,BX' + sLineBreak + '  MOV AX, [AX]' + sLineBreak + '  CMP AX, 00' +
+    sLineBreak + '  JZ newcoin' + sLineBreak + '  ADD AX, VP' + sLineBreak +
+    '  MOVB [AX], 4F' + sLineBreak + '' + sLineBreak + '  MOV BX, snakelen' +
+    sLineBreak + '  MOVB AL, [BX]' + sLineBreak + '  INC AL' + sLineBreak +
+    '  MOVB [BX],AL' + sLineBreak + '' + sLineBreak + '  JMP afterCoin' + sLineBreak +
+    '' + sLineBreak + '  newcoin:' + sLineBreak + '  MOV BX, randompos' + sLineBreak +
+    '  MOV [BX], 0' + sLineBreak + '  JMP coin' + sLineBreak + '' + sLineBreak +
+    '  ;---- wall' + sLineBreak + '  noCoin:' + sLineBreak + '' + sLineBreak +
+    '  CMP BL, 20' + sLineBreak + '  JNZ ende' + sLineBreak + '' + sLineBreak +
+    '  afterCoin:' + sLineBreak + '  ; Snake queue' + sLineBreak + '' + sLineBreak +
+    '' + sLineBreak + '  ;---- snake saving' + sLineBreak + '  MOV AX,queuepos' +
+    sLineBreak + '  MOVB AX, [AX]' + sLineBreak + '  MOV BX, snakepos' + sLineBreak +
+    '  MOV BX, [BX]' + sLineBreak + '  ADD AX, snakearraypos' + sLineBreak +
+    '  MOV [AX], BX' + sLineBreak + '' + sLineBreak + '  ;---- snake removal' +
+    sLineBreak + '  MOV AX, queuepos' + sLineBreak + '  MOVB AL, [AX]' + sLineBreak +
+    '  MOV BX, snakelen' + sLineBreak + '  MOVB BL, [BX]' + sLineBreak +
+    '  SUB AL, BL' + sLineBreak + '  SUB AL, BL' + sLineBreak + '  ADD AX, snakearraypos' +
+    sLineBreak + '  MOV CX, [AX]' + sLineBreak + '  MOVB [CX], 20' + sLineBreak +
+    '' + sLineBreak + '  ;---- snake saving queue update' + sLineBreak +
+    '  MOV BX, queuepos' + sLineBreak + '  MOVB AL,[BX]' + sLineBreak + '  ADD AL, 02' +
+    sLineBreak + '  MOVB [BX], AL' + sLineBreak + '' + sLineBreak + '  ;---- Display' +
+    sLineBreak + '  MOV AX, snakepos' + sLineBreak + '  MOV AX, [AX]' + sLineBreak +
+    '  MOVB [AX],2B' + sLineBreak + '' + sLineBreak + '  ;---- Movement' + sLineBreak +
+    '  MOV BX, snakedir' + sLineBreak + '  MOV BX, [BX]' + sLineBreak +
+    '  ADD AX, BX    ; Movement' + sLineBreak + '  MOV CX, snakepos' + sLineBreak +
+    '  MOV [CX], AX' + sLineBreak + '' + sLineBreak + '' + sLineBreak + '  ;---- slow down loop' +
+    sLineBreak + '  MOV AX,F0' + sLineBreak + '  wloop:' + sLineBreak + '    DEC AX' +
+    sLineBreak + '  JNZ wloop' + sLineBreak + '' + sLineBreak + '  ;---- keyboard input' +
+    sLineBreak + '  jnk KeyEnd' + sLineBreak + '' + sLineBreak + '  in AX' + sLineBreak + '' +
+    sLineBreak + '  cmp AX,57' + sLineBreak + '  jz up' + sLineBreak + '' + sLineBreak +
+    '  cmp AX,77' + sLineBreak + '  jz up' + sLineBreak + '' + sLineBreak + '  cmp AX,41' +
+    sLineBreak + '  jz left' + sLineBreak + '' + sLineBreak + '  cmp AX,61' + sLineBreak +
+    '  jz left' + sLineBreak + '' + sLineBreak + '  cmp AX,53' + sLineBreak +
+    '  jz down' + sLineBreak + '' + sLineBreak + '  cmp AX,73' + sLineBreak +
+    '  jz down' + sLineBreak + '' + sLineBreak + '  cmp AX,44' + sLineBreak + '  jz right' +
+    sLineBreak + '' + sLineBreak + '  cmp AX,64' + sLineBreak + '  jz right' +
+    sLineBreak + '' + sLineBreak + '  KeyEnd:' + sLineBreak + '' + sLineBreak + 'jmp loop' +
+    sLineBreak + ';================' + sLineBreak + '' + sLineBreak + 'left:' +
+    sLineBreak + 'mov CX, snakedir' + sLineBreak + 'mov [CX], FFFF' + sLineBreak +
+    'jmp KeyEnd' + sLineBreak + '' + sLineBreak + 'right:' + sLineBreak + 'mov CX, snakedir' +
+    sLineBreak + 'mov [CX], 1' + sLineBreak + 'jmp KeyEnd' + sLineBreak + '' +
+    sLineBreak + 'up:' + sLineBreak + 'mov CX, snakedir' + sLineBreak + 'mov [CX], FFB0' +
+    sLineBreak + 'jmp KeyEnd' + sLineBreak + '' + sLineBreak + 'down:' + sLineBreak +
+    'mov CX, snakedir' + sLineBreak + 'mov [CX], 50' + sLineBreak + 'jmp KeyEnd' +
+    sLineBreak + '' + sLineBreak + 'ende:' + sLineBreak + '' + sLineBreak + 'ADD VP, AA' +
+    sLineBreak + 'MOV CX, VP' + sLineBreak + 'MOV AX,gameovermessage' + sLineBreak +
+    'endloop1:' + sLineBreak + 'MOVB BX,[AX]' + sLineBreak + 'INC AX' + sLineBreak +
+    'CMP BX,0' + sLineBreak + 'JZ endloop2start' + sLineBreak + 'OUT BX' + sLineBreak +
+    'jmp endloop1' + sLineBreak + '' + sLineBreak + 'endloop2start:' + sLineBreak +
+    'MOV VP, CX' + sLineBreak + 'ADD VP, 50' + sLineBreak + '' + sLineBreak +
+    'endloop2:' + sLineBreak + 'MOVB BX,[AX]' + sLineBreak + 'INC AX' + sLineBreak +
+    'CMP BX,0' + sLineBreak + 'JZ punktzahlausgabe' + sLineBreak + 'OUT BX' +
+    sLineBreak + 'jmp endloop2' + sLineBreak + '' + sLineBreak + 'punktzahlausgabe:' +
+    sLineBreak + '' + sLineBreak + 'MOV AX,snakelen' + sLineBreak + 'MOVB AX,[AX]' +
+    sLineBreak + 'SUB AX,5' + sLineBreak + 'PUSH AX' + sLineBreak + 'CALL mehrstelligeAusgabe' +
+    sLineBreak + 'POP' + sLineBreak + '' + sLineBreak + 'end' + sLineBreak + '' + sLineBreak +
+    '' + sLineBreak + 'mehrstelligeAusgabe:' + sLineBreak + 'push BP' + sLineBreak +
+    'mov BP, SP' + sLineBreak + '  mov ax, [BP + 5]' + sLineBreak + '  ;zahl aufteilen' +
+    sLineBreak + '  msAaufteilen:' + sLineBreak + '  cmp ax, 0A' + sLineBreak +
+    '  js msAausgabe1  ;wenn ax kleiner als 10 ist, ax pushen und die Zahl ausgeben' + sLineBreak
+    +
+    '  mod bx, 0A' + sLineBreak + '  push bx      ;diese pushen' + sLineBreak +
+    '  sub ax, bx' + sLineBreak + '  div ax, 0A   ;diese "eintfernen" und neu aufteilen' +
+    sLineBreak + '  jmp msAaufteilen' + sLineBreak + '' + sLineBreak +
+    '  ;gepushte Zahl ausgeben' + sLineBreak + '  msAausgabe1:' + sLineBreak +
+    '  push ax      ;ax pushen, um alles auszugeben' + sLineBreak + '  msAausgabe:' +
+    sLineBreak + '  cmp SP, BP   ;wenn der stack leer ist, nichts mehr ausgeben' +
+    sLineBreak + '  jz msAende' + sLineBreak + '  pop ax       ;in ax poppen' +
+    sLineBreak + '  add ax, 30' + sLineBreak + '  out ax' + sLineBreak + '  jmp msAausgabe' +
+    sLineBreak + '' + sLineBreak + '  msAende:' + sLineBreak + '  mov SP, BP' +
+    sLineBreak + '  pop BP' + sLineBreak + '  ret' + sLineBreak + '' + sLineBreak +
+    'snakearraypos:' + sLineBreak + ';keep 256 bytes free';
   end;
 
   i:= 0;
@@ -498,6 +600,7 @@ begin
   speedEdt.Enabled := False;
   FrequencyType.Enabled := False;
   StepBtn.Enabled := False;
+  MainFrm_Menu_Edit.Enabled := true;
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
@@ -589,7 +692,7 @@ end;
 
 procedure TmainFrm.MainFrm_Menu_Help_TutorialClick(Sender: TObject);
 begin
-  FileOpenAct.Dialog.InitialDir:='../Beispielprogramme';
+  FileOpenAct.Dialog.InitialDir:='../Examples';
   FileOpenAct.Execute;
   FileOpenAct.Dialog.InitialDir:='';
 end;
@@ -684,6 +787,7 @@ begin
   speedEdt.Enabled := False;
   FrequencyType.Enabled := False;
   StepBtn.Enabled := False;
+  MainFrm_Menu_Edit.Enabled := true;
   StepOverBtn.Enabled := False;
   AssembleBtn.Caption := 'Assemble';
   RunPauseBtn.Caption := 'Run';
@@ -1014,6 +1118,7 @@ begin
         speedEdt.Enabled := True;
       StepBtn.Enabled := True;
       StepOverBtn.Enabled := True;
+      MainFrm_Menu_Edit.Enabled := false;
     end;
   end
   else

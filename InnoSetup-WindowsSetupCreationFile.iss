@@ -5,7 +5,7 @@
 #define MyAppVersion "0.2-beta.1"
 #define MyAppPublisher "Herder-Gymnasium LK Inf-4 2015"
 #define MyAppURL "https://github.com/HERDER2014/CPUSim"
-#define MyAppExeName "cpusim.exe"
+#define MyAppExeName "bin\cpusim.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -27,7 +27,8 @@ OutputDir=.\Output
 OutputBaseFilename=HerderCPUSim-0.2-beta.1
 SetupIconFile=.\src\cpusim.ico
 Compression=lzma
-SolidCompression=yes
+SolidCompression=yes     
+ChangesAssociations=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -35,12 +36,14 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+Name: "ASM_Association"; Description: "Associate ""asm"" extension"; GroupDescription: File extensions:
+
 
 [Files]
-Source: ".\bin\cpusim.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\cpusim.exe"; DestDir: "{app}\bin\"; Flags: ignoreversion
 Source: ".\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\bin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: ".\Examples\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\bin\*"; DestDir: "{app}\bin\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\Examples\*"; DestDir: "{app}\Examples\"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -53,3 +56,6 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Registry]
+Root: HKCR; Subkey: ".asm"; ValueType: string; ValueName: ""; ValueData: "HerderCPUSim"; Flags: uninsdeletevalue; Tasks: "ASM_Association"
+Root: HKCR; Subkey: "HerderCPUSim"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletekey; Tasks: "ASM_Association"

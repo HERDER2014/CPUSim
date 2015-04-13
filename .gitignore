@@ -18,6 +18,7 @@ src/lib/
 # Binarys
 bin/
 src/bin/
+Output/
 
 # Programs
 Programs/

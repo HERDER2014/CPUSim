@@ -22,10 +22,10 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=D:\Zwischenablage\cpuSim\LICENSE.txt
-OutputDir=D:\Zwischenablage
+LicenseFile=.\LICENSE
+OutputDir=.\Output
 OutputBaseFilename=HerderCPUSim-0.2-beta.1
-SetupIconFile=D:\Projekte\CPUSim\src\cpusim.ico
+SetupIconFile=.\src\cpusim.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -37,10 +37,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "D:\Zwischenablage\cpuSim\bin\cpusim.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Zwischenablage\cpuSim\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Zwischenablage\cpuSim\bin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Zwischenablage\cpuSim\Examples\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\bin\cpusim.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\bin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: ".\Examples\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -57,5 +57,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Registry]
-Root: HKCR; Subkey: ".asm"; ValueType: string; ValueName: ""; ValueData: "HerderCPUSim"; Flags: uninsdeletevalue; Tasks: "ASM_Association"
-Root: HKCR; Subkey: "HerderCPUSim"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName}"; Flags: uninsdeletekey; Tasks: "ASM_Association"
+Root: HKCR; Subkey: ".asm"; ValueType: string; ValueName: ""; ValueData: "HerderCPUSim"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "HerderCPUSim"; ValueType: string; ValueName: ""; ValueData: "Herder CPUSim"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "HerderCPUSim\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"
+Root: HKCR; Subkey: "HerderCPUSim\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""

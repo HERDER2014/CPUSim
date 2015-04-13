@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "HerderCPUSim"
-#define MyAppVersion "0.2-beta.1"
+#define MyAppVersion "1.0-beta.1"
 #define MyAppPublisher "Herder-Gymnasium LK Inf-4 2015"
 #define MyAppURL "https://github.com/HERDER2014/CPUSim"
 #define MyAppExeName "bin\cpusim.exe"
@@ -24,7 +24,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=.\LICENSE
 OutputDir=.\Output
-OutputBaseFilename=HerderCPUSim-0.2-beta.1
+OutputBaseFilename=HerderCPUSim-1.0-beta.1
 SetupIconFile=.\src\cpusim.ico
 Compression=lzma
 SolidCompression=yes     
@@ -59,5 +59,5 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 [Registry]
 Root: HKCR; Subkey: ".asm"; ValueType: string; ValueName: ""; ValueData: "HerderCPUSim"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: "HerderCPUSim"; ValueType: string; ValueName: ""; ValueData: "Herder CPUSim"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "HerderCPUSim\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#AppExeName},0"
-Root: HKCR; Subkey: "HerderCPUSim\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""
+Root: HKCR; Subkey: "HerderCPUSim\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKCR; Subkey: "HerderCPUSim\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""

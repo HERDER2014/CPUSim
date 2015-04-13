@@ -19,6 +19,7 @@ src/lib/
 bin/
 src/bin/
 Output/
+HerderCPUSim-*
 
 # Programs
 Programs/

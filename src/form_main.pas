@@ -196,6 +196,8 @@ var
   SelectedCellFromRam: word;
   CPUCreated: Boolean;
   ThreadCreated: Boolean;
+const
+  InitCaption = 'Herder CPU Simulator';
 implementation
 
 {$R *.lfm}
@@ -226,6 +228,7 @@ begin
   begin
     InputSynEdit.Lines.LoadFromFile(ParamStr(1));
     SavePath:=ParamStr(1);
+    Caption:= InitCaption + ' - ' + SavePath;
   end;
 end;
 
@@ -414,6 +417,7 @@ begin
     //WriteLn('cputhread created');
     Thread.OnTerminate := @OnCPUTerminate;
     assembled := True;
+    Caption:= Caption + ' (assembled)';
     //trackTime := True;
     drawCodeIPHighlighting := True;
     InputSynEdit.ReadOnly := True;
@@ -617,6 +621,10 @@ begin
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;
   assembled := False;
+  if (SavePath <> '') then
+    Caption:= InitCaption + ' - ' + SavePath
+  else
+    Caption:= InitCaption;
 
   RunPauseBtn.Enabled := False;
   speedEdt.Enabled := False;
@@ -810,6 +818,10 @@ begin
     //WriteLn('cput term');
   end;
   assembled := False;
+  if (SavePath <> '') then
+    Caption:= InitCaption + ' - ' + SavePath
+  else
+    Caption:= InitCaption;
   InputSynEdit.ReadOnly := False;
   InputSynEdit.Color := clWhite;
 
@@ -883,6 +895,7 @@ begin
   SavePath:= '';
   InputSynEdit.ClearAll;
   Saved:= true;
+  Caption:= InitCaption;
 end;
 
 procedure TmainFrm.MainFrm_Menu_File_OpenRecentClick(Sender: TObject);
@@ -919,6 +932,7 @@ begin
   else
     InputSynEdit.Lines.SaveToFile(SavePath);
   saved := True;
+  Caption:= InitCaption + ' - ' + SavePath;
 end;
 
 
@@ -966,6 +980,7 @@ begin
   InputSynEdit.Lines.LoadFromFile(path);
   SavePath := path;
   Saved := True;
+  Caption:= InitCaption + ' - ' + SavePath;
 end;
 
 procedure TmainFrm.FileSaveAsActAccept(Sender: TObject);
@@ -973,14 +988,8 @@ begin
   SavePath := FileSaveAsAct.Dialog.FileName;
   InputSynEdit.Lines.SaveToFile(SavePath);
   Saved := True;
+    Caption:= InitCaption + ' - ' + SavePath;
 end;
-
-//function TmainFrm.FileSave_ExitActExecute(Sender: TObject) : Boolean;
-//var
-//  testbool : Boolean;
-//begin
-//  mainFrm.Close;
-//end;
 
 function TmainFrm.FileExitActExecute(Sender: TObject): boolean;
 begin

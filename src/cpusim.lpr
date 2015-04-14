@@ -18,7 +18,7 @@ uses {$IFDEF UNIX} {$IFDEF UseCThreads}
 {$R *.res}
 
 begin
-  Application.Title := 'CPU Simulator Herder 14';
+  Application.Title := 'Herder CPU Simulator';
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TmainFrm, mainFrm);

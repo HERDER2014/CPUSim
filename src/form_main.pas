@@ -708,8 +708,16 @@ begin
 end;
 
 procedure TmainFrm.MainFrm_Menu_Help_TutorialClick(Sender: TObject);
+var
+  unixpath: String;
 begin
+  {$IFDEF Win32}
   FileOpenAct.Dialog.InitialDir:='../Examples';
+  {$ELSE}
+  unixpath:= '/usr/share/cpusim/Examples/';
+  if DirectoryExistsUTF8(unixpath) then
+     FileOpenAct.Dialog.InitialDir:=unixpath;
+  {$ENDIF}
   FileOpenAct.Execute;
   FileOpenAct.Dialog.InitialDir:='';
 end;

@@ -48,6 +48,22 @@ skip the build-mode flag in order to build in debug mode.
 
 To open the project in the Lazarus IDE just open the cpusim.lpi as a project.
 
+### Packaging (Linux)
+
+The icon [src/cpusim.png](src/cpusim.png) should be located at
+
+`/usr/share/pixmaps/cpusim.png`
+
+and the contents of the ['Examples' directory](Examples/) in
+
+`/usr/share/cpusim/Examples/`
+
+TODO: Use a scalable vektor graphics instead of png and fix paths in source code
+
+The [desktop file](cpusim.desktop) should be ready to use and goes into
+
+`/usr/share/applications/`
+
 ### Contribute
 
 See the [git book](git-scm.com/book/en/v2) on how to use git.

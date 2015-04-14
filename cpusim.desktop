@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Herder CPUSim
+Generic Name=CPU Simulator
+Comment=Assembly Simulator and IDE
+Exec=cpusim -style=qtcurve
+Icon=cpusim
+Terminal=false
+Categories=Development;IDE;Qt;Education;
+MimeType=text/x-asm

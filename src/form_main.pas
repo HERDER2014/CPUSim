@@ -235,15 +235,20 @@ var
   i : word;
   warning : string;
 begin
-  {$IFDEF Windows}
-  temp_savepath:='temp.asm';
-  {$ELSE}
-  temp_savepath:='/tmp/temp.asm';
-  {$ENDIF}
-  if SavePath = '' then
-    InputSynEdit.Lines.SaveToFile(temp_savepath)
-  else
-    MainFrm_Menu_File_SaveClick(nil);
+  try
+    {$IFDEF Windows}
+      temp_savepath:='temp.asm';
+    {$ELSE}
+      temp_savepath:='/tmp/temp.asm';
+    {$ENDIF}
+    if SavePath = '' then
+     InputSynEdit.Lines.SaveToFile(temp_savepath)
+    else
+      MainFrm_Menu_File_SaveClick(nil);
+  except
+      Log_lb.Items.Insert(0, '[warning] Program could not be saved.');
+  end;
+
   if RAM <> nil then
   begin
     RAM.Destroy;

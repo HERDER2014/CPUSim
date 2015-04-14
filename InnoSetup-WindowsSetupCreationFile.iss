@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "HerderCPUSim"
-#define MyAppVersion "1.0-beta.2"
+#define MyAppVersion "1.0-beta.3"
 #define MyAppPublisher "Herder-Gymnasium LK Inf-4 2015"
 #define MyAppURL "https://github.com/HERDER2014/CPUSim"
 #define MyAppExeName "bin\cpusim.exe"
@@ -24,7 +24,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=.\LICENSE
 OutputDir=.\Output
-OutputBaseFilename=HerderCPUSim-1.0-beta.2
+OutputBaseFilename=Windows-Installer_HerderCPUSim-1.0-beta.3
 SetupIconFile=.\src\cpusim.ico
 Compression=lzma
 SolidCompression=yes     

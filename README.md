@@ -69,7 +69,7 @@ The [desktop file](cpusim.desktop) should be ready to use and goes into
 See the [git book](git-scm.com/book/en/v2) on how to use git.
 Forks and pull requests welcome.
 
-Please try avoiding to commiting lfm files when you did not a change (lazarus writes windows arrangement into lfm's which we don't want to commit).
+Please try avoiding to commiting lfm files when you did not change anything (lazarus writes windows arrangement into lfm's which we don't want to commit).
 
 ## Roadmap
 

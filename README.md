@@ -26,7 +26,7 @@ Binary releases together with the corresponding source code can be found in the 
 
 ### ArchLinux Users
 
-There's already an (incomplete) [PKGBUILD available in the AUR](https://aur.archlinux.org/packages/herder-cpusim-git/) ([upstream URL](https://github.com/LeonardKoenig/PKGBUILDs))
+There's already an (incomplete) [PKGBUILD available in the AUR](https://aur.archlinux.org/packages/herder-cpusim-git/) ([upstream URL](https://github.com/LeonardKoenig/PKGBUILD_herder-cpusim-git))
 
 ## Building & Contributing
 
@@ -37,6 +37,8 @@ There's already an (incomplete) [PKGBUILD available in the AUR](https://aur.arch
 - lazarus-qt (?- lazarus-qt (?))
 
 ### Build
+
+> You need to run lazarus before this at least once to set up the paths.
 
 execute to build in release mode (optmizations such as O3 flags):
 

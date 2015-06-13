@@ -192,6 +192,7 @@ var
   oldSP: word;
   oldVP: word;
   oldHl: longInt;
+  closeOnStop: Boolean;
   SelectedLineFromRam: Cardinal;
   SelectedCellFromRam: word;
   CPUCreated: Boolean;
@@ -223,12 +224,18 @@ begin
   CPUCreated:=false;
   CPUCreated:=false;
   trackTime:=false;
+  closeOnStop:=false;
   InputSynEdit.TabWidth:=4;
   if (Paramcount > 0) and (FileExists(ParamStr(1))) then
   begin
     InputSynEdit.Lines.LoadFromFile(ParamStr(1));
     SavePath:=ParamStr(1);
     Caption:= InitCaption + ' - ' + SavePath;
+  end;
+  if (Paramcount > 1) and (ParamStr(2) = 'true') then
+  begin
+    AssembleBtnClick(nil);
+    closeOnStop:=true;
   end;
 end;
 
@@ -817,6 +824,10 @@ begin
     Threadcreated:=false;
     //WriteLn('cput term');
   end;
+
+  if closeOnStop then
+    Application.Terminate;
+
   assembled := False;
   if (SavePath <> '') then
     Caption:= InitCaption + ' - ' + SavePath

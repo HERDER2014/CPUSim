@@ -812,17 +812,19 @@ end;
 
 procedure TmainFrm.Stop;
 begin
-  if CPUCreated then
-  begin
-    CPU.Destroy;
-    CPUcreated:=false;
-    //WriteLn('cpu destr');
-  end;
   if ThreadCreated then
   begin
+    Thread.setVel(-1);
     Thread.term();
     Threadcreated:=false;
     //WriteLn('cput term');
+  end;
+  if CPUCreated then
+  begin
+    // CPU is destroyed by OnThreadDestroy already.
+    //CPU.Destroy;
+    CPUcreated:=false;
+    //WriteLn('cpu destr');
   end;
 
   if closeOnStop then

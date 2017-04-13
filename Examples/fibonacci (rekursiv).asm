@@ -36,7 +36,7 @@ fib:
 push BP
 mov BP, SP
 
-  mov bx, [BP + 5];Parameter bekommen
+  mov bx, [BP + 4];Parameter bekommen
   cmp bx, 3;F(2)=F(1)=1 ist definiert
   js ende1;also keine Berechnung, wenn X 1 oder 2 ist
 
@@ -62,7 +62,7 @@ ret
 mehrstelligeAusgabe:
 push BP
 mov BP, SP
-  mov ax, [BP + 5]
+  mov ax, [BP + 4]
   ;zahl aufteilen
   msAaufteilen:
   cmp ax, 0A
@@ -147,7 +147,7 @@ db_Ausgabe:
   push BP
   mov BP, SP
 
-  mov ax, [BP + 5];Adresse bekommen
+  mov ax, [BP + 4];Adresse bekommen
   dbAusgabe:
   movb bl, [ax];Byte an Adresse in bl schreiben
   cmp bl, 0;Wenn die Ausgabe beendet ist (das Byte 0 hat im Ascii-Code kein Zeichen,

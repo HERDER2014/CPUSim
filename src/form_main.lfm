@@ -1,7 +1,7 @@
 object mainFrm: TmainFrm
-  Left = 283
+  Left = 346
   Height = 584
-  Top = 314
+  Top = 230
   Width = 935
   AllowDropFiles = True
   Caption = 'CPUSimulator Herder 2014'
@@ -22,7 +22,7 @@ object mainFrm: TmainFrm
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   Position = poScreenCenter
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.6.4.0'
   inline InputSynEdit: TSynEdit
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = RAMGrid
@@ -468,7 +468,6 @@ object mainFrm: TmainFrm
       ''
     )
     VisibleSpecialChars = [vscSpace, vscTabAtLast]
-    SelectedColor.FrameEdges = sfeAround
     SelectedColor.BackPriority = 50
     SelectedColor.ForePriority = 50
     SelectedColor.FramePriority = 50
@@ -476,23 +475,17 @@ object mainFrm: TmainFrm
     SelectedColor.ItalicPriority = 50
     SelectedColor.UnderlinePriority = 50
     SelectedColor.StrikeOutPriority = 50
-    IncrementColor.FrameEdges = sfeAround
-    HighlightAllColor.FrameEdges = sfeAround
     BracketHighlightStyle = sbhsBoth
     BracketMatchColor.Background = clNone
     BracketMatchColor.Foreground = clNone
-    BracketMatchColor.FrameEdges = sfeAround
     BracketMatchColor.Style = [fsBold]
     FoldedCodeColor.Background = clNone
     FoldedCodeColor.Foreground = clGray
     FoldedCodeColor.FrameColor = clGray
-    FoldedCodeColor.FrameEdges = sfeAround
     MouseLinkColor.Background = clNone
     MouseLinkColor.Foreground = clBlue
-    MouseLinkColor.FrameEdges = sfeAround
     LineHighlightColor.Background = clNone
     LineHighlightColor.Foreground = clNone
-    LineHighlightColor.FrameEdges = sfeAround
     OnChange = InputSynEditChange
     OnGutterClick = InputSynEditGutterClick
     OnSpecialLineColors = InputSynEditSpecialLineColors
@@ -506,7 +499,6 @@ object mainFrm: TmainFrm
         MouseActions = <>
         MarkupInfo.Background = clBtnFace
         MarkupInfo.Foreground = clNone
-        MarkupInfo.FrameEdges = sfeAround
         DigitCount = 2
         ShowOnlyLineNumbersMultiplesOf = 1
         ZeroStart = False
@@ -523,13 +515,11 @@ object mainFrm: TmainFrm
         MouseActions = <>
         MarkupInfo.Background = clWhite
         MarkupInfo.Foreground = clGray
-        MarkupInfo.FrameEdges = sfeAround
       end
       object SynGutterCodeFolding1: TSynGutterCodeFolding
         MouseActions = <>
         MarkupInfo.Background = clNone
         MarkupInfo.Foreground = clGray
-        MarkupInfo.FrameEdges = sfeAround
         MouseActionsExpanded = <>
         MouseActionsCollapsed = <>
       end

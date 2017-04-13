@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="9"/>
+    <Version Value="10"/>
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
@@ -52,11 +52,7 @@
             </Options>
           </Linking>
           <Other>
-            <CompilerMessages>
-              <MsgFileName Value=""/>
-            </CompilerMessages>
             <CustomOptions Value="-dUseCThreads"/>
-            <CompilerPath Value="$(CompPath)"/>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -89,7 +85,6 @@
       <Unit0>
         <Filename Value="cpusim.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="cpusim"/>
       </Unit0>
       <Unit1>
         <Filename Value="form_main.pas"/>
@@ -97,27 +92,22 @@
         <ComponentName Value="mainFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="form_main"/>
       </Unit1>
       <Unit2>
         <Filename Value="uRAM.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uRAM"/>
       </Unit2>
       <Unit3>
         <Filename Value="uCompiler.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uCompiler"/>
       </Unit3>
       <Unit4>
         <Filename Value="uCPU.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uCPU"/>
       </Unit4>
       <Unit5>
         <Filename Value="uTypen.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uTypen"/>
       </Unit5>
       <Unit6>
         <Filename Value="uopcodes.pas"/>
@@ -135,12 +125,10 @@
         <ComponentName Value="OptionsFrm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="form_options"/>
       </Unit8>
       <Unit9>
         <Filename Value="asmHighlighter.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="asmHighlighter"/>
       </Unit9>
       <Unit10>
         <Filename Value="epiktimer.pas"/>
@@ -153,7 +141,6 @@
         <ComponentName Value="ScreenForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="form_screen"/>
       </Unit11>
     </Units>
   </ProjectOptions>
@@ -175,11 +162,7 @@
       </Options>
     </Linking>
     <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
       <CustomOptions Value="-dUseCThreads"/>
-      <CompilerPath Value="$(CompPath)"/>
     </Other>
   </CompilerOptions>
   <Debugging>

@@ -213,8 +213,8 @@ begin
   Ram := r;
   InitCriticalSection(cs);
   Reg.IP := 0;
-  Reg.SP := r.GetVRAMStart - 1;
-  Reg.BP := r.GetVRAMStart - 1;
+  Reg.SP := r.GetVRAMStart;
+  Reg.BP := r.GetVRAMStart;
   Reg.VP := r.GetVRAMStart;
   Reg.FLAGS := 0;
   Reg.AX := 0;
@@ -422,13 +422,13 @@ end;
 
 procedure TCPU.push(w: word);
 begin
-  Ram.WriteWord(Reg.SP - 1, w);
   Reg.SP -= 2;
+  Ram.WriteWord(Reg.SP, w);
 end;
 
 function TCPU.pop(): word;
 begin
-  Result := Ram.ReadWord(Reg.SP + 1);
+  Result := Ram.ReadWord(Reg.SP);
   Reg.SP += 2;
 end;
 

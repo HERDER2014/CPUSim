@@ -10,7 +10,7 @@ end
 mehrstelligeAusgabe:
 push BP
 mov BP, SP
-  mov ax, [BP + 5]
+  mov ax, [BP + 4]
   ;zahl aufteilen
   msAaufteilen:
   cmp ax, 0A

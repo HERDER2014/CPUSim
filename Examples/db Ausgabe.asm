@@ -19,7 +19,7 @@ db_Ausgabe:
   push BP
   mov BP, SP
 
-  mov ax, [BP + 5];Adresse bekommen
+  mov ax, [BP + 4];Adresse bekommen
   dbAusgabe:
   movb bl, [ax];Byte an Adresse in bl schreiben
   cmp bl, 0;Wenn die Ausgabe beendet ist (das Byte 0 hat im Ascii-Code kein Zeichen,
